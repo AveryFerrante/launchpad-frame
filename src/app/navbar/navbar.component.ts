@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
+  selectedTab = 0;
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onTabClick(tab: number) {
+    this.selectedTab = tab;
   }
 
 }
