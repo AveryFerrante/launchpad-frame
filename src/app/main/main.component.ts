@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TabEnum } from '../models/tabEnum';
+import { NavbarTabEnum } from '../models/enums';
 
 @Component({
   selector: 'app-main',
@@ -8,14 +8,15 @@ import { TabEnum } from '../models/tabEnum';
 })
 export class MainComponent implements OnInit {
 
-  tabEnum = TabEnum;
-  selectedTab: number;
+  tabEnum = NavbarTabEnum;
+  selectedTab = this.tabEnum.Frames;
   constructor() { }
 
   ngOnInit() {
   }
 
-  onTabChange(event: number) {
+  onTabChange(newTab: number) {
+    this.selectedTab = newTab;
   }
 
 }

@@ -1,0 +1,14 @@
+<section class="sidenav-content">
+    <a href="#" class="nav-link" [ngClass]="{'active': selectedLink === linkEnum.NewFrame}" (click)="onLinkChange(linkEnum.NewFrame)">
+        Create New Frame <clr-icon shape="plus"></clr-icon>
+    </a>
+
+  <section class="nav-group">
+    <input id="myframes" type="checkbox">
+    <label for="myframes">My Frames</label>
+    <ul class="nav-list">
+      <li><a class="nav-link">Link 1</a></li>
+      <li><a class="nav-link">Link 2</a></li>
+    </ul>
+  </section>
+</section>

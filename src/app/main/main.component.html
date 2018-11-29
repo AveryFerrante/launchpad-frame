@@ -1,3 +1,7 @@
 <clr-main-container>
-  <app-navbar [selectedTab]="tabEnum.Frames" (tab)="onTabChange($event)"></app-navbar>
+  <app-navbar [selectedTab]="selectedTab" (tab)="onTabChange($event)"></app-navbar>
+
+  <div class="content-container">
+    <app-frames-manager *ngIf="selectedTab === tabEnum.Frames"></app-frames-manager>
+  </div>
 </clr-main-container>

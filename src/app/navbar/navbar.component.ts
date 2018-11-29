@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { TabEnum } from '../models/tabEnum';
+import { NavbarTabEnum } from '../models/enums';
 
 @Component({
   selector: 'app-navbar',
@@ -9,7 +9,7 @@ import { TabEnum } from '../models/tabEnum';
 export class NavbarComponent implements OnInit {
 
   @Output() tab: EventEmitter<number> = new EventEmitter<number>();
-  tabEnum = TabEnum;
+  tabEnum = NavbarTabEnum;
   @Input() selectedTab: number;
   constructor() { }
 
