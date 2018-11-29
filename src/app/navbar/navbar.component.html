@@ -5,7 +5,7 @@
     </a>
   </div>
   <div class="header-nav" [clr-nav-level]="1">
-    <a href="#" class="nav-link nav-text" [ngClass]="{'active': selectedTab == 0}" (click)="onTabClick(0)">My Frames</a>
-    <a href="#" class="nav-link nav-text" [ngClass]="{'active': selectedTab == 1}" (click)="onTabClick(1)">My Photos</a>
+    <a href="#" class="nav-link nav-text" [ngClass]="{'active': selectedTab == tabEnum.Frames}" (click)="onTabClick(tabEnum.Frames)">My Frames</a>
+    <a href="#" class="nav-link nav-text" [ngClass]="{'active': selectedTab == tabEnum.Photos}" (click)="onTabClick(tabEnum.Photos)">My Photos</a>
   </div>
 </clr-header>
