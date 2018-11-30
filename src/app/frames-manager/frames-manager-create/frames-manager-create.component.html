@@ -1,0 +1,9 @@
+<form clrForm clrLayout="horizontal" [formGroup]="newFrameForm">
+  <clr-input-container>
+    <label class="clr-col-xs-12 clr-col-md-2 clr-col-lg-1 clr-offset-md-1 clr-offset-lg-2">Frame Name: </label>
+    <input class="clr-col-xs-12 clr-col-md-9 clr-col-lg-9" clrInput type="text" formControlName="frameName"  />
+    <clr-control-helper>Rotating funny tips here?</clr-control-helper>
+    <clr-control-error *clrIfError="'required'">This is required!</clr-control-error>
+    <clr-control-error *clrIfError="'minlength'">More characters!</clr-control-error>
+  </clr-input-container>
+</form>

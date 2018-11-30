@@ -1,7 +1,6 @@
 <clr-main-container>
   <app-navbar [selectedTab]="selectedTab" (tab)="onTabChange($event)"></app-navbar>
 
-  <div class="content-container">
-    <app-frames-manager *ngIf="selectedTab === tabEnum.Frames"></app-frames-manager>
-  </div>
+  <!-- content-container class must be attached here. First child must be content-container, second child must be sidenav -->
+  <app-frames-manager class="content-container" *ngIf="selectedTab === tabEnum.Frames"></app-frames-manager>
 </clr-main-container>
