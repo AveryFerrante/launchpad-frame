@@ -8,8 +8,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class FramesManagerCreateComponent implements OnInit {
 
+  readonly frameNameMinLength = 2;
   newFrameForm = new FormGroup({
-    frameName: new FormControl('', [Validators.required, Validators.minLength(2)])
+    frameName: new FormControl('', [Validators.required, Validators.minLength(this.frameNameMinLength)]),
+    frameDescription: new FormControl(''),
+    frameIsPublic: new FormControl('', Validators.required)
   });
   constructor() { }
 

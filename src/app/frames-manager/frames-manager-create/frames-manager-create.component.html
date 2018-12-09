@@ -1,9 +1,28 @@
 <form clrForm clrLayout="horizontal" [formGroup]="newFrameForm">
   <clr-input-container>
     <label class="clr-col-xs-12 clr-col-md-2 clr-col-lg-1 clr-offset-md-1 clr-offset-lg-2">Frame Name: </label>
-    <input class="clr-col-xs-12 clr-col-md-9 clr-col-lg-9" clrInput type="text" formControlName="frameName"  />
+    <input class="clr-col-xs-12 clr-col-md-9 clr-col-lg-9 forty-percent-width" clrInput type="text" formControlName="frameName" />
     <clr-control-helper>Rotating funny tips here?</clr-control-helper>
     <clr-control-error *clrIfError="'required'">This is required!</clr-control-error>
-    <clr-control-error *clrIfError="'minlength'">More characters!</clr-control-error>
+    <clr-control-error *clrIfError="'minlength'">Name must be atleast {{frameNameMinLength}} characters!</clr-control-error>
   </clr-input-container>
+  <clr-textarea-container>
+    <label class="clr-col-xs-12 clr-col-md-2 clr-col-lg-1 clr-offset-md-1 clr-offset-lg-2">Description: </label>
+    <textarea class="clr-col-xs-12 clr-col-md-9 clr-col-lg-9 forty-percent-width" clrTextarea formControlName="frameDescription"></textarea>
+    <clr-control-helper>Others can see this</clr-control-helper>
+  </clr-textarea-container>
+  
+  <clr-radio-container clrInline>
+      <label class="clr-control-label clr-col-xs-12 clr-col-md-2 clr-col-lg-1 clr-offset-md-1 clr-offset-lg-2">Make Public?</label>
+      <clr-radio-wrapper>
+        <input  class="clr-col-xs-12 clr-col-md-9 clr-col-lg-9 forty-percent-width" type="radio" clrRadio formControlName="frameIsPublic" />
+        <label>Yes</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="frameIsPublic" />
+        <label>No</label>
+      </clr-radio-wrapper>
+    </clr-radio-container>
 </form>
+
+{{newFrameForm.value | json}}
