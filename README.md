@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.6.
 
+This is a web application aimed at allowing users to create / share / manage online picture frames with groups of friends and family. A user can create a new frame, invite others to join the frame, and begin uploading pictures! Then, a user may select a frame and put it in viewing mode, allowing the pictures in the frame to cycle on the screen (recommended to put the site in full screen). Still under lots of construction.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
