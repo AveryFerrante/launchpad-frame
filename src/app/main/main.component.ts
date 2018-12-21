@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TabEnum } from '../models/tabEnum';
 
 @Component({
   selector: 'app-main',
@@ -8,14 +7,9 @@ import { TabEnum } from '../models/tabEnum';
 })
 export class MainComponent implements OnInit {
 
-  tabEnum = TabEnum;
-  selectedTab: number;
   constructor() { }
 
   ngOnInit() {
-  }
-
-  onTabChange(event: number) {
   }
 
 }
