@@ -1,0 +1,48 @@
+.nav-bg {
+    background-color: #442d3f;
+    opacity: .82;
+}
+
+.login-nav-brand {
+    color: white;
+    font-size: 2.5em;
+}
+
+.login-panel {
+    background-color: rgba(189, 197, 191, .5);
+}
+
+.login-panel-width {
+    width: 50vw;
+}
+
+.login-panel-label {
+    color: black;
+    font-size: 1.5em;
+}
+
+.login-button {
+    background-color: #dd2828;
+    color: black;
+}
+
+.create-account-link {
+    color: black;
+    text-decoration: underline;
+}
+
+.bg-img {
+    background: url('../../assets/style/login-page-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.mb-7 {
+    margin-bottom: 7em;
+}
+
+.login-input {
+    line-height: 2.5em;
+}
