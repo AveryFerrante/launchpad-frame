@@ -1,18 +1,5 @@
 <div class="container-fluid h-100 bg-img">
-  <div class="d-flex flex-column h-100">
-    <div class="row nav-bg">
-      <div class="offset-1 col mt-4 mb-4">
-        <span class="login-nav-brand">Launchpad Frame</span>
-      </div>
-    </div>
-    <div class="row mt-5 justify-content-center">
-      <div class="login-panel d-flex flex-column login-panel-width justify-content-center align-items-center">
-        <span class="login-panel-label mt-5 mb-4">Log In to Launchpad Frame</span>
-        <input type="text" class="w-50 mb-4 login-input" placeholder="Email Address">
-        <input type="password" class="w-50 mb-4 login-input" placeholder="Password">
-        <button type="button" class="btn w-50 login-button mb-2">Log In</button>
-        <a href="#" class="create-account-link mb-7">Create Account</a>
-      </div>
-    </div>
+  <div class="d-flex flex-column h-100 justify-content-center align-items-center">
+    <router-outlet></router-outlet>
   </div>
 </div>

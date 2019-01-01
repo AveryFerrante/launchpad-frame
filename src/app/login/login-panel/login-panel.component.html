@@ -1,0 +1,9 @@
+<div class="opaque-gray-panel-bg d-flex flex-column login-panel-sizing justify-content-center align-items-center">
+  <span class="login-panel-label mb-4">Log In to Launchpad Frame</span>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="d-flex flex-column w-100 justify-content-center align-items-center">
+    <input type="text" class="w-50 mb-4 login-panel-input" formControlName="emailInput" required placeholder="Email Address">
+    <input type="password" class="w-50 mb-4 login-panel-input" formControlName="passwordInput" placeholder="Password">
+    <button type="submit" [disabled]="!loginForm.valid" class="btn w-50 login-panel-button mb-2">Log In</button>
+  </form>
+  <a [routerLink]="['/create-account']" class="create-account-link mb-5">Create Account</a>
+</div>
