@@ -1,0 +1,24 @@
+Font Family: Courier
+
+Panel: BDC5BF Opacity = 50%
+
+Navbar: 442D3F Opacity = 82%
+
+Login Button: DD2828 Opacity = 100%
+
+Create Account: Black
+
+
+
+My Frames:
+	Side Nav:
+		Header panel: 782D68 opacity = 90%
+		Panel lighter: 782D68 opacity = 80% (all this on white bg)
+Gray Sections: CCCCCC Opactiy = 75%
+Purple Buttons: 782D68 Opacity = 80%
+Add Picture Thumbnail: 78D68 Opacity = 40%
+
+My Pictures:
+Add Picture Thumbnail: Same as above
+Filter '+' button:782D68 Opacity = 80%
+
