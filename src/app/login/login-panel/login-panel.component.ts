@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { LoginCredentials } from '../../../models/login credentials';
+
 @Component({
   selector: 'app-login-panel',
   templateUrl: './login-panel.component.html',
@@ -22,7 +24,9 @@ export class LoginPanelComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     if (this.loginForm.valid) {
-      console.log(this.loginForm);
+      const credentials = new LoginCredentials(this.emailCtrl.value, this.passwordCtrl.value);
+      console.log(credentials);
+      // Make request here
     }
   }
 
