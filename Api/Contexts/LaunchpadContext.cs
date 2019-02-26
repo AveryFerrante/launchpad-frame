@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Api.Entities;
 
-namespace Api.Entities
+namespace Api.Contexts
 {
     public partial class LaunchpadContext : DbContext
     {
