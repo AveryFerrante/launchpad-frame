@@ -1,1 +1,57 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.opaque-gray-panel-bg {
+    background-color: rgba(189, 197, 191, .5); /* need to set opacity through this function so that text inside won't be effected by it */
+}
+
+.login-panel-sizing {
+    width: 50vw;
+    height: 60vh;
+}
+
+.login-panel-label {
+    color: black;
+    font-size: 2vw;
+}
+
+.login-panel-button {
+    background-color: #dd2828;
+    color: black;
+}
+
+.create-account-link {
+    color: black;
+    text-decoration: underline;
+}
+
+.login-panel-input {
+    height: 3rem;
+    font-size: 1.5rem;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    border: 1px solid #ced4da;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.login-panel-input:focus:not(.invalid-input) { /* Taken from bootstraps form-control:focus */
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.invalid-input {
+    border-color: #ff0033;
+    outline: 0;
+}
+
+.invalid-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 51, .25);
+}
+
+.invalid-text {
+    color: #ff0033e0;
+}
