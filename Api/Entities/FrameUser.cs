@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Api.Entities
 {
-    public partial class FrameUsers
+    public partial class FrameUser
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -15,9 +15,9 @@ namespace Api.Entities
         public bool HasAccepted { get; set; }
         public DateTime? AcceptedDate { get; set; }
 
-        public Users AddedByNavigation { get; set; }
-        public Frames Frame { get; set; }
-        public Users RemovedByNavigation { get; set; }
-        public Users User { get; set; }
+        public User AddedByNavigation { get; set; }
+        public Frame Frame { get; set; }
+        public User RemovedByNavigation { get; set; }
+        public User User { get; set; }
     }
 }

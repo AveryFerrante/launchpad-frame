@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Api.Entities
 {
-    public partial class FrameUserPermissions
+    public partial class FrameUserPermission
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -15,7 +15,7 @@ namespace Api.Entities
         public bool RequiresPictureApproval { get; set; }
         public bool CanRemovePictures { get; set; }
 
-        public Frames Frame { get; set; }
-        public Users User { get; set; }
+        public Frame Frame { get; set; }
+        public User User { get; set; }
     }
 }

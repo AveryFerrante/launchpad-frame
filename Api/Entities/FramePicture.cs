@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Api.Entities
 {
-    public partial class FramePictures
+    public partial class FramePicture
     {
         public int Id { get; set; }
         public int PictureId { get; set; }
@@ -15,10 +15,10 @@ namespace Api.Entities
         public bool IsApproved { get; set; }
         public int? ApprovedBy { get; set; }
 
-        public Users AddedByNavigation { get; set; }
-        public Users ApprovedByNavigation { get; set; }
-        public Frames Frame { get; set; }
-        public Pictures Picture { get; set; }
-        public Users RemovedByNavigation { get; set; }
+        public User AddedByNavigation { get; set; }
+        public User ApprovedByNavigation { get; set; }
+        public Frame Frame { get; set; }
+        public Picture Picture { get; set; }
+        public User RemovedByNavigation { get; set; }
     }
 }

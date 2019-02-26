@@ -16,28 +16,29 @@ namespace Api.Contexts
         {
         }
 
-        public virtual DbSet<FrameManagers> FrameManagers { get; set; }
-        public virtual DbSet<FramePictures> FramePictures { get; set; }
-        public virtual DbSet<Frames> Frames { get; set; }
-        public virtual DbSet<FrameSettings> FrameSettings { get; set; }
-        public virtual DbSet<FrameUserPermissions> FrameUserPermissions { get; set; }
-        public virtual DbSet<FrameUsers> FrameUsers { get; set; }
-        public virtual DbSet<Pictures> Pictures { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<FrameManager> FrameManagers { get; set; }
+        public virtual DbSet<FramePicture> FramePictures { get; set; }
+        public virtual DbSet<Frame> Frames { get; set; }
+        public virtual DbSet<FrameSetting> FrameSettings { get; set; }
+        public virtual DbSet<FrameUserPermission> FrameUserPermissions { get; set; }
+        public virtual DbSet<FrameUser> FrameUsers { get; set; }
+        public virtual DbSet<Picture> Pictures { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=LaunchpadFrame;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FrameManagers>(entity =>
+            modelBuilder.Entity<FrameManager>(entity =>
             {
+                entity.ToTable("FrameManagers");
+                
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
@@ -51,8 +52,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_FrameManagers_Users");
             });
 
-            modelBuilder.Entity<FramePictures>(entity =>
+            modelBuilder.Entity<FramePicture>(entity =>
             {
+                entity.ToTable("FramePictures");
+                
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.AddedDate).HasColumnType("datetime");
@@ -88,8 +91,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_FramePictures_Users1");
             });
 
-            modelBuilder.Entity<Frames>(entity =>
+            modelBuilder.Entity<Frame>(entity =>
             {
+                entity.ToTable("Frames");
+                
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Description)
@@ -110,8 +115,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_Frames_Users");
             });
 
-            modelBuilder.Entity<FrameSettings>(entity =>
+            modelBuilder.Entity<FrameSetting>(entity =>
             {
+                entity.ToTable("FrameSettings");
+                
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Frame)
@@ -121,8 +128,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_FrameSettings_Frames");
             });
 
-            modelBuilder.Entity<FrameUserPermissions>(entity =>
+            modelBuilder.Entity<FrameUserPermission>(entity =>
             {
+                entity.ToTable("FrameUserPermissions");
+                
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Frame)
@@ -138,8 +147,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_FrameUserPermissions_Users");
             });
 
-            modelBuilder.Entity<FrameUsers>(entity =>
+            modelBuilder.Entity<FrameUser>(entity =>
             {
+                entity.ToTable("FrameUsers");
+                
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.AcceptedDate).HasColumnType("datetime");
@@ -172,8 +183,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_FrameUsers_Users");
             });
 
-            modelBuilder.Entity<Pictures>(entity =>
+            modelBuilder.Entity<Picture>(entity =>
             {
+                entity.ToTable("Pictures");
+                
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
@@ -191,8 +204,10 @@ namespace Api.Contexts
                     .HasConstraintName("FK_Pictures_Users");
             });
 
-            modelBuilder.Entity<Users>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
+                entity.ToTable("Users");
+
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Email)

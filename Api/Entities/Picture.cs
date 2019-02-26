@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Api.Entities
 {
-    public partial class Pictures
+    public partial class Picture
     {
-        public Pictures()
+        public Picture()
         {
-            FramePictures = new HashSet<FramePictures>();
+            FramePictures = new HashSet<FramePicture>();
         }
 
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace Api.Entities
         public string Location { get; set; }
         public DateTime? EndDate { get; set; }
 
-        public Users CreatedByNavigation { get; set; }
-        public ICollection<FramePictures> FramePictures { get; set; }
+        public User CreatedByNavigation { get; set; }
+        public ICollection<FramePicture> FramePictures { get; set; }
     }
 }
