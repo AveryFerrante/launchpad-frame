@@ -41,6 +41,7 @@ Thumbs.db
 # API
 /Api/bin
 /Api/obj/Debug
+/Api/obj/Api.csproj.nuget.*
 
 
 
