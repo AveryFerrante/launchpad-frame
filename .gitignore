@@ -39,8 +39,8 @@ testem.log
 Thumbs.db
 
 # API
-./Api/bin/*
-./Api/obj/Debug/*
+Api/bin/*
+Api/obj/Debug
 
 
 
