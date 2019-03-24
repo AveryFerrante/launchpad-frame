@@ -37,3 +37,11 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# API
+/Api/bin
+/Api/obj/Debug
+/Api/obj/Api.csproj.nuget.*
+
+
+
