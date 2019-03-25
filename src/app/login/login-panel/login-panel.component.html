@@ -19,4 +19,7 @@
     <button type="submit" class="btn w-50 login-panel-button mb-2">Log In</button>
   </form>
   <a [routerLink]="['/create-account']" class="create-account-link mb-5">Create Account</a>
+  <div *ngIf="errorMessage != null" class="invalid-text">
+    {{ errorMessage }}
+  </div>
 </div>

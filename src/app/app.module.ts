@@ -10,6 +10,10 @@ import { LoginComponent } from './login/login.component';
 import { LoginPanelComponent } from './login/login-panel/login-panel.component';
 import { CreateAccountPanelComponent } from './login/create-account-panel/create-account-panel.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,10 @@ import { AppRoutingModule } from './app-routing.module';
     NgbModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireAuthModule
   ],
   providers: [],
   bootstrap: [MainComponent]
