@@ -38,10 +38,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# API
-/Api/bin
-/Api/obj/Debug
-/Api/obj/Api.csproj.nuget.*
+
+# Configs
+/src/environments/FirebaseConfig.ts
 
 
 
