@@ -1,25 +1,39 @@
-<div class="opaque-gray-panel-bg d-flex flex-column login-panel-sizing justify-content-center align-items-center">
-  <span class="login-panel-label mb-4">Log In to Launchpad Frame</span>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="d-flex flex-column w-100 justify-content-center align-items-center">
+<div class="card" style="width: 25rem;">
+  <h4 class="card-header text-center">
+    Login
+  </h4>
+  <div class="card-body d-flex flex-column">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
+      class="d-flex flex-column w-100 justify-content-center align-items-center mb-2">
 
-    <div class="form-group w-50 mb-4">
-      <input type="text" class="login-panel-input mb-1 w-100" formControlName="emailInput" required placeholder="Email Address"
-        [ngClass]="{ 'invalid-input': emailCtrl.errors && submitted }">
-      <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.required" class="invalid-text">Email is Required</span>
-      <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.email" class="invalid-text">Invalid Email Format</span>
+      <div class="mb-4 w-100">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          </div>
+          <input type="text" class="form-control" formControlName="emailInput" required placeholder="Email Address"
+            [ngClass]="{ 'invalid-input': emailCtrl.errors && submitted }">
+        </div>
+        <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.required" class="invalid-text">Email is Required</span>
+        <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.email" class="invalid-text">Invalid Email Format</span>
+      </div>
+
+      <div class="mb-4 w-100">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          </div>
+          <input type="password" class="form-control" formControlName="passwordInput" placeholder="Password"
+            [ngClass]="{ 'invalid-input': passwordCtrl.errors && submitted }">
+        </div>
+        <span *ngIf="submitted && passwordCtrl.errors && passwordCtrl.errors.required" class="invalid-text">Password is Required</span>
+      </div>
+
+      <button type="submit" class="btn btn-outline-primary w-100">Log In</button>
+    </form>
+    <a [routerLink]="['/create-account']" class="create-account-link align-self-center mb-1">Create Account</a>
+    <div *ngIf="errorMessage != null" class="invalid-text text-center mt-2">
+      {{ errorMessage }}
     </div>
-
-    <div class="form-group w-50 mb-4">
-      <input type="password" class="login-panel-input w-100" formControlName="passwordInput" placeholder="Password"
-        [ngClass]="{ 'invalid-input': passwordCtrl.errors && submitted }">
-      <span *ngIf="submitted && passwordCtrl.errors && passwordCtrl.errors.required" class="invalid-text">Password is
-        Required</span>
-    </div>
-
-    <button type="submit" class="btn w-50 login-panel-button mb-2">Log In</button>
-  </form>
-  <a [routerLink]="['/create-account']" class="create-account-link mb-5">Create Account</a>
-  <div *ngIf="errorMessage != null" class="invalid-text">
-    {{ errorMessage }}
   </div>
 </div>

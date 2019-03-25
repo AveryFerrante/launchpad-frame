@@ -1,7 +1,5 @@
 .bg-img {
-    background: url('../../assets/style/login-page-bg.jpg') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background-image: radial-gradient(rgb(64,4,51), rgb(178, 121, 165));
+    background-image: -moz-radial-gradient(rgb(64,4,51,), rgb(178, 121, 165));
+    background-image: -webkit-radial-gradient(rgb(64,4,51,), rgb(178, 121, 165));
 }
