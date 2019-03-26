@@ -3,3 +3,7 @@
     background-image: -moz-radial-gradient(rgb(64,4,51,), rgb(178, 121, 165));
     background-image: -webkit-radial-gradient(rgb(64,4,51,), rgb(178, 121, 165));
 }
+
+.triadic-font-color {
+    color: 	#f5f5f5;
+}
