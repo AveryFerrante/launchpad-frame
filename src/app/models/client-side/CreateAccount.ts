@@ -1,13 +1,13 @@
+import { UserCredentials } from './UserCredentials';
+
 export class CreateAccount {
-    email: string;
     firstName: string;
     lastName: string;
-    password: string;
+    userCredentials: UserCredentials;
 
-    constructor(e: string, fn: string, ln: string, p: string) {
-        this.email = e;
+    constructor(fn: string, ln: string, uc: UserCredentials) {
         this.firstName = fn;
         this.lastName = ln;
-        this.password = p;
+        this.userCredentials = uc;
     }
 }

@@ -1,24 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Login } from 'src/app/models/client-side/Login';
-import { CreateAccount } from 'src/app/models/client-side/CreateAccount';
+import { UserCredentials } from 'src/app/models/client-side/UserCredentials';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
+  get currentUserObservable(): Observable<firebase.User> { return this.fireAuth.authState; }
+  get currentUser(): firebase.User { return this.fireAuth.auth.currentUser; }
   constructor(private fireAuth: AngularFireAuth) { }
 
-  signInWithEmail(login: Login): Promise<firebase.auth.UserCredential> {
+  signInWithEmail(login: UserCredentials): Promise<firebase.auth.UserCredential> {
     return this.fireAuth.auth.signInWithEmailAndPassword(login.email, login.password);
   }
 
-  createNewEmailAccount(account: CreateAccount): Promise<firebase.auth.UserCredential> {
+  createNewEmailAccount(account: UserCredentials): Promise<firebase.auth.UserCredential> {
     return this.fireAuth.auth.createUserWithEmailAndPassword(account.email, account.password);
   }
 
-  getCurrentUser(): firebase.User {
-    return this.fireAuth.auth.currentUser;
+  signOut(): Promise<void> {
+    return this.fireAuth.auth.signOut();
   }
 }

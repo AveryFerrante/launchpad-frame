@@ -15,21 +15,23 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     MainComponent,
     AuthenticationComponent,
     LoginPanelComponent,
-    CreateAccountPanelComponent
+    CreateAccountPanelComponent,
+    HomeComponent
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule
   ],

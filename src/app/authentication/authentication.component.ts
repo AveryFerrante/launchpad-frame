@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Login } from '../models/client-side/Login';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { CreateAccount } from '../models/client-side/CreateAccount';
+import { UserCredentials } from '../models/client-side/UserCredentials';
+import { UserInfoService } from '../services/userinfo/user-info.service';
+import { UserInfo } from '../models/UserInfo';
 
 @Component({
   selector: 'app-authentication',
@@ -15,11 +17,12 @@ export class AuthenticationComponent implements OnInit {
   showCreateAccountForm: boolean;
   panelTitle: string;
   errorMessage: string;
-  constructor(private activatedRoute: ActivatedRoute, private authService: AuthenticationService) { }
+  constructor(private activatedRoute: ActivatedRoute, private authService: AuthenticationService,
+    private userInfoService: UserInfoService, private router: Router) { }
 
   ngOnInit() {
     this.activatedRoute.url.subscribe((u) => {
-      if(u[0] && u[0].path === 'login') {
+      if (u[0] && u[0].path === 'login') {
         this.showLoginForm = true;
         this.showCreateAccountForm = false;
         this.panelTitle = 'Login';
@@ -31,18 +34,18 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
-  onLogin(login: Login) {
+  onLogin(login: UserCredentials) {
     console.log('login triggered');
       this.authService.signInWithEmail(login).then(
         resp => {
-          // TODO
+          // REDIRECT
         },
         error => {
           const errorCode = error.code;
           if (errorCode === 'auth/wrong-password') {
             this.errorMessage = 'Email or password is incorrect.';
           } else if (errorCode === 'auth/user-not-found') {
-            this.errorMessage = 'No matching user found for the provided email.';
+            this.errorMessage = 'Email or password is incorrect.';
           } else if (errorCode === 'auth/invalid-email') {
             this.errorMessage = 'Email is invalid.';
           } else if (errorCode === 'auth/user-disabled') {
@@ -55,16 +58,25 @@ export class AuthenticationComponent implements OnInit {
     }
 
     onCreate(account: CreateAccount) {
-      this.authService.createNewEmailAccount(account).then(
-        resp => {
-          // CREATE USER DOCUMENT
+      this.authService.createNewEmailAccount(account.userCredentials).then(
+        user => {
+          const userInfo = new UserInfo(account.firstName, account.lastName);
+          this.userInfoService.addNewUserInfo(user.user.uid, userInfo).then(
+            success => {
+              // ADD TO STATE MANAGEMENT
+              this.router.navigate(['/home']);
+            },
+            error => {
+              console.log(error);
+            }
+          );
         },
         error => {
           const errorCode = error.Code;
-          if(errorCode === 'auth/weak-password') {
+          if (errorCode === 'auth/weak-password') {
             this.errorMessage = 'Password is not strong enough';
           }
         }
-      )
+      );
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Login } from 'src/app/models/client-side/Login';
+import { UserCredentials } from 'src/app/models/client-side/UserCredentials';
 
 @Component({
   selector: 'app-login-panel',
@@ -15,7 +15,7 @@ export class LoginPanelComponent implements OnInit {
   get emailCtrl() { return this.loginForm.controls.emailInput; }
   get passwordCtrl() { return this.loginForm.controls.passwordInput; }
   submitted = false;
-  @Output() onLogin = new EventEmitter();
+  @Output() login = new EventEmitter();
   constructor() { }
 
   ngOnInit() {
@@ -24,7 +24,7 @@ export class LoginPanelComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     if (this.loginForm.valid) {
-      this.onLogin.emit(new Login(this.emailCtrl.value, this.passwordCtrl.value));
+      this.login.emit(new UserCredentials(this.emailCtrl.value, this.passwordCtrl.value));
     }
   }
 
