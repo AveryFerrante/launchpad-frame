@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Login } from 'src/app/models/client-side/Login';
 
 @Component({
   selector: 'app-login-panel',
@@ -15,8 +15,8 @@ export class LoginPanelComponent implements OnInit {
   get emailCtrl() { return this.loginForm.controls.emailInput; }
   get passwordCtrl() { return this.loginForm.controls.passwordInput; }
   submitted = false;
-  errorMessage: string;
-  constructor(private fireAuth: AngularFireAuth) { }
+  @Output() onLogin = new EventEmitter();
+  constructor() { }
 
   ngOnInit() {
   }
@@ -24,26 +24,7 @@ export class LoginPanelComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     if (this.loginForm.valid) {
-      this.fireAuth.auth.signInWithEmailAndPassword(this.emailCtrl.value, this.passwordCtrl.value).then(
-        resp => {
-          // TODO
-        },
-        error => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          if (errorCode === 'auth/wrong-password') {
-            this.errorMessage = 'Email or password is incorrect.';
-          } else if (errorCode === 'auth/user-not-found') {
-            this.errorMessage = 'No matching user found for the provided email.';
-          } else if (errorCode === 'auth/invalid-email') {
-            this.errorMessage = 'Email is invalid.';
-          } else if (errorCode === 'auth/user-disabled') {
-            this.errorMessage = 'This account has been disabled.';
-          } else { // This scenario shouldn't happen really
-
-          }
-        }
-      );
+      this.onLogin.emit(new Login(this.emailCtrl.value, this.passwordCtrl.value));
     }
   }
 

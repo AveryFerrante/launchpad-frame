@@ -44,11 +44,12 @@
       <div class="input-group-prepend">
         <span class="input-group-text"><i class="fas fa-lock"></i></span>
       </div>
-      <input type="text" class="form-control" formControlName="passwordInput" required placeholder="Password"
+      <input type="password" class="form-control" formControlName="passwordInput" required placeholder="Password"
         [ngClass]="{ 'invalid-input': passwordCtrl.errors && submitted }">
     </div>
     <span *ngIf="submitted && passwordCtrl.errors && passwordCtrl.errors.required" class="invalid-text">Password is
       Required</span>
+      <span *ngIf="submitted && passwordsMatch === false && !passwordCtrl.errors" class="invalid-text">Passwords Must Match</span>
   </div>
 
   <div class="mb-4 w-100">
@@ -56,11 +57,12 @@
       <div class="input-group-prepend">
         <span class="input-group-text"><i class="fas fa-lock"></i></span>
       </div>
-      <input type="text" class="form-control" formControlName="passwordConfirmInput" required
+      <input type="password" class="form-control" formControlName="passwordConfirmInput" required
         placeholder="Confirm Password" [ngClass]="{ 'invalid-input': passwordConfirmCtrl.errors && submitted }">
     </div>
     <span *ngIf="submitted && passwordConfirmCtrl.errors && passwordConfirmCtrl.errors.required"
       class="invalid-text">Password is Required</span>
+      <span *ngIf="submitted && passwordsMatch === false && !passwordConfirmCtrl.errors" class="invalid-text">Passwords Must Match</span>
   </div>
 
   <button type="submit" class="btn btn-outline-primary w-100">Create Account</button>
