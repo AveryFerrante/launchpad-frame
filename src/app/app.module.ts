@@ -16,6 +16,7 @@ import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { HomeComponent } from './home/home.component';
+import { NavbarComponent } from './home/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { HomeComponent } from './home/home.component';
     AuthenticationComponent,
     LoginPanelComponent,
     CreateAccountPanelComponent,
-    HomeComponent
+    HomeComponent,
+    NavbarComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
