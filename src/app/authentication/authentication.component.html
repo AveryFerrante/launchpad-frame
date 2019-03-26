@@ -1,0 +1,19 @@
+<div class="container-fluid h-100 bg-img">
+  <div class="d-flex flex-column h-100">
+    <div class="align-items-center d-flex flex-column" style="margin-top: 10rem;">
+      <div class="card" style="width: 25rem;">
+        <h4 class="card-header text-center">
+          {{ panelTitle }}
+        </h4>
+        <div class="card-body d-flex flex-column">
+            <!-- Form Content -->
+            <app-login-panel *ngIf="showLoginForm" class="d-flex flex-column"></app-login-panel>
+            <app-create-account-panel *ngIf="showCreateAccountForm" class="d-flex flex-column"></app-create-account-panel>
+          <div *ngIf="errorMessage != null" class="invalid-text text-center mt-2">
+            {{ errorMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
