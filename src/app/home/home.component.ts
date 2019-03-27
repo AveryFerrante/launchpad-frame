@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   constructor(private authService: AuthenticationService, private router: Router, public userInfoStore: UserinfoStoreService) { }
 
   ngOnInit() {
-    this.userInfoStore.initializeUserInfo();
+    // this.userInfoStore.initializeUserInfo();
   }
 
   onLogout() {

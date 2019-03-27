@@ -1,0 +1,15 @@
+.background-color {
+    background-color: rgba(68, 45, 63, .82);
+}
+
+.font-color {
+    color: white;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    background-color: rgba(68, 45, 63, 1);
+}
