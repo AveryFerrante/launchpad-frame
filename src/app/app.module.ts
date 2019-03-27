@@ -21,6 +21,8 @@ import { UserinfoStoreService } from './services/stores/userinfostore.service';
 
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
+import { FramesComponent } from './home/frames/frames.component';
+import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { NavbarComponent } from './home/navbar/navbar.component';
     LoginPanelComponent,
     CreateAccountPanelComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    FramesComponent,
+    SidenavComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),

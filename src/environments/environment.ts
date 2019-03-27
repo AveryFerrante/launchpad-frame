@@ -7,7 +7,8 @@ import { FirebaseConfig } from './firebaseConfig';
 export const environment = {
   production: false,
   firebaseConfig: FirebaseConfig,
-  userDatabase: 'users'
+  userDatabase: 'users',
+  frameDatabase: 'frames'
 };
 
 /*

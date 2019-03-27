@@ -4,25 +4,6 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.opaque-gray-panel-bg {
-    background-color: rgba(189, 197, 191, .5); /* need to set opacity through this function so that text inside won't be effected by it */
-}
-
-.login-panel-sizing {
-    width: 50vw;
-    height: 60vh;
-}
-
-.login-panel-label {
-    color: black;
-    font-size: 2vw;
-}
-
-.login-panel-button {
-    background-color: #dd2828;
-    color: black;
-}
-
 .create-account-link {
     color: black;
     text-decoration: underline;
@@ -54,4 +35,8 @@ body {
 
 .invalid-text {
     color: #ff0033e0;
+}
+
+.clickable {
+    cursor: pointer;
 }
