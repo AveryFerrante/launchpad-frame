@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { UserInfo } from 'src/app/models/UserInfo';
+import { CreateAccount } from 'src/app/models/client-side/CreateAccount';
+import { UserCredentials } from 'src/app/models/client-side/UserCredentials';
 
 @Component({
   selector: 'app-create-account-panel',
@@ -23,24 +22,21 @@ export class CreateAccountPanelComponent implements OnInit {
   get passwordCtrl() { return this.signUpForm.controls.passwordInput; }
   get passwordConfirmCtrl() { return this.signUpForm.controls.passwordConfirmInput; }
   submitted = false;
-  constructor(private fireAuth: AngularFireAuth, private db: AngularFirestore) { }
+  passwordsMatch = false;
+  @Output() create = new EventEmitter();
+  constructor() { }
 
   ngOnInit() {
   }
 
   onSubmit() {
     this.submitted = true;
-    if (this.signUpForm.valid) {
-      this.fireAuth.auth.createUserWithEmailAndPassword(this.emailCtrl.value, this.passwordCtrl.value).then(
-        resp => {
-          this.db.collection('users').add(new UserInfo(this.firstNameCtrl.value, this.lastNameCtrl.value, resp.user.uid).getData()).then(
-            a => console.log(a),
-            e => console.log(e));
-        },
-        error => {
-          console.log(error);
-        }
-      );
+    if (this.passwordCtrl.value !== this.passwordConfirmCtrl.value) {
+      this.passwordsMatch = false;
+    } else if (this.signUpForm.valid) {
+      this.passwordsMatch = true;
+      const credentials = new UserCredentials(this.emailCtrl.value, this.passwordCtrl.value);
+      this.create.emit(new CreateAccount(this.firstNameCtrl.value, this.lastNameCtrl.value, credentials));
     }
   }
 

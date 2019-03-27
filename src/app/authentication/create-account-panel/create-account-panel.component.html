@@ -1,0 +1,70 @@
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()"
+  class="d-flex flex-column w-100 justify-content-center align-items-center mb-2">
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+      </div>
+      <input type="text" class="form-control" formControlName="emailInput" required placeholder="Email Address"
+        [ngClass]="{ 'invalid-input': emailCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.required" class="invalid-text">Email is
+      Required</span>
+    <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.email" class="invalid-text">Invalid Email
+      Format</span>
+  </div>
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+      </div>
+      <input type="text" class="form-control" formControlName="firstNameInput" required placeholder="First Name"
+        [ngClass]="{ 'invalid-input': firstNameCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && firstNameCtrl.errors && firstNameCtrl.errors.required" class="invalid-text">First Name is
+      Required</span>
+  </div>
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+      </div>
+      <input type="text" class="form-control" formControlName="lastNameInput" required placeholder="Last Name"
+        [ngClass]="{ 'invalid-input': lastNameCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && lastNameCtrl.errors && lastNameCtrl.errors.required" class="invalid-text">Last Name is
+      Required</span>
+  </div>
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+      </div>
+      <input type="password" class="form-control" formControlName="passwordInput" required placeholder="Password"
+        [ngClass]="{ 'invalid-input': passwordCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && passwordCtrl.errors && passwordCtrl.errors.required" class="invalid-text">Password is
+      Required</span>
+      <span *ngIf="submitted && passwordsMatch === false && !passwordCtrl.errors" class="invalid-text">Passwords Must Match</span>
+  </div>
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+      </div>
+      <input type="password" class="form-control" formControlName="passwordConfirmInput" required
+        placeholder="Confirm Password" [ngClass]="{ 'invalid-input': passwordConfirmCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && passwordConfirmCtrl.errors && passwordConfirmCtrl.errors.required"
+      class="invalid-text">Password is Required</span>
+      <span *ngIf="submitted && passwordsMatch === false && !passwordConfirmCtrl.errors" class="invalid-text">Passwords Must Match</span>
+  </div>
+
+  <button type="submit" class="btn btn-outline-primary w-100">Create Account</button>
+</form>
+<a [routerLink]="['/login']" class="create-account-link align-self-center mb-1">Log in with existing account</a>

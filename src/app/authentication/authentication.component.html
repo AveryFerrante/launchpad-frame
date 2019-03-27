@@ -1,0 +1,21 @@
+<div class="container-fluid h-100 bg-img">
+  <div class="d-flex flex-column h-100">
+    <h1 class="align-self-center mb-3 triadic-font-color" style="margin-top: 3%;"><em>Launchpad Frame</em></h1>
+    <span class="align-self-center mb-3 triadic-font-color" style="font-size: 4rem;"> <i class="fas fa-space-shuttle"></i></span>
+    <div class="align-items-center d-flex flex-column">
+      <div class="card" style="width: 25rem;">
+        <h4 class="card-header text-center">
+          {{ panelTitle }}
+        </h4>
+        <div class="card-body d-flex flex-column">
+            <!-- Form Content -->
+            <app-login-panel *ngIf="showLoginForm" class="d-flex flex-column" (login)="onLogin($event)"></app-login-panel>
+            <app-create-account-panel *ngIf="showCreateAccountForm" class="d-flex flex-column" (create)="onCreate($event)"></app-create-account-panel>
+          <div *ngIf="errorMessage != null" class="invalid-text text-center mt-2">
+            {{ errorMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

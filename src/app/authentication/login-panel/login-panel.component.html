@@ -1,0 +1,32 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
+  class="d-flex flex-column w-100 justify-content-center align-items-center mb-2">
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+      </div>
+      <input type="text" class="form-control" formControlName="emailInput" required placeholder="Email Address"
+        [ngClass]="{ 'invalid-input': emailCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.required" class="invalid-text">Email is
+      Required</span>
+    <span *ngIf="submitted && emailCtrl.errors && emailCtrl.errors.email" class="invalid-text">Invalid Email
+      Format</span>
+  </div>
+
+  <div class="mb-4 w-100">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+      </div>
+      <input type="password" class="form-control" formControlName="passwordInput" placeholder="Password"
+        [ngClass]="{ 'invalid-input': passwordCtrl.errors && submitted }">
+    </div>
+    <span *ngIf="submitted && passwordCtrl.errors && passwordCtrl.errors.required" class="invalid-text">Password is
+      Required</span>
+  </div>
+
+  <button type="submit" class="btn btn-outline-primary w-100">Log In</button>
+</form>
+<a [routerLink]="['/create-account']" class="create-account-link align-self-center mb-1">Create Account</a>

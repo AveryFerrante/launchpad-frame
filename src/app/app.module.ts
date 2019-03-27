@@ -1,39 +1,51 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainComponent } from './main/main.component';
-import { LoginComponent } from './login/login.component';
-import { LoginPanelComponent } from './login/login-panel/login-panel.component';
-import { CreateAccountPanelComponent } from './login/create-account-panel/create-account-panel.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { LoginPanelComponent } from './authentication/login-panel/login-panel.component';
+import { CreateAccountPanelComponent } from './authentication/create-account-panel/create-account-panel.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 
+import { AuthenticationService } from './services/authentication/authentication.service';
+import { UserInfoService } from './services/userinfo/user-info.service';
+import { UserinfoStoreService } from './services/stores/userinfostore.service';
+
+
+import { HomeComponent } from './home/home.component';
+import { NavbarComponent } from './home/navbar/navbar.component';
+
 @NgModule({
   declarations: [
     MainComponent,
-    LoginComponent,
+    AuthenticationComponent,
     LoginPanelComponent,
-    CreateAccountPanelComponent
+    CreateAccountPanelComponent,
+    HomeComponent,
+    NavbarComponent
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     BrowserModule,
     BrowserAnimationsModule,
-    NgbModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
-  providers: [],
+  providers: [
+    AuthenticationService,
+    UserInfoService,
+    UserinfoStoreService
+  ],
   bootstrap: [MainComponent]
 })
 export class AppModule { }

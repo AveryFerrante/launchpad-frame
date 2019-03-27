@@ -1,12 +1,10 @@
 export class UserInfo {
-    FirstName: string;
-    LastName: string;
-    UserId: string;
+    firstName: string;
+    lastName: string;
 
-    constructor(fname: string, lname: string, uid: string) {
-        this.FirstName = fname;
-        this.LastName = lname;
-        this.UserId = uid;
+    constructor(fname: string, lname: string) {
+        this.firstName = fname;
+        this.lastName = lname;
     }
 
     public getData(): object {
