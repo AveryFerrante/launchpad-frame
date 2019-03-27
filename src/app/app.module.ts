@@ -15,6 +15,10 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
+import { UserInfoService } from './services/userinfo/user-info.service';
+import { UserinfoStoreService } from './services/stores/userinfostore.service';
+
+
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
 
@@ -37,7 +41,11 @@ import { NavbarComponent } from './home/navbar/navbar.component';
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
-  providers: [AuthenticationService],
+  providers: [
+    AuthenticationService,
+    UserInfoService,
+    UserinfoStoreService
+  ],
   bootstrap: [MainComponent]
 })
 export class AppModule { }

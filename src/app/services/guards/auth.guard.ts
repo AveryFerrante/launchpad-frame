@@ -13,8 +13,9 @@ export class AuthGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     // CurrentUser can take a bit to initialize for firebase, must use observable to wait for emmitted value
-    return this.authService.currentUserObservable.pipe(map((auth) => {
-        if (auth == null) {
+    return this.authService.currentUser$.pipe(
+      map(user => {
+        if (user == null) {
           return true;
         } else {
           this.router.navigate(['/home']);

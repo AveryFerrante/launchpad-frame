@@ -4,6 +4,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 import { CreateAccount } from '../models/client-side/CreateAccount';
 import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfoService } from '../services/userinfo/user-info.service';
+import { UserinfoStoreService } from '../services/stores/userinfostore.service';
 import { UserInfo } from '../models/UserInfo';
 
 @Component({
@@ -18,7 +19,7 @@ export class AuthenticationComponent implements OnInit {
   panelTitle: string;
   errorMessage: string;
   constructor(private activatedRoute: ActivatedRoute, private authService: AuthenticationService,
-    private userInfoService: UserInfoService, private router: Router) { }
+    private userInfoService: UserInfoService, private router: Router, private userInfoStore: UserinfoStoreService) { }
 
   ngOnInit() {
     this.activatedRoute.url.subscribe((u) => {
@@ -35,10 +36,9 @@ export class AuthenticationComponent implements OnInit {
   }
 
   onLogin(login: UserCredentials) {
-    console.log('login triggered');
       this.authService.signInWithEmail(login).then(
         resp => {
-          // REDIRECT
+          this.router.navigate(['/home']);
         },
         error => {
           const errorCode = error.code;
@@ -61,9 +61,8 @@ export class AuthenticationComponent implements OnInit {
       this.authService.createNewEmailAccount(account.userCredentials).then(
         user => {
           const userInfo = new UserInfo(account.firstName, account.lastName);
-          this.userInfoService.addNewUserInfo(user.user.uid, userInfo).then(
+          this.userInfoService.addNewUserInfo(userInfo).then(
             success => {
-              // ADD TO STATE MANAGEMENT
               this.router.navigate(['/home']);
             },
             error => {
