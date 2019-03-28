@@ -1,11 +1,15 @@
-<div style="height: 4rem;">
-  <app-navbar></app-navbar>
-</div>
+<div class="h-100 d-flex flex-column">
+  <div style="height: 4rem;">
+    <app-navbar></app-navbar>
+  </div>
 
-<!-- <p>
+  <!-- <p>
   home works!
   <button type="button" class="btn btn-primary" (click)="onLogout()">Log Out</button>
   {{ (userInfoStore.userInfo$ | async) == null ? 'LOADING' :  (userInfoStore.userInfo$ | async | json) }}
 </p> -->
 
-<app-frames></app-frames>
+  <div class="flex-grow-1">
+    <app-frames></app-frames>
+  </div>
+</div>

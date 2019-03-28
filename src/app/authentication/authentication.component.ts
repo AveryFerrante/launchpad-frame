@@ -4,7 +4,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 import { CreateAccount } from '../models/client-side/CreateAccount';
 import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfoService } from '../services/userinfo/user-info.service';
-import { UserinfoStoreService } from '../services/stores/userinfostore.service';
+import { UserInfoStore } from '../services/stores/userinfostore.service';
 import { UserInfo } from '../models/UserInfo';
 
 @Component({
@@ -19,7 +19,7 @@ export class AuthenticationComponent implements OnInit {
   panelTitle: string;
   errorMessage: string;
   constructor(private activatedRoute: ActivatedRoute, private authService: AuthenticationService,
-    private userInfoService: UserInfoService, private router: Router, private userInfoStore: UserinfoStoreService) { }
+    private userInfoService: UserInfoService, private router: Router, private userInfoStore: UserInfoStore) { }
 
   ngOnInit() {
     this.activatedRoute.url.subscribe((u) => {

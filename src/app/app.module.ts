@@ -16,7 +16,7 @@ import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { UserInfoService } from './services/userinfo/user-info.service';
-import { UserinfoStoreService } from './services/stores/userinfostore.service';
+import { UserInfoStore } from './services/stores/userinfostore.service';
 
 
 import { HomeComponent } from './home/home.component';
@@ -48,7 +48,7 @@ import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
   providers: [
     AuthenticationService,
     UserInfoService,
-    UserinfoStoreService
+    UserInfoStore
   ],
   bootstrap: [MainComponent]
 })

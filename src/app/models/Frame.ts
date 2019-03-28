@@ -13,8 +13,8 @@ export class Frame extends DataTranslator {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.endDate = endDate;
+        this.createdBy = createdBy;
     }
 }

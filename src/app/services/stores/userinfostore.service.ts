@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UserInfo } from 'src/app/models/UserInfo';
 import { UserInfoService } from '../userinfo/user-info.service';
-import { stringify } from '@angular/core/src/render3/util';
+import { Frame } from 'src/app/models/Frame';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserinfoStoreService {
+export class UserInfoStore {
   // keep this immutable
   private readonly _userInfo = new BehaviorSubject<UserInfo>(null);
   readonly userInfo$ = this._userInfo.asObservable();
@@ -30,7 +30,12 @@ export class UserinfoStoreService {
     this.userInfoService.getUserInfo().subscribe(response => {
       this.userInfo = response;
     }, error => {
-      throw new Error('Error initializing userinfo');
+      throw new Error('Error initializing userInfo');
     });
+  }
+
+  addFrame(val: string) {
+    const userInfo = new UserInfo(this.userInfo.firstName, this.userInfo.lastName, [...this.userInfo.ownedFrames, val]);
+    this.userInfo = userInfo;
   }
 }

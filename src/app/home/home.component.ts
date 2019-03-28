@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { Router } from '@angular/router';
-import { UserinfoStoreService } from '../services/stores/userinfostore.service';
+import { UserInfoStore } from '../services/stores/userinfostore.service';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +10,10 @@ import { UserinfoStoreService } from '../services/stores/userinfostore.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private authService: AuthenticationService, private router: Router, public userInfoStore: UserinfoStoreService) { }
+  constructor(private authService: AuthenticationService, private router: Router, public userInfoStore: UserInfoStore) { }
 
   ngOnInit() {
-    // this.userInfoStore.initializeUserInfo();
+    this.userInfoStore.initializeUserInfo();
   }
 
   onLogout() {
