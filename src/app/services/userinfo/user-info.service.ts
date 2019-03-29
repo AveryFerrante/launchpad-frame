@@ -16,10 +16,13 @@ export class UserInfoService {
     this.dbName = environment.userDatabase;
   }
 
+  // Inject UserInfo store here and add .pipe(tap(() => store = info));
+  // also return an observable here using of();
   addNewUserInfo(info: UserInfo): Promise<void> {
     return this.db.collection(this.dbName).doc(this.authService.currentUser.uid).set(info.getData());
   }
 
+  // Also manage the state here (use tap to push to the UserInfo store)
   getUserInfo(): Observable<UserInfo> {
     // concatMap has a second parameter that can be a projection function. Look into removing the second pipe
     return this.authService.currentUser$.pipe(
