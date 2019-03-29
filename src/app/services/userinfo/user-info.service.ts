@@ -21,6 +21,7 @@ export class UserInfoService {
   }
 
   getUserInfo(): Observable<UserInfo> {
+    // concatMap has a second parameter that can be a projection function. Look into removing the second pipe
     return this.authService.currentUser$.pipe(
       concatMap(user => {
         return this.db.collection(this.dbName).doc(user.uid).get().pipe(
