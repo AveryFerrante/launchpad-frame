@@ -23,6 +23,7 @@ export class UserInfoService {
   }
 
   // Also manage the state here (use tap to push to the UserInfo store)
+  // Don't think this should return the value...thinking the component should rely on the store...
   getUserInfo(): Observable<UserInfo> {
     // concatMap has a second parameter that can be a projection function. Look into removing the second pipe
     return this.authService.currentUser$.pipe(
@@ -42,6 +43,7 @@ export class UserInfoService {
   }
 
   // Assume uid has already been loaded in (can't call this on a refresh, etc.)
+  // Update the UserInfo store
   addOwnedFrames(frameId: string): Observable<void> {
     return from(this.db.collection(this.dbName).doc(this.authService.currentUser.uid).set({
       // ownedFrames: firebase.firestore.FieldValue.arrayUnion(frameId)
