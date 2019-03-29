@@ -9,6 +9,8 @@ import { map } from 'rxjs/operators';
 })
 export class AuthenticationService {
 
+  // Look into making this just return a firebase.User: what happens if you do
+  // return this.fireAuth.authState.subscribe(user => return user); 
   get currentUser$(): Observable<firebase.User> { return this.fireAuth.authState; }
   get currentUser(): firebase.User { return this.fireAuth.auth.currentUser; }
   constructor(private fireAuth: AngularFireAuth) { }
