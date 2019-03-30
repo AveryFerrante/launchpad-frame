@@ -4,7 +4,9 @@ import { UserInfo } from 'src/app/models/UserInfo';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { Observable, from } from 'rxjs';
-import { map, concatMap } from 'rxjs/operators';
+import { map, mapTo, concatMap, tap } from 'rxjs/operators';
+import { UserInfoStore } from '../stores/userinfostore.service';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -12,41 +14,43 @@ import { map, concatMap } from 'rxjs/operators';
 export class UserInfoService {
 
   private dbName: string;
-  constructor(private db: AngularFirestore, private authService: AuthenticationService) {
+  constructor(private db: AngularFirestore, private authService: AuthenticationService, private store: UserInfoStore) {
     this.dbName = environment.userDatabase;
   }
 
-  // Inject UserInfo store here and add .pipe(tap(() => store = info));
-  // also return an observable here using of();
-  addNewUserInfo(info: UserInfo): Promise<void> {
-    return this.db.collection(this.dbName).doc(this.authService.currentUser.uid).set(info.getData());
-  }
+  get currentState(): Observable<UserInfo> { return this.store.userInfo$; }
 
-  // Also manage the state here (use tap to push to the UserInfo store)
-  // Don't think this should return the value...thinking the component should rely on the store...
-  getUserInfo(): Observable<UserInfo> {
-    // concatMap has a second parameter that can be a projection function. Look into removing the second pipe
-    return this.authService.currentUser$.pipe(
-      concatMap(user => {
-        return this.db.collection(this.dbName).doc(user.uid).get().pipe(
-          map((response) => {
-            if (response.exists) {
-              const data = response.data();
-              return new UserInfo(data.firstName, data.lastName);
-            } else {
-              throw new Error('Userinfo does not exist for signed in user');
-            }
-          })
-        );
-      })
+  addNewUserInfo(info: UserInfo): Observable<void> {
+    return from(this.db.collection(this.dbName).doc(this.authService.currentUser.uid).set(info.getData())).pipe(
+      tap(() => this.store.set(info))
     );
   }
 
-  // Assume uid has already been loaded in (can't call this on a refresh, etc.)
-  // Update the UserInfo store
+  getUserInfo(): Observable<void> {
+    return this.authService.currentUser$.pipe(
+      concatMap((user: firebase.User) => this.db.collection(this.dbName).doc(user.uid).get()),
+      map((response: firebase.firestore.DocumentSnapshot) => {
+        if (response.exists) {
+          const data = response.data();
+          console.log('Recieved userinfo from DB: ', response.data());
+          return new UserInfo(data.firstName, data.lastName, data.ownedFrames);
+        } else {
+          throw new Error('Userinfo does not exist for signed in user');
+        }
+      }),
+      tap((user: UserInfo) => this.store.set(user)),
+      mapTo(null)
+    );
+  }
+
+  clearUserInfo(): void {
+    this.store.clear();
+  }
+
+  // Doesn't update the user frame store right now, don't really need that front end since frame store is kept live
   addOwnedFrames(frameId: string): Observable<void> {
-    return from(this.db.collection(this.dbName).doc(this.authService.currentUser.uid).set({
-      // ownedFrames: firebase.firestore.FieldValue.arrayUnion(frameId)
+    return from(this.db.collection(this.dbName).doc(this.authService.currentUser.uid).update({
+      ownedFrames: firebase.firestore.FieldValue.arrayUnion(frameId)
     }));
   }
 }

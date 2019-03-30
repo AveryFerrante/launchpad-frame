@@ -11,19 +11,23 @@ export class FramesStore {
   readonly frames$ = this._frames.asObservable();
   constructor() { }
 
-  get frames(): Frame[] {
+  private get frames(): Frame[] {
     return this._frames.getValue();
   }
 
-  set frames(val: Frame[]) {
+  private set frames(val: Frame[]) {
     this._frames.next(val);
   }
 
-  addFrame(val: Frame) {
+  add(val: Frame) {
     if (this.frames == null) {
       this.frames = [val];
     } else {
       this.frames = [...this.frames, val];
     }
+  }
+
+  clear(): void {
+    this.frames = null;
   }
 }

@@ -3,11 +3,11 @@
     <app-navbar></app-navbar>
   </div>
 
-  <!-- <p>
+  <p>
   home works!
   <button type="button" class="btn btn-primary" (click)="onLogout()">Log Out</button>
-  {{ (userInfoStore.userInfo$ | async) == null ? 'LOADING' :  (userInfoStore.userInfo$ | async | json) }}
-</p> -->
+  {{ (userInfo$ | async) == null ? 'LOADING' :  (userInfo$ | async | json) }}
+</p>
 
   <div class="flex-grow-1">
     <app-frames></app-frames>

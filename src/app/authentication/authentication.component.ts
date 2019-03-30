@@ -6,6 +6,7 @@ import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfoService } from '../services/userinfo/user-info.service';
 import { UserInfoStore } from '../services/stores/userinfostore.service';
 import { UserInfo } from '../models/UserInfo';
+import { map, concatMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authentication',
@@ -36,10 +37,8 @@ export class AuthenticationComponent implements OnInit {
   }
 
   onLogin(login: UserCredentials) {
-      this.authService.signInWithEmail(login).then(
-        resp => {
-          this.router.navigate(['/home']);
-        },
+      this.authService.signInWithEmail(login).subscribe(
+        () => this.router.navigate(['/home']),
         error => {
           const errorCode = error.code;
           if (errorCode === 'auth/wrong-password') {
@@ -58,24 +57,16 @@ export class AuthenticationComponent implements OnInit {
     }
 
     onCreate(account: CreateAccount) {
-      this.authService.createNewEmailAccount(account.userCredentials).then(
-        user => {
-          const userInfo = new UserInfo(account.firstName, account.lastName);
-          this.userInfoService.addNewUserInfo(userInfo).then(
-            success => {
-              this.router.navigate(['/home']);
-            },
-            error => {
-              console.log(error);
+      this.authService.createNewEmailAccount(account.userCredentials).pipe(
+        map(() => new UserInfo(account.firstName, account.lastName, [])),
+        concatMap((userInfo: UserInfo) => this.userInfoService.addNewUserInfo(userInfo)))
+        .subscribe(
+          () => this.router.navigate(['/home']),
+          (error) => {
+            if (error.code === 'auth/weak-password') {
+              this.errorMessage = 'Password is not strong enough';
             }
-          );
-        },
-        error => {
-          const errorCode = error.Code;
-          if (errorCode === 'auth/weak-password') {
-            this.errorMessage = 'Password is not strong enough';
           }
-        }
-      );
+        );
     }
 }
