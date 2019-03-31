@@ -23,7 +23,8 @@ export class FramesComponent implements OnInit, OnDestroy {
         }
       }),
       take(1)
-    ).subscribe();
+    )
+    .subscribe({error: (error) => console.log('Error onInit frames component:', error)});
   }
 
   ngOnDestroy() {

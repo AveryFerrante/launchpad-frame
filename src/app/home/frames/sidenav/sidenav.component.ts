@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FramesService } from 'src/app/services/frames/frames.service';
-import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
 import { Frame } from 'src/app/models/Frame';
-import { concatMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,16 +12,14 @@ import { Observable, of } from 'rxjs';
 export class SidenavComponent implements OnInit {
 
   public frames$: Observable<Frame[]> = null;
-  constructor(private frameService: FramesService, private userInfoService: UserInfoService) { }
+  constructor(private frameService: FramesService, private router: Router) { }
 
   ngOnInit() {
     this.frames$ = this.frameService.currentState;
   }
 
   onCreateNew() {
-    this.frameService.add('Test Frame!', 'This is the first frame I have created').pipe(
-      concatMap((frameId: string) => this.userInfoService.addOwnedFrames(frameId))
-    ).subscribe();
+    this.router.navigate(['home', 'frames', 'create']);
   }
 
 }

@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthenticationService, private router: Router, private userInfo: UserInfoService) { }
 
   ngOnInit() {
-    // Doesn't ini right if coming from brand new user creation....
+    this.userInfo$ = this.userInfo.currentState;
     this.userInfo.currentState.pipe(
       concatMap((state: UserInfo) => {
         if (state == null) {
@@ -28,7 +28,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       }),
       take(1)
-    ).subscribe(() => this.userInfo$ = this.userInfo.currentState);
+    )
+    .subscribe({error: (error) => console.log('Error onInit home component:', error), complete: () => console.log('completed home init')});
   }
 
   onLogout() {

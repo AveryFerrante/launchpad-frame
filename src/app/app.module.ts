@@ -23,6 +23,7 @@ import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
 import { FramesComponent } from './home/frames/frames.component';
 import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
+import { CreateFrameComponent } from './home/frames/create-frame/create-frame.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
     HomeComponent,
     NavbarComponent,
     FramesComponent,
-    SidenavComponent
+    SidenavComponent,
+    CreateFrameComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
