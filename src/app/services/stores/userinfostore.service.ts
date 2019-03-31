@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserInfo } from 'src/app/models/UserInfo';
-import { UserInfoService } from '../userinfo/user-info.service';
-import { stringify } from '@angular/core/src/render3/util';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserinfoStoreService {
+export class UserInfoStore {
   // keep this immutable
   private readonly _userInfo = new BehaviorSubject<UserInfo>(null);
-  readonly userInfo$ = this._userInfo.asObservable();
-  constructor(private userInfoService: UserInfoService) { }
+  readonly userInfo$ = this._userInfo.asObservable(); // CAN I MAKE THIS RETURN THEN COMPLETE TO AVOID TAKE() IN COMPONENT INI FUNCTIONS?
+  constructor() { }
 
   // get last value emitted in _userinfo subject
-  get userInfo(): UserInfo {
+  private get userInfo(): UserInfo {
     return this._userInfo.getValue();
   }
 
-  set userInfo(val: UserInfo) {
+  private set userInfo(val: UserInfo) {
     this._userInfo.next(val);
   }
 
-  removeUserInfo() {
+  set(info: UserInfo) {
+    console.log('Store setting UserInfo value: ', info);
+    this.userInfo = info;
+  }
+
+  clear() {
     this.userInfo = null;
   }
 
-  initializeUserInfo() {
-    this.userInfoService.getUserInfo().subscribe(response => {
-      this.userInfo = response;
-    }, error => {
-      throw new Error('Error initializing userinfo');
-    });
+  addFrame(val: string) {
+    const userInfo = new UserInfo(this.userInfo.firstName, this.userInfo.lastName, [...this.userInfo.ownedFrames, val]);
+    this.userInfo = userInfo;
   }
 }

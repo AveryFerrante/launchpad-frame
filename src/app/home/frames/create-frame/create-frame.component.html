@@ -1,0 +1,54 @@
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+  <div class="card w-50 mt-5">
+    <h2 class="card-header text-center">
+      Create a Frame
+    </h2>
+    <div class="card-body d-flex flex-column">
+      <form [formGroup]="newFrameForm" (ngSubmit)="onSubmit()"
+        class="d-flex flex-column w-100 justify-content-center align-items-center">
+
+        <div class="mb-4 w-100">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            </div>
+            <input type="text" class="form-control" formControlName="titleInput" required placeholder="Frame Title"
+              [ngClass]="{ 'invalid-input': titleCtrl.errors && submitted }">
+          </div>
+          <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.required" class="invalid-text">Title is
+            Required</span>
+          <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.minlength" class="invalid-text">Title must be
+            atleast 2 characters</span>
+            <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.maxlength" class="invalid-text">Title cannot
+                exceed 100 characters</span>
+        </div>
+
+        <div class="w-100 mb-4">
+          <textarea type="text" class="form-control" rows="5" formControlName="descriptionInput" placeholder="Frame Description"
+            [ngClass]="{ 'invalid-input': descriptionCtrl.errors && submitted }"></textarea>
+          <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.required" class="invalid-text">Description
+            is Required</span>
+          <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.minlength" class="invalid-text">Description
+              must be atleast 2 characters</span>
+          <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.maxlength" class="invalid-text">Description
+              cannot exceed 1000 characters</span>
+        </div>
+
+        <div class="w-100 row align-items-center mb-4">
+          <div class="col-md-4 col-sm-12 d-flex">
+            <span class="mr-2">Public: </span>
+            <input class="tgl tgl-flat" id="publicTgl" type="checkbox" />
+            <label class="tgl-btn" for="publicTgl"></label>
+          </div>
+        
+          <div class="col-md-4 col-sm-12 d-flex">
+            <span class="mr-2">Read Only: </span>
+            <input class="tgl tgl-flat" id="readOnlyTgl" type="checkbox" />
+            <label class="tgl-btn" for="readOnlyTgl"></label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary align-self-start">Create</button>
+      </form>
+    </div>
+  </div>
+</div>

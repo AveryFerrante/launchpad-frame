@@ -1,15 +1,14 @@
-export class UserInfo {
+import { DataTranslator } from './DataTranslator';
+
+export class UserInfo extends DataTranslator {
     firstName: string;
     lastName: string;
+    ownedFrames: string[];
 
-    constructor(fname: string, lname: string) {
+    constructor(fname: string, lname: string, ownedFrames: string[] = []) {
+        super();
         this.firstName = fname;
         this.lastName = lname;
-    }
-
-    public getData(): object {
-        const result = {};
-        Object.keys(this).map(key => result[key] = this[key]);
-        return result;
+        this.ownedFrames = ownedFrames;
     }
 }

@@ -16,11 +16,14 @@ import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { UserInfoService } from './services/userinfo/user-info.service';
-import { UserinfoStoreService } from './services/stores/userinfostore.service';
+import { UserInfoStore } from './services/stores/userinfostore.service';
 
 
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
+import { FramesComponent } from './home/frames/frames.component';
+import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
+import { CreateFrameComponent } from './home/frames/create-frame/create-frame.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { NavbarComponent } from './home/navbar/navbar.component';
     LoginPanelComponent,
     CreateAccountPanelComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    FramesComponent,
+    SidenavComponent,
+    CreateFrameComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -44,7 +50,7 @@ import { NavbarComponent } from './home/navbar/navbar.component';
   providers: [
     AuthenticationService,
     UserInfoService,
-    UserinfoStoreService
+    UserInfoStore
   ],
   bootstrap: [MainComponent]
 })
