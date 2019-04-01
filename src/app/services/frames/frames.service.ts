@@ -30,15 +30,23 @@ export class FramesService {
 
   getAll(): Observable<void> {
     return this.db.collection(this.dbName, ref => ref.where('createdBy', '==', this.authService.currentUser.uid)).get().pipe(
-      tap((docs: firebase.firestore.QuerySnapshot) => docs.forEach(doc => {
-        const data = doc.data();
-        this.store.add(new Frame(data.id, data.title, data.description, data.createdDate, data.createdBy, data.endDate));
-      })),
+      tap((docs: firebase.firestore.QuerySnapshot) => {
+        const framesList = [];
+        docs.forEach(doc => {
+          const data = doc.data();
+          framesList.push(new Frame(doc.id, data.title, data.description, data.createdDate, data.createdBy, data.endDate));
+        });
+        this.store.addMultiple(framesList);
+      }),
       mapTo(null)
     );
   }
 
   clear(): void {
     this.store.clear();
+  }
+
+  get(id: string): Observable<Frame> {
+    return this.store.get(id);
   }
 }

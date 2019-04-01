@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { Frame } from 'src/app/models/Frame';
+import { map, first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,28 @@ export class FramesStore {
     } else {
       this.frames = [...this.frames, val];
     }
+  }
+
+  addMultiple(val: Frame[]) {
+    if (this.frames == null) {
+      this.frames = val;
+    } else {
+      this.frames = [...this.frames].concat(val);
+    }
+  }
+
+  get(val: string): Observable<Frame> {
+    return this.frames$.pipe(
+      first((f: Frame[]) => f !== null),
+      map((frames: Frame[]) => {
+        const matches = frames.filter((f: Frame) => f.id === val);
+        if (matches.length > 0) {
+          return matches[0];
+        } else {
+          return null;
+        }
+      })
+    );
   }
 
   clear(): void {

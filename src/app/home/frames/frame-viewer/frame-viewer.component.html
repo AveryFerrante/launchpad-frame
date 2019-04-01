@@ -1,0 +1,6 @@
+<div *ngIf="frame" class="row justify-content-center mt-3">
+  <h1>{{ frame.title }}</h1>
+</div>
+
+<ngx-dropzone (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
+   [label]="'Drag files (or click)'"></ngx-dropzone>

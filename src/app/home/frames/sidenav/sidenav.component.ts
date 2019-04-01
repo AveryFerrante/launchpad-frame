@@ -22,4 +22,9 @@ export class SidenavComponent implements OnInit {
     this.router.navigate(['home', 'frames', 'create']);
   }
 
+  viewFrame(id: string) {
+    console.log('view frame', id);
+    this.router.navigate(['home', 'frames', id]);
+  }
+
 }

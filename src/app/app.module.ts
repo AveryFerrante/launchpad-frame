@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
@@ -24,6 +25,7 @@ import { NavbarComponent } from './home/navbar/navbar.component';
 import { FramesComponent } from './home/frames/frames.component';
 import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
 import { CreateFrameComponent } from './home/frames/create-frame/create-frame.component';
+import { FrameViewerComponent } from './home/frames/frame-viewer/frame-viewer.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { CreateFrameComponent } from './home/frames/create-frame/create-frame.co
     NavbarComponent,
     FramesComponent,
     SidenavComponent,
-    CreateFrameComponent
+    CreateFrameComponent,
+    FrameViewerComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -45,7 +48,8 @@ import { CreateFrameComponent } from './home/frames/create-frame/create-frame.co
     ReactiveFormsModule,
     HttpClientModule,
     AngularFirestoreModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    NgxDropzoneModule
   ],
   providers: [
     AuthenticationService,
