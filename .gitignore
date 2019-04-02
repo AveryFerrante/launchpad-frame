@@ -42,5 +42,8 @@ Thumbs.db
 # Configs
 /src/environments/FirebaseConfig.ts
 
+# Build Path
+/firebase/dist
+
 
 

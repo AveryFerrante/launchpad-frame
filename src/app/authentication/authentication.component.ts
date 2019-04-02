@@ -6,7 +6,7 @@ import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfoService } from '../services/userinfo/user-info.service';
 import { UserInfoStore } from '../services/stores/userinfostore.service';
 import { UserInfo } from '../models/UserInfo';
-import { map, concatMap, catchError } from 'rxjs/operators';
+import { concatMap, mapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authentication',
@@ -58,7 +58,7 @@ export class AuthenticationComponent implements OnInit {
 
     onCreate(account: CreateAccount) {
       this.authService.createNewEmailAccount(account.userCredentials).pipe(
-        map(() => new UserInfo(account.firstName, account.lastName, [])),
+        mapTo(new UserInfo(account.firstName, account.lastName, [])),
         concatMap((userInfo: UserInfo) => this.userInfoService.addNewUserInfo(userInfo)))
         .subscribe(
           () => this.router.navigate(['/home']),

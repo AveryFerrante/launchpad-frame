@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { environment } from '../environments/environment';
 
@@ -49,6 +50,7 @@ import { FrameViewerComponent } from './home/frames/frame-viewer/frame-viewer.co
     HttpClientModule,
     AngularFirestoreModule,
     AngularFireAuthModule,
+    AngularFireStorageModule,
     NgxDropzoneModule
   ],
   providers: [
