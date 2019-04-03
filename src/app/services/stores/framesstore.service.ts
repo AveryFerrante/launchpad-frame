@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Frame } from 'src/app/models/Frame';
 import { map, first } from 'rxjs/operators';
 
@@ -74,7 +74,9 @@ export class FramesStore {
 
   private replaceFrame(oldFrame: Frame, newFrame: Frame): Frame[] {
     const frameSnapshot = this.frames;
+    console.log(frameSnapshot);
     frameSnapshot.splice(this.frames.indexOf(oldFrame), 1).push(newFrame);
+    console.log(frameSnapshot);
     return frameSnapshot;
   }
 }
