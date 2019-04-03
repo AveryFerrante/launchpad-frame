@@ -8,7 +8,9 @@ export const environment = {
   production: false,
   firebaseConfig: FirebaseConfig,
   userDatabase: 'users',
-  frameDatabase: 'frames'
+  frameDatabase: 'frames',
+  imageDatabase: 'images',
+  pictureCache: '60' // In seconds
 };
 
 /*

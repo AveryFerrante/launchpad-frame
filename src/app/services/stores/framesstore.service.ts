@@ -50,7 +50,31 @@ export class FramesStore {
     );
   }
 
+  addImage(frame: Frame, imageId: string, imagePath: string) {
+    let imageIdArray = frame.imageIds;
+    let imagePathArray = frame.imagePaths;
+    if (imageIdArray === null) {
+      imageIdArray = [imageId];
+    } else {
+      imageIdArray = [...imageIdArray, imageId];
+    }
+    if (imagePathArray === null) {
+      imagePathArray = [imagePath];
+    } else {
+      imagePathArray = [...imagePathArray, imagePath];
+    }
+    const newFrame = new Frame(frame.id, frame.title, frame.description, frame.createdDate,
+      frame.createdBy, frame.endDate, imagePathArray, imageIdArray);
+    this.frames = this.replaceFrame(frame, newFrame);
+  }
+
   clear(): void {
     this.frames = null;
+  }
+
+  private replaceFrame(oldFrame: Frame, newFrame: Frame): Frame[] {
+    const frameSnapshot = this.frames;
+    frameSnapshot.splice(this.frames.indexOf(oldFrame), 1).push(newFrame);
+    return frameSnapshot;
   }
 }

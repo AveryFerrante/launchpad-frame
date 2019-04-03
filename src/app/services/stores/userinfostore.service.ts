@@ -8,7 +8,7 @@ import { UserInfo } from 'src/app/models/UserInfo';
 export class UserInfoStore {
   // keep this immutable
   private readonly _userInfo = new BehaviorSubject<UserInfo>(null);
-  readonly userInfo$ = this._userInfo.asObservable(); // CAN I MAKE THIS RETURN THEN COMPLETE TO AVOID TAKE() IN COMPONENT INI FUNCTIONS?
+  readonly userInfo$ = this._userInfo.asObservable();
   constructor() { }
 
   // get last value emitted in _userinfo subject

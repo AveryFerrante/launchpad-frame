@@ -7,8 +7,11 @@ export class Frame extends DataTranslator {
     createdDate: Date;
     createdBy: string;
     endDate: Date;
+    imagePaths: string[];
+    imageIds: string[];
 
-    constructor(id: string, title: string, description: string, createdDate: Date, createdBy: string, endDate: Date) {
+    constructor(id: string, title: string, description: string, createdDate: Date, createdBy: string, endDate: Date,
+        imagePaths: string[] = null, imageIds: string[] = null) {
         super();
         this.id = id;
         this.title = title;
@@ -16,5 +19,7 @@ export class Frame extends DataTranslator {
         this.createdDate = createdDate;
         this.endDate = endDate;
         this.createdBy = createdBy;
+        this.imagePaths = imagePaths;
+        this.imageIds = imageIds;
     }
 }

@@ -4,8 +4,9 @@ import { Frame } from 'src/app/models/Frame';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { from, Observable } from 'rxjs';
-import { tap, map, mapTo } from 'rxjs/operators';
+import { tap, map, mapTo, concatMap } from 'rxjs/operators';
 import { FramesStore } from '../stores/framesstore.service';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,8 @@ export class FramesService {
         const framesList = [];
         docs.forEach(doc => {
           const data = doc.data();
-          framesList.push(new Frame(doc.id, data.title, data.description, data.createdDate, data.createdBy, data.endDate));
+          framesList.push(new Frame(doc.id, data.title, data.description, data.createdDate, data.createdBy, data.endDate,
+            data.imagePaths, data.imageIds));
         });
         this.store.addMultiple(framesList);
       }),
@@ -48,5 +50,20 @@ export class FramesService {
 
   get(id: string): Observable<Frame> {
     return this.store.get(id);
+  }
+
+  addImage(frameId: string, imageId: string, imagePath: string): Observable<void> {
+    return this.store.get(frameId).pipe(
+      concatMap((frame: Frame) => {
+        return from(this.db.collection(this.dbName).doc(frame.id).update({
+          imageIds: firebase.firestore.FieldValue.arrayUnion(imageId),
+          imagePaths: firebase.firestore.FieldValue.arrayUnion(imagePath)
+        })).pipe(mapTo(frame));
+      }),
+      tap((frame: Frame) => {
+        this.store.addImage(frame, imageId, imagePath);
+      }),
+      mapTo(null)
+    );
   }
 }
