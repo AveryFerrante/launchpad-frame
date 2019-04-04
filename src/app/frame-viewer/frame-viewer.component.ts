@@ -23,7 +23,7 @@ export class FrameViewerComponent implements OnInit {
 
   frame$: Observable<Frame>;
   id;
-  @HostBinding('class.flex-grow-1') setTrue() { return true; }
+  @HostBinding('class') classes = 'flex-grow-1 d-flex flex-column';
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.id = params.get('id');

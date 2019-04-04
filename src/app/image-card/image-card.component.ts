@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ImageCardComponent implements OnInit {
 
-  @Input() imgSrc: string;
+  @Input() imageSources: string[];
   constructor() { }
 
   ngOnInit() {

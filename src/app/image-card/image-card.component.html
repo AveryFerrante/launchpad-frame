@@ -1,2 +1,11 @@
-<img [src]="imgSrc" alt="" class="card-img-top">
+<!-- <div class="card-columns">
+    <div class="card" *ngFor="let url of imageSources">
+        <img class="card-img" [src]="url">
+    </div>
+</div> -->
 
+<div class="d-flex flex-wrap">
+    <div style="width: 250px; height: 250px;" *ngFor="let url of imageSources">
+            <img class="card-img" [src]="url">
+    </div>
+</div>
