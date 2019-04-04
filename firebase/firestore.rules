@@ -6,7 +6,7 @@ service cloud.firestore {
     }
     match /frames/{frameId} {
     	allow create: if request.auth.uid == request.resource.data.createdBy;
-      allow read, update: if request.auth.uid == resource.data.createdBy;
+      allow read, update: if (request.auth.uid == resource.data.createdBy;
     }
     match /images/{imageId} {
     	allow create: if request.auth.uid == request.resource.data.createdBy;

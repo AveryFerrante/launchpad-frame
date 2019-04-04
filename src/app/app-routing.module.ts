@@ -5,9 +5,9 @@ import { AuthenticationComponent } from './authentication/authentication.compone
 import { AuthGuard } from './services/guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { UnauthGuardGuard } from './services/guards/unauth.guard';
-import { FramesComponent } from './home/frames/frames.component';
-import { CreateFrameComponent } from './home/frames/create-frame/create-frame.component';
-import { FrameViewerComponent } from './home/frames/frame-viewer/frame-viewer.component';
+import { FramesComponent } from './frames/frames.component';
+import { CreateFrameComponent } from './create-frame/create-frame.component';
+import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },

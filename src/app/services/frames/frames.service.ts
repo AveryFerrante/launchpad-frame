@@ -52,15 +52,12 @@ export class FramesService {
     return this.store.get(id);
   }
 
-  addImage(frameId: string, imageId: string, imagePath: string): Observable<void> {
-    return this.store.get(frameId).pipe(
-      concatMap((frame: Frame) => {
-        return from(this.db.collection(this.dbName).doc(frame.id).update({
-          imageIds: firebase.firestore.FieldValue.arrayUnion(imageId),
-          imagePaths: firebase.firestore.FieldValue.arrayUnion(imagePath)
-        })).pipe(mapTo(frame));
-      }),
-      tap((frame: Frame) => {
+  addImage(frame: Frame, imageId: string, imagePath: string): Observable<void> {
+    return from(this.db.collection(this.dbName).doc(frame.id).update({
+      imageIds: firebase.firestore.FieldValue.arrayUnion(imageId),
+      imagePaths: firebase.firestore.FieldValue.arrayUnion(imagePath)
+    })).pipe(
+      tap(() => {
         this.store.addImage(frame, imageId, imagePath);
       }),
       mapTo(null)

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Frame } from 'src/app/models/Frame';
-import { map, first } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
+import { map, first, skipWhile } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,7 @@ export class FramesStore {
 
   get(val: string): Observable<Frame> {
     return this.frames$.pipe(
-      first((f: Frame[]) => f !== null),
+      skipWhile((f: Frame[]) => f === null),
       map((frames: Frame[]) => {
         const matches = frames.filter((f: Frame) => f.id === val);
         if (matches.length > 0) {
@@ -73,10 +74,8 @@ export class FramesStore {
   }
 
   private replaceFrame(oldFrame: Frame, newFrame: Frame): Frame[] {
-    const frameSnapshot = this.frames;
-    console.log(frameSnapshot);
-    frameSnapshot.splice(this.frames.indexOf(oldFrame), 1).push(newFrame);
-    console.log(frameSnapshot);
+    const frameSnapshot = cloneDeep(this.frames);
+    frameSnapshot[this.frames.indexOf(oldFrame)] = newFrame;
     return frameSnapshot;
   }
 }

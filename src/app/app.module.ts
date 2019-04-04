@@ -22,11 +22,12 @@ import { UserInfoStore } from './services/stores/userinfostore.service';
 
 
 import { HomeComponent } from './home/home.component';
-import { NavbarComponent } from './home/navbar/navbar.component';
-import { FramesComponent } from './home/frames/frames.component';
-import { SidenavComponent } from './home/frames/sidenav/sidenav.component';
-import { CreateFrameComponent } from './home/frames/create-frame/create-frame.component';
-import { FrameViewerComponent } from './home/frames/frame-viewer/frame-viewer.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { FramesComponent } from './frames/frames.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
+import { CreateFrameComponent } from './create-frame/create-frame.component';
+import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
+import { ImageCardComponent } from './image-card/image-card.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { FrameViewerComponent } from './home/frames/frame-viewer/frame-viewer.co
     FramesComponent,
     SidenavComponent,
     CreateFrameComponent,
-    FrameViewerComponent
+    FrameViewerComponent,
+    ImageCardComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),

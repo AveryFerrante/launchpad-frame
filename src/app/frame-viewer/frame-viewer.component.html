@@ -1,0 +1,12 @@
+<div *ngIf="frame$ | async as frame;" class="row mt-3">
+  <div class="col-12 text-center">
+    <h2>{{ frame.title }}</h2>
+  </div>
+
+    <div class="col-xl-2" *ngFor="let url of frame.imagePaths">
+      <app-image-card [imgSrc]="url"></app-image-card>
+    </div>
+</div>
+
+<ngx-dropzone (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
+   [label]="'Drag files (or click)'"></ngx-dropzone>
