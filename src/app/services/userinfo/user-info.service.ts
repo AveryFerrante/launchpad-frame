@@ -3,13 +3,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { Observable, from, of } from 'rxjs';
-import { map, mapTo, concatMap, tap } from 'rxjs/operators';
+import { map, mapTo, tap } from 'rxjs/operators';
 import { UserInfoStore } from '../stores/userinfostore.service';
-import * as firebase from 'firebase';
 import { UserInfo } from 'src/app/models/UserInfo';
-import { UserFrames } from 'src/app/models/UserFrames';
-import { FrameImageMetadata } from 'src/app/models/FrameImageMetadata';
-import { UserFrameMetadata } from 'src/app/models/UserFramesMetadata';
+import { UserFrames, constructUserFrame } from 'src/app/models/UserFrames';
 
 @Injectable({
   providedIn: 'root'
@@ -48,23 +45,19 @@ export class UserInfoService {
     this.store.clear();
   }
 
-  getAddFrameTransaction(trans: firebase.firestore.Transaction, frameId: string, role: string): firebase.firestore.Transaction {
+  getAddFrameTransaction(trans: firebase.firestore.Transaction, userFrame: UserFrames): Observable<void> {
     const docRef = this.db.firestore.doc(`${this.dbName}/${this.authService.currentUser.uid}`);
-    trans.get(docRef).then((doc) => {
-      const frames = doc.get('frames') ? doc.get('frames') : {};
-      frames[frameId] = {
-        name: name,
-        role: role
-      };
+    return from(trans.get(docRef).then((doc) => {
+      let frames = doc.get('frames') ? doc.get('frames') : {};
+      frames = Object.assign(frames, userFrame);
       trans.set(docRef, { frames: frames }, { merge: true });
-    });
-    return trans;
+    }));
   }
 
-  // addFrame(frameId: string, name: string): Observable<void> {
+  // addFrame(frameId: string, name: string) {
   //   const docRef = this.db.firestore.doc(`${this.dbName}/${this.authService.currentUser.uid}`);
   //   return from(this.db.firestore.runTransaction((t) => {
-  //     t.get(docRef).then((doc) => {
+  //     return t.get(docRef).then((doc) => {
   //       const frames = doc.get('frames') ? doc.get('frames') : {};
   //       frames[frameId] = {
   //         name: name,

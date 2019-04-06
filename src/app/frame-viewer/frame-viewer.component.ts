@@ -25,32 +25,32 @@ export class FrameViewerComponent implements OnInit {
   id;
   @HostBinding('class') classes = 'flex-grow-1 d-flex flex-column';
   ngOnInit() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.id = params.get('id');
-      this.frame$ = this.framesService.get(this.id);
-    });
+    // this.route.paramMap.subscribe((params: ParamMap) => {
+    //   this.id = params.get('id');
+    //   this.frame$ = this.framesService.get(this.id);
+    // });
   }
 
   // Must hard pass currentFrameId here since a user could switch to a new frame during uploading, causing a new frame id to propagate
-  onFilesAdded(files: File[], currentFrameId = this.id) {
-    for (const file of files) {
-      const fileName = `${new Date().toJSON()}_${file.name}`;
-      const metaData = {
-        cacheControl: `public,max-age=${environment.pictureCache}`
-      };
-      const uploadTask = this.storage.storage.ref(`images/${this.authService.currentUser.uid}`).child(fileName).put(file, metaData);
-      uploadTask.on('state_changed',
-        (snapshot) => { console.log('Upload progress: ', (snapshot.bytesTransferred / snapshot.totalBytes) * 100, '%'); },
-        (error) => console.log('Upload error occur, WHAT DO?'),
-        () => {
-          const values$ = forkJoin(this.framesService.get(currentFrameId).pipe(take(1)),
-                                   from(uploadTask.snapshot.ref.getDownloadURL())).pipe(
-            switchMap((values: [Frame, string]) => forkJoin(of(values[0]), this.imagesService.add(values[1], [values[0].id]))),
-            concatMap((values: [Frame, Image]) => this.framesService.addImage(values[0], values[1].id, values[1].path))
-          ).subscribe({ complete: () => console.log('Completed image upload and added to frame') });
-        }
-      );
-    }
-  }
+  // onFilesAdded(files: File[], currentFrameId = this.id) {
+  //   for (const file of files) {
+  //     const fileName = `${new Date().toJSON()}_${file.name}`;
+  //     const metaData = {
+  //       cacheControl: `public,max-age=${environment.pictureCache}`
+  //     };
+  //     const uploadTask = this.storage.storage.ref(`images/${this.authService.currentUser.uid}`).child(fileName).put(file, metaData);
+  //     uploadTask.on('state_changed',
+  //       (snapshot) => { console.log('Upload progress: ', (snapshot.bytesTransferred / snapshot.totalBytes) * 100, '%'); },
+  //       (error) => console.log('Upload error occur, WHAT DO?'),
+  //       () => {
+  //         const values$ = forkJoin(this.framesService.get(currentFrameId).pipe(take(1)),
+  //                                  from(uploadTask.snapshot.ref.getDownloadURL())).pipe(
+  //           switchMap((values: [Frame, string]) => forkJoin(of(values[0]), this.imagesService.add(values[1], [values[0].id]))),
+  //           concatMap((values: [Frame, Image]) => this.framesService.addImage(values[0], values[1].id, values[1].path))
+  //         ).subscribe({ complete: () => console.log('Completed image upload and added to frame') });
+  //       }
+  //     );
+  //   }
+  // }
 
 }

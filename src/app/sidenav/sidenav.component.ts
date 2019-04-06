@@ -21,6 +21,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
     this.userInfo$ = this.userService.currentState.pipe(
       skipWhile((u: UserInfo) => u == null),
     ).subscribe((userInfo: UserInfo) => {
+        this.frameNames = [];
         for (const frameId in userInfo.frames) {
           const metaData: UserFrameMetadata = userInfo.frames[frameId];
           this.frameNames.push(metaData.name);

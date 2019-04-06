@@ -29,7 +29,7 @@ export class FramesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.frameService.clear();
+    // this.frameService.clear();
   }
 
 }

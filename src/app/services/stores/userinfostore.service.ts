@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserInfo } from 'src/app/models/UserInfo';
-import { UserFrameMetadata } from 'src/app/models/UserFramesMetadata';
 import { UserFrames } from 'src/app/models/UserFrames';
+import { cloneDeep } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class UserInfoStore {
   }
 
   addFrame(frame: UserFrames) {
-    const userInfo = this.userInfo;
+    const userInfo = cloneDeep(this.userInfo);
     const frames = userInfo.frames ? userInfo.frames : {};
     userInfo.frames = Object.assign(frames, frame);
     this.userInfo = userInfo;
