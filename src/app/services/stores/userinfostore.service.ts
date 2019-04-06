@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserInfo } from 'src/app/models/UserInfo';
+import { UserFrameMetadata } from 'src/app/models/UserFramesMetadata';
+import { UserFrames } from 'src/app/models/UserFrames';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +31,10 @@ export class UserInfoStore {
     this.userInfo = null;
   }
 
-  addFrame(val: string) {
-    const userInfo = new UserInfo(this.userInfo.firstName, this.userInfo.lastName, [...this.userInfo.ownedFrames, val]);
+  addFrame(frame: UserFrames) {
+    const userInfo = this.userInfo;
+    const frames = userInfo.frames ? userInfo.frames : {};
+    userInfo.frames = Object.assign(frames, frame);
     this.userInfo = userInfo;
   }
 }

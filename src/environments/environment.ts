@@ -9,6 +9,8 @@ export const environment = {
   firebaseConfig: FirebaseConfig,
   userDatabase: 'users',
   frameDatabase: 'frames',
+  frameUserSub: 'userInfo',
+  frameImageSub: 'images',
   imageDatabase: 'images',
   pictureCache: '60' // In seconds
 };

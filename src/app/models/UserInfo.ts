@@ -1,14 +1,17 @@
 import { DataTranslator } from './DataTranslator';
+import { UserFrames } from './UserFrames';
 
 export class UserInfo extends DataTranslator {
     firstName: string;
     lastName: string;
-    ownedFrames: string[];
+    email: string;
+    frames: UserFrames;
 
-    constructor(fname: string, lname: string, ownedFrames: string[] = []) {
+    constructor(fname: string, lname: string, email: string, frames: UserFrames = null) {
         super();
         this.firstName = fname;
         this.lastName = lname;
-        this.ownedFrames = ownedFrames;
+        this.email = email;
+        this.frames = frames;
     }
 }

@@ -50,7 +50,7 @@ export class AuthenticationComponent implements OnInit {
           } else if (errorCode === 'auth/user-disabled') {
             this.errorMessage = 'This account has been disabled.';
           } else { // This scenario shouldn't happen really
-
+            this.errorMessage = 'Unknown error occured. Please try again';
           }
         }
       );
@@ -58,13 +58,15 @@ export class AuthenticationComponent implements OnInit {
 
     onCreate(account: CreateAccount) {
       this.authService.createNewEmailAccount(account.userCredentials).pipe(
-        mapTo(new UserInfo(account.firstName, account.lastName, [])),
+        mapTo(new UserInfo(account.firstName, account.lastName, account.userCredentials.email)),
         concatMap((userInfo: UserInfo) => this.userInfoService.addNewUserInfo(userInfo)))
         .subscribe(
           () => this.router.navigate(['/home']),
           (error) => {
             if (error.code === 'auth/weak-password') {
               this.errorMessage = 'Password is not strong enough';
+            } else {
+              this.errorMessage = 'Email is already in use';
             }
           }
         );

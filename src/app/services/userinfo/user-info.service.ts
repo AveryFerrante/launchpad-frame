@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { UserInfo } from 'src/app/models/UserInfo';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { Observable, from } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { map, mapTo, concatMap, tap } from 'rxjs/operators';
 import { UserInfoStore } from '../stores/userinfostore.service';
 import * as firebase from 'firebase';
+import { UserInfo } from 'src/app/models/UserInfo';
+import { UserFrames } from 'src/app/models/UserFrames';
+import { FrameImageMetadata } from 'src/app/models/FrameImageMetadata';
+import { UserFrameMetadata } from 'src/app/models/UserFramesMetadata';
 
 @Injectable({
   providedIn: 'root'
@@ -26,31 +29,49 @@ export class UserInfoService {
     );
   }
 
-  getUserInfo(): Observable<void> {
-    return this.authService.currentUser$.pipe(
-      concatMap((user: firebase.User) => this.db.collection(this.dbName).doc(user.uid).get()),
+  initializeUserInfo(): Observable<void> {
+    return from(this.db.collection(this.dbName).doc(this.authService.currentUser.uid).get().pipe(
       map((response: firebase.firestore.DocumentSnapshot) => {
-        if (response.exists) {
+        try {
           const data = response.data();
-          console.log('Recieved userinfo from DB: ', response.data());
-          return new UserInfo(data.firstName, data.lastName, data.ownedFrames);
-        } else {
+          return new UserInfo(data.firstName, data.lastName, data.email, data.frames);
+        } catch {
           throw new Error('Userinfo does not exist for signed in user');
         }
       }),
       tap((user: UserInfo) => this.store.set(user)),
       mapTo(null)
-    );
+    ));
   }
 
   clearUserInfo(): void {
     this.store.clear();
   }
 
-  // Doesn't update the user frame store right now, don't really need that front end since frame store is kept live
-  addOwnedFrames(frameId: string): Observable<void> {
-    return from(this.db.collection(this.dbName).doc(this.authService.currentUser.uid).update({
-      ownedFrames: firebase.firestore.FieldValue.arrayUnion(frameId)
-    }));
+  getAddFrameTransaction(trans: firebase.firestore.Transaction, frameId: string, role: string): firebase.firestore.Transaction {
+    const docRef = this.db.firestore.doc(`${this.dbName}/${this.authService.currentUser.uid}`);
+    trans.get(docRef).then((doc) => {
+      const frames = doc.get('frames') ? doc.get('frames') : {};
+      frames[frameId] = {
+        name: name,
+        role: role
+      };
+      trans.set(docRef, { frames: frames }, { merge: true });
+    });
+    return trans;
   }
+
+  // addFrame(frameId: string, name: string): Observable<void> {
+  //   const docRef = this.db.firestore.doc(`${this.dbName}/${this.authService.currentUser.uid}`);
+  //   return from(this.db.firestore.runTransaction((t) => {
+  //     t.get(docRef).then((doc) => {
+  //       const frames = doc.get('frames') ? doc.get('frames') : {};
+  //       frames[frameId] = {
+  //         name: name,
+  //         userId: this.authService.currentUser.uid
+  //       };
+  //       t.set(docRef, { frames: frames }, { merge: true });
+  //     });
+  //   }));
+  // }
 }

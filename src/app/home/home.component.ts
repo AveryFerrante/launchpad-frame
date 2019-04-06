@@ -19,17 +19,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userInfo$ = this.userInfo.currentState;
-    this.userInfo.currentState.pipe(
-      concatMap((state: UserInfo) => {
-        if (state == null) {
-          return this.userInfo.getUserInfo();
-        } else {
-          return of();
-        }
-      }),
-      take(1)
-    )
-    .subscribe({error: (error) => console.log('Error onInit home component:', error), complete: () => console.log('completed home init')});
+    this.userInfo.initializeUserInfo().subscribe();
   }
 
   onLogout() {

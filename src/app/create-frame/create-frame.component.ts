@@ -27,9 +27,7 @@ export class CreateFrameComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     if (this.newFrameForm.valid) {
-      this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value).pipe(
-        concatMap((frameId: string) => this.userInfoService.addOwnedFrames(frameId))
-      ).subscribe();
+      this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value).subscribe({complete: () => console.log('it all updated?')});
     }
   }
 
