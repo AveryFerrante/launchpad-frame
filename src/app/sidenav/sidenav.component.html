@@ -7,8 +7,8 @@
       <div class="ml-2 mt-3 clickable mb-3" (click)="onCreateNew()">
         Create New Frame <i class="fas fa-plus ml-2"></i>
       </div>
-      <div class="ml-2 mt-3 clickable" *ngFor="let name of frameNames" (click)="viewFrame()">
-        <h4>{{ name }}</h4>
+      <div class="ml-2 mt-3 clickable" *ngFor="let frame of frames" (click)="viewFrame(frame.id)">
+        <h4>{{ frame.name }}</h4>
       </div>
     </div> 
   </div>

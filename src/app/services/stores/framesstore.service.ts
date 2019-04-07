@@ -30,6 +30,24 @@ export class FramesStore {
     }
   }
 
+  get(frameId: string): Observable<ClientFrame> {
+    return this.frames$.pipe(
+      skipWhile((f: ClientFrame[]) => f === null),
+      map((frames: ClientFrame[]) => {
+        const match = frames.filter((f: ClientFrame) => f.id === frameId);
+        return match.length > 0 ? match[0] : null;
+      })
+    );
+  }
+
+  exists(frameId: string) {
+    if (this._frames.getValue() === null) {
+      return false;
+    }
+    const match = this._frames.getValue().filter((f: ClientFrame) => f.id === frameId);
+    return match.length > 0;
+  }
+
   // addMultiple(val: ClientFrame[]) {
   //   if (this.frames == null) {
   //     this.frames = val;

@@ -1,15 +1,27 @@
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-    	allow create: if request.auth.uid != null;
+    	allow create: if isSignedIn();
       allow read, update: if request.auth.uid == userId;
     }
     match /frames/{frameId} {
-    	allow create: if request.auth.uid == request.resource.data.createdBy;
-      allow read, update: if (request.auth.uid == resource.data.createdBy;
+    	allow create: if isSignedIn();
+      allow read: if getUserFramePermissions(frameId, database) != null;
+      match /userInfo/{frameId} {
+        allow create: if isSignedIn();
+      }
     }
     match /images/{imageId} {
     	allow create: if request.auth.uid == request.resource.data.createdBy;
     }
+  }
+  function isSignedIn() {
+    return request.auth.uid != null;
+  }
+  function getUserFramePermissions(frameId, database) {
+    return get(/databases/$(database)/documents/frames/$(frameId)/userInfo/$(frameId)).data.users[request.auth.uid];
+  }
+  function checkFramePermission(permission, userPermissions) {
+    return (permission in userPermissions.permissions || userPermissions.role == 'owner');
   }
 }

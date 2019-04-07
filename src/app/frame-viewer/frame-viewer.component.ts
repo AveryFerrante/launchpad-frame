@@ -2,13 +2,12 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { switchMap, concatMap, take } from 'rxjs/operators';
-import { Frame } from 'src/app/models/Frame';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { environment } from 'src/environments/environment';
-import { from, Observable, forkJoin, of } from 'rxjs';
+import {  Observable, of } from 'rxjs';
 import { ImagesService } from 'src/app/services/images/images.service';
-import { Image } from 'src/app/models/Image';
+import { ClientFrame } from '../models/client-side/ClientFrame';
+import { map, mergeMap, tap, switchMap, catchError } from 'rxjs/operators';
+import { Errors } from '../models/Errors';
 
 @Component({
   selector: 'app-frame-viewer',
@@ -21,14 +20,23 @@ export class FrameViewerComponent implements OnInit {
     private storage: AngularFireStorage, private authService: AuthenticationService,
     private imagesService: ImagesService) { }
 
-  frame$: Observable<Frame>;
-  id;
+  frame: ClientFrame = null;
+  frameNotFound = false;
   @HostBinding('class') classes = 'flex-grow-1 d-flex flex-column';
   ngOnInit() {
-    // this.route.paramMap.subscribe((params: ParamMap) => {
-    //   this.id = params.get('id');
-    //   this.frame$ = this.framesService.get(this.id);
-    // });
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => this.framesService.getFrameData(params.get('id')).pipe(
+        catchError((error: Error) => {
+          if (error.message === Errors.InvalidFrameId) {
+            this.frameNotFound = true;
+            this.frame = null;
+          } else {
+            console.log(error.message);
+          }
+          return of();
+        })
+      )),
+    ).subscribe((frame: ClientFrame) => { this.frame = frame; this.frameNotFound = false; });
   }
 
   // Must hard pass currentFrameId here since a user could switch to a new frame during uploading, causing a new frame id to propagate

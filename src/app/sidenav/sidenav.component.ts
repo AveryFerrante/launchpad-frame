@@ -14,20 +14,22 @@ import { skipWhile } from 'rxjs/operators';
 export class SidenavComponent implements OnInit, OnDestroy {
 
   private userInfo$: Subscription = null;
-  public frameNames: string[] = [];
+  public frames = [];
   constructor(private userService: UserInfoService, private router: Router) { }
 
   ngOnInit() {
     this.userInfo$ = this.userService.currentState.pipe(
       skipWhile((u: UserInfo) => u == null),
     ).subscribe((userInfo: UserInfo) => {
-        this.frameNames = [];
+        this.frames = [];
         for (const frameId in userInfo.frames) {
           const metaData: UserFrameMetadata = userInfo.frames[frameId];
-          this.frameNames.push(metaData.name);
-        }
+          this.frames.push({
+            name: metaData.name,
+            id: frameId
+        });
       }
-    );
+    });
   }
 
   onCreateNew() {

@@ -1,14 +1,18 @@
-<div *ngIf="frame$ | async as frame;" class="d-flex flex-column flex-grow-1 align-items-center mt-3">
+<div *ngIf="frame !== null" class="d-flex flex-column flex-grow-1 align-items-center mt-3">
 
   <div>
     <h2>{{ frame.title }}</h2>
   </div>
 
   <div class="flex-grow-1">
-    <app-image-card [imageSources]="frame.imagePaths"></app-image-card>
+    <!-- <app-image-card [imageSources]="frame.imagePaths"></app-image-card> -->
   </div>
 
 
 <ngx-dropzone (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
    [label]="'Drag files (or click)'"></ngx-dropzone>
+</div>
+
+<div *ngIf="frameNotFound">
+  Couldn't find frame
 </div>
