@@ -3,11 +3,11 @@ import { FramesService } from 'src/app/services/frames/frames.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import {  Observable, of } from 'rxjs';
+import {  of } from 'rxjs';
 import { ImagesService } from 'src/app/services/images/images.service';
-import { ClientFrame } from '../models/client-side/ClientFrame';
-import { map, mergeMap, tap, switchMap, catchError } from 'rxjs/operators';
-import { Errors } from '../models/Errors';
+import { ClientFrame } from '../../models/client-side/ClientFrame';
+import { switchMap, catchError } from 'rxjs/operators';
+import { Errors } from '../../models/Errors';
 
 @Component({
   selector: 'app-frame-viewer',

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { UserInfoService } from '../services/userinfo/user-info.service';
-import { UserInfo } from '../models/UserInfo';
-import { UserFrameMetadata } from '../models/UserFramesMetadata';
+import { UserInfoService } from '../../services/userinfo/user-info.service';
+import { UserInfo } from '../../models/UserInfo';
+import { UserFrameMetadata } from '../../models/UserFramesMetadata';
 import { skipWhile } from 'rxjs/operators';
 
 @Component({

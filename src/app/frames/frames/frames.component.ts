@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { Frame } from 'src/app/models/Frame';
 import { concatMap, take } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-frames',

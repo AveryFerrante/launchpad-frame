@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainComponent } from './main/main.component';
@@ -13,20 +13,17 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-import { NgxDropzoneModule } from 'ngx-dropzone';
 import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { UserInfoService } from './services/userinfo/user-info.service';
 import { UserInfoStore } from './services/stores/userinfostore.service';
 
+import { FramesModule } from './frames/frames.module';
+
 
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { FramesComponent } from './frames/frames.component';
-import { SidenavComponent } from './sidenav/sidenav.component';
-import { CreateFrameComponent } from './create-frame/create-frame.component';
-import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
 import { ImageCardComponent } from './image-card/image-card.component';
 
 @NgModule({
@@ -37,10 +34,6 @@ import { ImageCardComponent } from './image-card/image-card.component';
     CreateAccountPanelComponent,
     HomeComponent,
     NavbarComponent,
-    FramesComponent,
-    SidenavComponent,
-    CreateFrameComponent,
-    FrameViewerComponent,
     ImageCardComponent
   ],
   imports: [
@@ -48,12 +41,12 @@ import { ImageCardComponent } from './image-card/image-card.component';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    ReactiveFormsModule,
     HttpClientModule,
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
-    NgxDropzoneModule
+    FramesModule,
+    ReactiveFormsModule
   ],
   providers: [
     AuthenticationService,

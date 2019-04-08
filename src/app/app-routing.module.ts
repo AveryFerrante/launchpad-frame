@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes, Router } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { AuthGuard } from './services/guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { UnauthGuardGuard } from './services/guards/unauth.guard';
-import { FramesComponent } from './frames/frames.component';
-import { CreateFrameComponent } from './create-frame/create-frame.component';
-import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
+import { FramesComponent } from './frames/frames/frames.component';
+import { CreateFrameComponent } from './frames/create-frame/create-frame.component';
+import { FrameViewerComponent } from './frames/frame-viewer/frame-viewer.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },
