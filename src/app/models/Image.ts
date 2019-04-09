@@ -3,16 +3,14 @@ import { DataTranslator } from './DataTranslator';
 export class Image extends DataTranslator {
     id: string;
     createdDate: Date;
-    path: string;
+    downloadPath: string;
     createdBy: string;
-    frameIds: string[];
 
-    constructor(id: string, createdDate: Date, path: string, createdBy: string, frameIds: string[] = null) {
+    constructor(id: string, createdDate: Date, downloadPath: string, createdBy: string) {
         super();
         this.id = id;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
-        this.path = path;
-        this.frameIds = frameIds;
+        this.downloadPath = downloadPath;
     }
 }

@@ -6,12 +6,15 @@ export type FrameUserInfo = {
     }
 };
 
-export function constructFrameUserInfo(userId: string, permissions: string[] = [], role: string): FrameUserInfo {
+export function constructFrameUserInfo(userId: string, permissions: string[] = [], role: string,
+    fname: string, lname: string): FrameUserInfo {
     return {
         users: {
             [userId]: {
                 permissions: permissions,
-                role: role
+                role: role,
+                firstName: fname,
+                lastName: lname
             }
         }
     };

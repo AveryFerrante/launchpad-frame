@@ -4,22 +4,29 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { Image } from '../../models/Image';
 import { environment } from 'src/environments/environment';
-import { from, Observable } from 'rxjs';
-import { mapTo, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { ImageFrame } from 'src/app/models/ImageFrame';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImagesService {
-  dbName = environment.imageDatabase;
+  private imageDb = environment.imageDatabase;
+  private imageFrameSub = environment.imageFrameSub;
   constructor(private store: ImagesStore, private authService: AuthenticationService, private db: AngularFirestore) { }
 
-  add(path: string, frameIds: string[]): Observable<Image> {
-    const imageId = this.db.createId();
-    const image = new Image(imageId, new Date(), path, this.authService.currentUser.uid, frameIds);
-    return from(this.db.collection(this.dbName).doc(imageId).set(image.getData())).pipe(
-      tap(() => this.store.add(image)),
-      mapTo(image)
-    );
+  getAddImageTransaction(t: firebase.firestore.Transaction, downloadPath: string, imageId: string = null) {
+    if (imageId === null) {
+      imageId = this.db.createId();
+    }
+    const image = new Image(imageId, new Date(), downloadPath, this.authService.currentUser.uid);
+    const docRef = this.db.firestore.collection(this.imageDb).doc(imageId);
+    return of(t.set(docRef, image.getData()));
+  }
+
+  getAddImageFrameTransaction(t: firebase.firestore.Transaction, imageId: string, frameId: string) {
+    const docRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
+    const imageFrame = new ImageFrame(new Date());
+    return of(t.set(docRef, imageFrame.getData()));
   }
 }

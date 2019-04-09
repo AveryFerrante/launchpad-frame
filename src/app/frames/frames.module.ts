@@ -7,6 +7,7 @@ import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
 import { AppRoutingModule } from '../app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { FrameImageViewerComponent } from './frame-image-viewer/frame-image-viewer.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     FramesComponent,
     SidenavComponent,
     CreateFrameComponent,
-    FrameViewerComponent
+    FrameViewerComponent,
+    FrameImageViewerComponent
   ],
   exports: [FramesComponent]
 })

@@ -5,13 +5,8 @@
   </div>
 
   <div class="flex-grow-1">
-    <!-- <app-image-card [imageSources]="frame.imagePaths"></app-image-card> -->
+    <app-frame-image-viewer [frameId]="frameId"></app-frame-image-viewer>
   </div>
-
-
-<ngx-dropzone (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
-   [label]="'Drag files (or click)'"></ngx-dropzone>
-</div>
 
 <div *ngIf="frameNotFound">
   Couldn't find frame

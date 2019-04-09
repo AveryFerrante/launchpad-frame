@@ -6,7 +6,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import {  of } from 'rxjs';
 import { ImagesService } from 'src/app/services/images/images.service';
 import { ClientFrame } from '../../models/client-side/ClientFrame';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap, catchError, tap } from 'rxjs/operators';
 import { Errors } from '../../models/Errors';
 
 @Component({
@@ -22,6 +22,7 @@ export class FrameViewerComponent implements OnInit {
 
   frame: ClientFrame = null;
   frameNotFound = false;
+  frameId: string = null;
   @HostBinding('class') classes = 'flex-grow-1 d-flex flex-column';
   ngOnInit() {
     this.route.paramMap.pipe(
@@ -34,31 +35,9 @@ export class FrameViewerComponent implements OnInit {
             console.log(error.message);
           }
           return of();
-        })
+        }),
+        tap(() => this.frameId = params.get('id'))
       )),
     ).subscribe((frame: ClientFrame) => { this.frame = frame; this.frameNotFound = false; });
   }
-
-  // Must hard pass currentFrameId here since a user could switch to a new frame during uploading, causing a new frame id to propagate
-  // onFilesAdded(files: File[], currentFrameId = this.id) {
-  //   for (const file of files) {
-  //     const fileName = `${new Date().toJSON()}_${file.name}`;
-  //     const metaData = {
-  //       cacheControl: `public,max-age=${environment.pictureCache}`
-  //     };
-  //     const uploadTask = this.storage.storage.ref(`images/${this.authService.currentUser.uid}`).child(fileName).put(file, metaData);
-  //     uploadTask.on('state_changed',
-  //       (snapshot) => { console.log('Upload progress: ', (snapshot.bytesTransferred / snapshot.totalBytes) * 100, '%'); },
-  //       (error) => console.log('Upload error occur, WHAT DO?'),
-  //       () => {
-  //         const values$ = forkJoin(this.framesService.get(currentFrameId).pipe(take(1)),
-  //                                  from(uploadTask.snapshot.ref.getDownloadURL())).pipe(
-  //           switchMap((values: [Frame, string]) => forkJoin(of(values[0]), this.imagesService.add(values[1], [values[0].id]))),
-  //           concatMap((values: [Frame, Image]) => this.framesService.addImage(values[0], values[1].id, values[1].path))
-  //         ).subscribe({ complete: () => console.log('Completed image upload and added to frame') });
-  //       }
-  //     );
-  //   }
-  // }
-
 }

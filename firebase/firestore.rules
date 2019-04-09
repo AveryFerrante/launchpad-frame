@@ -7,12 +7,21 @@ service cloud.firestore {
     match /frames/{frameId} {
     	allow create: if isSignedIn();
       allow read: if getUserFramePermissions(frameId, database) != null;
+
       match /userInfo/{frameId} {
         allow create: if isSignedIn();
+      }
+
+      match /images/{imageId} {
+        allow create: if checkFramePermission('canaddimages', getUserFramePermissions(frameId, database));
       }
     }
     match /images/{imageId} {
     	allow create: if request.auth.uid == request.resource.data.createdBy;
+
+      match /frameInfo/{frameId} {
+        allow create: if request.auth.uid == getImageCreator(imageId, database);
+      }
     }
   }
   function isSignedIn() {
@@ -23,5 +32,8 @@ service cloud.firestore {
   }
   function checkFramePermission(permission, userPermissions) {
     return (permission in userPermissions.permissions || userPermissions.role == 'owner');
+  }
+  function getImageCreator(imageId, database) {
+    return get(/databases/$(database)/documents/images/$(imageId)).data.createdBy;
   }
 }

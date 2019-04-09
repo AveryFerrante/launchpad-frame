@@ -22,6 +22,10 @@ export class UserInfoStore {
     this._userInfo.next(val);
   }
 
+  getCurrentSnapshot(): UserInfo {
+    return this._userInfo.getValue();
+  }
+
   set(info: UserInfo) {
     console.log('Store setting UserInfo value: ', info);
     this.userInfo = info;

@@ -14,18 +14,18 @@ export class FramesComponent implements OnInit, OnDestroy {
   constructor(private frameService: FramesService) { }
 
   ngOnInit() {
-    this.frameService.currentState.pipe(
-      concatMap((state: Frame[]) => {
-        if (state == null) {
-          return this.frameService.getAll();
-        } else {
-          return of();
-        }
-      }),
-      take(1)
-    )
-    .subscribe({ error: (error) => console.log('Error onInit frames component:', error),
-                 complete: () => console.log('Completed fetching frames') });
+    // this.frameService.currentState.pipe(
+    //   concatMap((state: Frame[]) => {
+    //     if (state == null) {
+    //       return this.frameService.getAll();
+    //     } else {
+    //       return of();
+    //     }
+    //   }),
+    //   take(1)
+    // )
+    // .subscribe({ error: (error) => console.log('Error onInit frames component:', error),
+    //              complete: () => console.log('Completed fetching frames') });
   }
 
   ngOnDestroy() {

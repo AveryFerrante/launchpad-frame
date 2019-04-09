@@ -30,7 +30,7 @@ export class FramesStore {
     }
   }
 
-  get(frameId: string): Observable<ClientFrame> {
+  getFrameWatcher(frameId: string): Observable<ClientFrame> {
     return this.frames$.pipe(
       skipWhile((f: ClientFrame[]) => f === null),
       map((frames: ClientFrame[]) => {
@@ -38,6 +38,11 @@ export class FramesStore {
         return match.length > 0 ? match[0] : null;
       })
     );
+  }
+
+  get(frameId: string): ClientFrame {
+    const match = this.frames.filter((f: ClientFrame) => f.id === frameId);
+    return match.length > 0 ? match[0] : null;
   }
 
   exists(frameId: string) {
