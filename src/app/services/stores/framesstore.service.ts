@@ -4,6 +4,7 @@ import { Frame } from 'src/app/models/Frame';
 import { cloneDeep } from 'lodash';
 import { map, first, skipWhile } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
+import { FrameImage } from 'src/app/models/FrameImage';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,17 @@ export class FramesStore {
     return match.length > 0;
   }
 
+  addImage(frameId: string, image: FrameImage): void {
+    const oldFrame = this.get(frameId);
+    if (oldFrame) {
+      const frame = cloneDeep(oldFrame);
+      frame.images.push(image);
+      this.frames = this.replaceFrame(oldFrame, frame);
+    } else {
+      throw new Error('Can\'t find frame to update image');
+    }
+  }
+
   // addMultiple(val: ClientFrame[]) {
   //   if (this.frames == null) {
   //     this.frames = val;
@@ -97,9 +109,9 @@ export class FramesStore {
   //   this.frames = null;
   // }
 
-  // private replaceFrame(oldFrame: Frame, newFrame: Frame): Frame[] {
-  //   const frameSnapshot = cloneDeep(this.frames);
-  //   frameSnapshot[this.frames.indexOf(oldFrame)] = newFrame;
-  //   return frameSnapshot;
-  // }
+  private replaceFrame(oldFrame: ClientFrame, newFrame: ClientFrame): ClientFrame[] {
+    const frameSnapshot = cloneDeep(this.frames);
+    frameSnapshot[this.frames.indexOf(oldFrame)] = newFrame;
+    return frameSnapshot;
+  }
 }

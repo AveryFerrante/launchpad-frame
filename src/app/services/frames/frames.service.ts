@@ -15,9 +15,9 @@ import { UserInfoService } from '../userinfo/user-info.service';
 import { Errors } from 'src/app/models/Errors';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FrameImage } from 'src/app/models/FrameImage';
-import { ImagesStore } from '../stores/imagesstore.service';
-import { markParentViewsForCheck } from '@angular/core/src/view/util';
+import { Image } from '../../models/Image';
 import { ImagesService } from '../images/images.service';
+import { ImageFrame } from 'src/app/models/ImageFrame';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +27,8 @@ export class FramesService {
   private frameDb: string;
   private frameUserSub: string;
   private frameImageSub: string;
+  private imageDb = environment.imageDatabase;
+  private imageFrameSub = environment.imageFrameSub;
   constructor(private db: AngularFirestore, private authService: AuthenticationService, private frameStore: FramesStore,
     private userInfoStore: UserInfoStore, private userInfoService: UserInfoService, private storage: AngularFireStorage,
     private imagesService: ImagesService) {
@@ -80,55 +82,51 @@ export class FramesService {
     }
   }
 
-  uploadImagesToFrame(files: File[], frameId: string) {
-    const frame = this.frameStore.get(frameId);
-    if (frame === null) {
-      throw new Error('No frame for the id, cannot add pictures');
-    }
-    for (const file of files) {
-      const fileName = `${new Date().toJSON()}_${file.name}`;
-      const metaData = {
-        cacheControl: `public,max-age=${environment.pictureCache}`
-      };
-      const uploadTask = this.storage.storage.ref(`images/${this.authService.currentUser.uid}`).child(fileName).put(file, metaData);
-      uploadTask.on('state_changed',
-        (snapshot) => { console.log('Upload progress: ', (snapshot.bytesTransferred / snapshot.totalBytes) * 100, '%'); },
-        (error) => console.log('Upload error occur, WHAT DO?'),
-        () => {
-          this.db.firestore.runTransaction(t => {
-            const imageId = this.db.createId();
-            return from(uploadTask.snapshot.ref.getDownloadURL()).pipe(
-              map((downloadPath: string) => new FrameImage(downloadPath, imageId, this.authService.currentUser.uid)),
-              map((frameImage: FrameImage) => {
-                return forkJoin(
-                  this.getAddFrameImageTransaction(t, frameId, frameImage),
-                  this.imagesService.getAddImageTransaction(t, frameImage.downloadPath, imageId),
-                  this.imagesService.getAddImageFrameTransaction(t, imageId, frameId)
-                );
-              })
-            ).toPromise();
-          });
-        });
-      }
-    }
+  uploadImageToFrame(file: File): firebase.storage.UploadTask {
+    const fileName = `${new Date().toJSON()}_${file.name}`;
+    const metaData = {
+      cacheControl: `public,max-age=${environment.pictureCache}`
+    };
+    return this.storage.storage.ref(`images/${this.authService.currentUser.uid}`).child(fileName).put(file, metaData);
+  }
 
   /*
    * Fetches frame and image data from the DB. This data
    * is then automatically inserted into the store.
    */
   private fetchFrameData(frameId: string): Observable<ClientFrame> {
-    return this.db.collection(this.frameDb).doc(frameId).get().pipe(
-      map((doc: firebase.firestore.DocumentSnapshot) => {
-        if (doc.exists) {
-          const data = doc.data();
-          const frame = new Frame(doc.id, data.title, data.description, data.createdDate);
-          return new ClientFrame(frame);
-        } else {
-          throw new Error(Errors.InvalidFrameId);
-        }
-      }),
-      tap((val: ClientFrame) => this.frameStore.add(val)),
-      mergeMap(() => this.frameStore.getFrameWatcher(frameId))
+    return forkJoin(this.db.collection(this.frameDb).doc(frameId).get(),
+      this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).get()).pipe(
+        map((val: [firebase.firestore.DocumentSnapshot, firebase.firestore.QuerySnapshot]) => {
+          const data = val[0].data();
+          const frame = new Frame(val[0].id, data.title, data.description, data.createdDate);
+          const frameImages: FrameImage[] = [];
+          for (const doc of val[1].docs) {
+            const subData = doc.data();
+            frameImages.push(new FrameImage(subData.downloadPath, subData.imageId, subData.ownerId));
+          }
+          return new ClientFrame(frame, frameImages);
+        }),
+        tap((val: ClientFrame) => this.frameStore.add(val)),
+        mergeMap(() => this.frameStore.getFrameWatcher(frameId))
+      );
+  }
+
+  public newImageWorkflow(frameId: string, downloadPath: string): Observable<void> {
+    const imageId = this.db.createId();
+    const frameImage = new FrameImage(downloadPath, imageId, this.authService.currentUser.uid);
+    const batch = this.db.firestore.batch();
+    const frameImageSubRef = this.db.firestore.collection(this.frameDb)
+      .doc(`${frameId}/${this.frameImageSub}/${this.db.createId()}`);
+    const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);
+    const imageRef = this.db.firestore.collection(this.imageDb).doc(imageId);
+    const imageFrameRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
+    const imageFrame = new ImageFrame(new Date());
+    batch.set(frameImageSubRef, frameImage.getData());
+    batch.set(imageRef, image.getData());
+    batch.set(imageFrameRef, imageFrame.getData());
+    return from(batch.commit()).pipe(
+      tap(() => this.frameStore.addImage(frameId, frameImage))
     );
   }
 }
