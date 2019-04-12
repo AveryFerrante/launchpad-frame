@@ -58,7 +58,7 @@ export class FramesStore {
     const oldFrame = this.get(frameId);
     if (oldFrame) {
       const frame = cloneDeep(oldFrame);
-      frame.images.push(image);
+      frame.images.unshift(image);
       this.frames = this.replaceFrame(oldFrame, frame);
     } else {
       throw new Error('Can\'t find frame to update image');

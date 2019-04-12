@@ -4,7 +4,7 @@ import { Frame } from 'src/app/models/Frame';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { from, Observable, of, forkJoin } from 'rxjs';
-import { tap, map, mergeMap, merge } from 'rxjs/operators';
+import { tap, map, mergeMap, merge, finalize, switchMap, last } from 'rxjs/operators';
 import { FramesStore } from '../stores/framesstore.service';
 import * as firebase from 'firebase';
 import { FrameUserInfo, constructFrameUserInfo } from 'src/app/models/FrameUserInfo';
@@ -13,7 +13,7 @@ import { UserInfoStore } from '../stores/userinfostore.service';
 import { constructUserFrame } from 'src/app/models/UserFrames';
 import { UserInfoService } from '../userinfo/user-info.service';
 import { Errors } from 'src/app/models/Errors';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { FrameImage } from 'src/app/models/FrameImage';
 import { Image } from '../../models/Image';
 import { ImagesService } from '../images/images.service';
@@ -82,12 +82,19 @@ export class FramesService {
     }
   }
 
-  uploadImageToFrame(file: File): firebase.storage.UploadTask {
+  uploadImageToFrame(file: File, frameId: string): AngularFireUploadTask {
     const fileName = `${new Date().toJSON()}_${file.name}`;
     const metaData = {
       cacheControl: `public,max-age=${environment.pictureCache}`
     };
-    return this.storage.storage.ref(`images/${this.authService.currentUser.uid}`).child(fileName).put(file, metaData);
+    const ref = this.storage.ref(`images/${this.authService.currentUser.uid}/${fileName}`);
+    const task = ref.put(file, metaData);
+    task.snapshotChanges().pipe(
+      last(),
+      mergeMap((snapShot: firebase.storage.UploadTaskSnapshot) => from(snapShot.ref.getDownloadURL())),
+      mergeMap((dl: string) => this.newImageWorkflow(frameId, dl))
+    ).subscribe(() => console.log('in subscribe method'));
+    return task;
   }
 
   /*

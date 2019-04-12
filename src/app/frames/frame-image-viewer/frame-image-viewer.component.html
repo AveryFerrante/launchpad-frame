@@ -1,2 +1,21 @@
-<ngx-dropzone (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
-   [label]="'Drag files (or click)'"></ngx-dropzone>
+
+
+<div class="progress" *ngIf="percentages$ | async; let percent">
+   <div class="progress-bar" role="progressbar" [style.width.%]="percent"></div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-around">
+
+      <ngx-dropzone class="item-size" (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
+      [label]="'Drag files (or click)'"></ngx-dropzone>
+   <ng-container *ngIf="frame$ | async; let frame">
+<div class="card mb-2" *ngFor="let image of frame.images">
+   <img [src]="image.downloadPath" class="card-image-top item-size">
+   <div class="card-body">
+      <p class="card-text">
+         <button class="btn btn-danger" *ngIf="ownedFrameIds.includes(frame.id) || image.ownerId === userId">Delete</button>
+      </p>
+   </div>
+ </div>
+</ng-container>
+<div>

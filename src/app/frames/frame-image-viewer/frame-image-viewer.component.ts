@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FramesService } from 'src/app/services/frames/frames.service';
-import { from } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { finalize, map, first } from 'rxjs/operators';
+import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
+import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
+import { UserInfo } from 'src/app/models/UserInfo';
 
 @Component({
   selector: 'app-frame-image-viewer',
@@ -10,32 +13,54 @@ import { mergeMap } from 'rxjs/operators';
 })
 export class FrameImageViewerComponent implements OnInit {
 
-  @Input() frameId: string;
-  constructor(private framesService: FramesService) { }
+  @Input() set frameId(id: string) {
+    this._frameId = id;
+    this.setFrameObservable();
+  }
+  private _frameId: string;
+  public percentages$: Observable<number>;
+  public frame$: Observable<ClientFrame>;
+  public ownedFrameIds: string[];
+  constructor(private framesService: FramesService, private userInfoService: UserInfoService) { }
 
   ngOnInit() {
-  }
-
-
-  onFilesAdded(files: File[]) {
-    const frameId = this.frameId; // Since this.frameId can change if the user switches frames during uplaod
-    for (const file of files) {
-      const task = this.framesService.uploadImageToFrame(file);
-      task.on('state_changed',
-        {
-          next: (value: firebase.storage.UploadTaskSnapshot) => console.log(),
-          error: (error: Error) => console.log(),
-          complete: () => {
-            from(task.snapshot.ref.getDownloadURL()).pipe(
-              mergeMap((dl: string) => this.framesService.newImageWorkflow(frameId, dl)
-              )).subscribe({
-                error: (e: Error) => console.log(e),
-                complete: () => console.log('Success!')
-              });
+    this.userInfoService.currentState.pipe(
+      first((ui: UserInfo) => ui !== null),
+      map((ui: UserInfo) => {
+        const frameIds = [];
+        for (const id in ui.frames) {
+          if (ui.frames[id].role === 'owner') {
+            frameIds.push(id);
           }
         }
-      );
+        return frameIds;
+      })
+    ).subscribe((ids: string[]) => this.ownedFrameIds = ids);
+    this.setFrameObservable();
+  }
+
+  setFrameObservable() {
+    this.frame$ = this.framesService.getFrameData(this._frameId);
+  }
+
+  onFilesAdded(files: File[]) {
+    const frameId = this._frameId; // Since this.frameId can change if the user switches frames during uplaod
+    const percentagesTracker$: Observable<number>[] = [];
+    for (const file of files) {
+      const task = this.framesService.uploadImageToFrame(file, frameId);
+      percentagesTracker$.push(task.percentageChanges());
     }
+
+    this.percentages$ = combineLatest(percentagesTracker$).pipe(
+      finalize(() => this.percentages$ = null),
+      map((percentages: number[]) => {
+        let result = 0;
+        for (const percentage of percentages) {
+          result = result + percentage;
+        }
+        return result / percentages.length;
+      })
+    );
   }
 
 }

@@ -44,3 +44,8 @@ body {
 .min-h-100 {
     min-height: 100%;
 }
+
+.card {
+    border-radius: 0;
+    box-shadow: 1px 1px 8px;
+}

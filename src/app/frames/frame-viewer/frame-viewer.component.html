@@ -3,15 +3,11 @@
     <h2>{{ frame.title }}</h2>
   </div>
 
-  <div class="flex-grow-1">
+  <div class="flex-grow-1 w-100">
     <app-frame-image-viewer [frameId]="frameId"></app-frame-image-viewer>
   </div>
-
+  
   <div *ngIf="frameNotFound">
     Couldn't find frame
-  </div>
-
-  <div *ngFor="let image of frame.images">
-    <img [src]="image.downloadPath" alt="" height="200" width="200">
   </div>
 </div>
