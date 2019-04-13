@@ -1,13 +1,16 @@
-<div *ngIf="(frame$ | async); let frame" class="d-flex flex-column flex-grow-1 align-items-center mt-3">
-  <div>
+<ng-container *ngIf="(frame$ | async); let frame">
+  <div class="bg-dark" style="height: 10%">
     <h2>{{ frame.title }}</h2>
   </div>
 
-  <div class="flex-grow-1 w-100">
+  <div style="max-height: 75%; height: 75%; overflow-y: auto;">
     <app-frame-image-viewer [frameId]="frameId"></app-frame-image-viewer>
   </div>
   
+  <div class="flex-grow-1 bg-dark">
+    THis is text here other component will go here why is CSS so hard
+  </div>
   <div *ngIf="frameNotFound">
     Couldn't find frame
   </div>
-</div>
+</ng-container>

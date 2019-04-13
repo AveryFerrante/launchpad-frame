@@ -1,24 +1,28 @@
-
-
 <div class="progress" *ngIf="percentages$ | async; let percent">
    <div class="progress-bar" role="progressbar" [style.width.%]="percent"></div>
 </div>
 
-<div class="d-flex flex-wrap justify-content-around">
-
-      <ngx-dropzone class="item-size" (filesAdded)="onFilesAdded($event)" [multiple]="true" [accept]="'image/jpeg,image/png'" [preserveFiles]="false"
-      [label]="'Drag files (or click)'"></ngx-dropzone>
-   <ng-container *ngIf="frame$ | async; let frame">
-<div class="card mb-2" *ngFor="let image of frame.images">
-   <img [src]="image.downloadPath" class="card-image-top item-size">
-   <div class="card-body">
-      <p class="card-text">
-         <button class="btn btn-danger" (click)="onRemoveImage(image.imageId, image.id)" 
-         *ngIf="ownedFrameIds.includes(frame.id) || image.ownerId === userId">
-            Remove
-         </button>
-      </p>
+<div class="d-flex flex-wrap">
+   <div class="col-md-4 col-sm-12 col-xl-3">
+      <ngx-dropzone style="height: 200px" (filesAdded)="onFilesAdded($event)" [multiple]="true"
+         [accept]="'image/jpeg,image/png'" [preserveFiles]="false" [label]="'Drag files (or click)'"></ngx-dropzone>
    </div>
- </div>
-</ng-container>
-<div>
+
+   <ng-container *ngIf="frame$ | async; let frame">
+      <div class="col-md-4 col-sm-12 col-xl-3" *ngFor="let image of frame.images">
+         <div class="card mb-2">
+            <img [src]="image.downloadPath" class="card-image-top" style="height: 200px">
+            <div class="card-body">
+               <div class="d-flex">
+                  <span style="width: 75%;">Added by {{ image.addedBy }} on {{ image.dateAdded.toDateString() }}</span>
+                  <button style="height: 40px;" class="btn btn-danger ml-auto align-self-center"
+                     (click)="onRemoveImage(image.imageId, image.id)"
+                     *ngIf="ownedFrameIds.includes(frame.id) || image.ownerId === userId">
+                     Remove
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </ng-container>
+</div>

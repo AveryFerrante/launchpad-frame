@@ -23,7 +23,7 @@ export class FrameViewerComponent implements OnInit {
   frame$: Observable<ClientFrame> = null;
   frameNotFound = false;
   frameId: string = null;
-  @HostBinding('class') classes = 'flex-grow-1 d-flex flex-column';
+  @HostBinding('class') classes = 'h-100 d-flex flex-column';
   ngOnInit() {
     this.frame$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => this.framesService.getFrameData(params.get('id')).pipe(

@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Frame } from 'src/app/models/Frame';
-import { environment } from '../../../environments/environment';
-import { AuthenticationService } from '../authentication/authentication.service';
-import { from, Observable, of, forkJoin } from 'rxjs';
-import { tap, map, mergeMap, merge, finalize, switchMap, last } from 'rxjs/operators';
-import { FramesStore } from '../stores/framesstore.service';
-import * as firebase from 'firebase';
-import { FrameUserInfo, constructFrameUserInfo } from 'src/app/models/FrameUserInfo';
-import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
-import { UserInfoStore } from '../stores/userinfostore.service';
-import { constructUserFrame } from 'src/app/models/UserFrames';
-import { UserInfoService } from '../userinfo/user-info.service';
-import { Errors } from 'src/app/models/Errors';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
+import * as firebase from 'firebase';
+import { forkJoin, from, Observable, of } from 'rxjs';
+import { last, map, mergeMap, tap } from 'rxjs/operators';
+import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
+import { Frame } from 'src/app/models/Frame';
 import { FrameImage } from 'src/app/models/FrameImage';
-import { Image } from '../../models/Image';
-import { ImagesService } from '../images/images.service';
+import { constructFrameUserInfo, FrameUserInfo } from 'src/app/models/FrameUserInfo';
 import { ImageFrame } from 'src/app/models/ImageFrame';
+import { constructUserFrame } from 'src/app/models/UserFrames';
+import { environment } from '../../../environments/environment';
+import { Image } from '../../models/Image';
+import { AuthenticationService } from '../authentication/authentication.service';
+import { ImagesService } from '../images/images.service';
+import { FramesStore } from '../stores/framesstore.service';
+import { UserInfoStore } from '../stores/userinfostore.service';
+import { UserInfoService } from '../userinfo/user-info.service';
 
 @Injectable({
   providedIn: 'root'
@@ -110,7 +109,9 @@ export class FramesService {
           const frameImages: FrameImage[] = [];
           for (const doc of val[1].docs) {
             const subData = doc.data();
-            frameImages.push(new FrameImage(doc.id, subData.downloadPath, subData.imageId, subData.ownerId));
+            const dateAdded = new Date(subData.dateAdded.seconds * 1000);
+            frameImages.push(new FrameImage(doc.id, subData.downloadPath, subData.imageId, subData.ownerId,
+              dateAdded, subData.addedBy));
           }
           return new ClientFrame(frame, frameImages);
         }),
@@ -122,12 +123,15 @@ export class FramesService {
   private newImageWorkflow(frameId: string, downloadPath: string): Observable<void> {
     const imageId = this.db.createId();
     const batch = this.db.firestore.batch();
-    const frameImageSubRef = this.db.firestore.collection(this.frameDb)
-      .doc(`${frameId}/${this.frameImageSub}`);
-    const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId, this.authService.currentUser.uid);
-    const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);
+    const frameImageSubRef = this.db.firestore.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`)
+      .doc();
     const imageRef = this.db.firestore.collection(this.imageDb).doc(imageId);
     const imageFrameRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
+
+    const userInfo = this.userInfoStore.getCurrentSnapshot();
+    const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId,
+      this.authService.currentUser.uid, new Date(), `${userInfo.firstName} ${userInfo.lastName}`);
+    const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);
     const imageFrame = new ImageFrame(new Date());
     batch.set(frameImageSubRef, frameImage.getData());
     batch.set(imageRef, image.getData());
