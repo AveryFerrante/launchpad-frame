@@ -13,6 +13,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { NotifierModule } from 'angular-notifier';
 import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
@@ -45,6 +46,7 @@ import { ImageCardComponent } from './image-card/image-card.component';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    NotifierModule,
     FramesModule,
     ReactiveFormsModule
   ],

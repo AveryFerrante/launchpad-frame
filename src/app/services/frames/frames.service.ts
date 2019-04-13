@@ -17,6 +17,7 @@ import { ImagesService } from '../images/images.service';
 import { FramesStore } from '../stores/framesstore.service';
 import { UserInfoStore } from '../stores/userinfostore.service';
 import { UserInfoService } from '../userinfo/user-info.service';
+import { NotifierService } from 'angular-notifier';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class FramesService {
   private imageFrameSub = environment.imageFrameSub;
   constructor(private db: AngularFirestore, private authService: AuthenticationService, private frameStore: FramesStore,
     private userInfoStore: UserInfoStore, private userInfoService: UserInfoService, private storage: AngularFireStorage,
-    private imagesService: ImagesService) {
+    private imagesService: ImagesService, private notifierService: NotifierService) {
     this.frameDb = environment.frameDatabase;
     this.frameUserSub = environment.frameUserSub;
     this.frameImageSub = environment.frameImageSub;
@@ -92,7 +93,7 @@ export class FramesService {
       last(),
       mergeMap((snapShot: firebase.storage.UploadTaskSnapshot) => from(snapShot.ref.getDownloadURL())),
       mergeMap((dl: string) => this.newImageWorkflow(frameId, dl))
-    ).subscribe(() => console.log('in subscribe method'));
+    ).subscribe(() => this.notifierService.notify('success', 'Image(s) added to the frame!'));
     return task;
   }
 

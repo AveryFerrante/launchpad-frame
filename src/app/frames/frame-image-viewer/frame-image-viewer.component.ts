@@ -5,6 +5,7 @@ import { finalize, map, first } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
 import { UserInfo } from 'src/app/models/UserInfo';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-frame-image-viewer',
@@ -21,7 +22,7 @@ export class FrameImageViewerComponent implements OnInit {
   public percentages$: Observable<number>;
   public frame$: Observable<ClientFrame>;
   public ownedFrameIds: string[];
-  constructor(private framesService: FramesService, private userInfoService: UserInfoService) { }
+  constructor(private framesService: FramesService, private userInfoService: UserInfoService, private notifierService: NotifierService) { }
 
   ngOnInit() {
     this.userInfoService.currentState.pipe(
@@ -65,7 +66,7 @@ export class FrameImageViewerComponent implements OnInit {
 
   onRemoveImage(imageId: string, frameImageId: string) {
     this.framesService.removeImageWorkflow(this._frameId, imageId, frameImageId).subscribe({
-     complete: () => console.log('Finished')
+     complete: () => this.notifierService.notify('success', 'Image has been removed from the frame')
     });
   }
 

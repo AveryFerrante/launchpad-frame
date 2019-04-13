@@ -1,5 +1,5 @@
 <ng-container *ngIf="(frame$ | async); let frame">
-  <div class="bg-dark" style="height: 10%">
+  <div class="light-gray-bg d-flex align-items-center justify-content-center " style="height: 10%">
     <h2>{{ frame.title }}</h2>
   </div>
 
@@ -7,7 +7,7 @@
     <app-frame-image-viewer [frameId]="frameId"></app-frame-image-viewer>
   </div>
   
-  <div class="flex-grow-1 bg-dark">
+  <div class="flex-grow-1 light-gray-bg">
     THis is text here other component will go here why is CSS so hard
   </div>
   <div *ngIf="frameNotFound">
