@@ -13,7 +13,10 @@
    <img [src]="image.downloadPath" class="card-image-top item-size">
    <div class="card-body">
       <p class="card-text">
-         <button class="btn btn-danger" *ngIf="ownedFrameIds.includes(frame.id) || image.ownerId === userId">Delete</button>
+         <button class="btn btn-danger" (click)="onRemoveImage(image.imageId, image.id)" 
+         *ngIf="ownedFrameIds.includes(frame.id) || image.ownerId === userId">
+            Remove
+         </button>
       </p>
    </div>
  </div>

@@ -63,4 +63,10 @@ export class FrameImageViewerComponent implements OnInit {
     );
   }
 
+  onRemoveImage(imageId: string, frameImageId: string) {
+    this.framesService.removeImageWorkflow(this._frameId, imageId, frameImageId).subscribe({
+     complete: () => console.log('Finished')
+    });
+  }
+
 }
