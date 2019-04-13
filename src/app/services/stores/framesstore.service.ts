@@ -65,6 +65,18 @@ export class FramesStore {
     }
   }
 
+  removeImage(frameId: string, frameImageId: string) {
+    const oldFrame = this.get(frameId);
+    if (oldFrame) {
+      const frame = cloneDeep(oldFrame);
+      const removeIndex = frame.images.findIndex((img: FrameImage) => img.id === frameImageId);
+      frame.images.splice(removeIndex, 1);
+      this.frames = this.replaceFrame(oldFrame, frame);
+    } else {
+      throw new Error('Can\'t find frame to update image');
+    }
+  }
+
   // addMultiple(val: ClientFrame[]) {
   //   if (this.frames == null) {
   //     this.frames = val;

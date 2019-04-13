@@ -110,7 +110,7 @@ export class FramesService {
           const frameImages: FrameImage[] = [];
           for (const doc of val[1].docs) {
             const subData = doc.data();
-            frameImages.push(new FrameImage(subData.downloadPath, subData.imageId, subData.ownerId));
+            frameImages.push(new FrameImage(doc.id, subData.downloadPath, subData.imageId, subData.ownerId));
           }
           return new ClientFrame(frame, frameImages);
         }),
@@ -119,12 +119,12 @@ export class FramesService {
       );
   }
 
-  public newImageWorkflow(frameId: string, downloadPath: string): Observable<void> {
+  private newImageWorkflow(frameId: string, downloadPath: string): Observable<void> {
     const imageId = this.db.createId();
-    const frameImage = new FrameImage(downloadPath, imageId, this.authService.currentUser.uid);
     const batch = this.db.firestore.batch();
     const frameImageSubRef = this.db.firestore.collection(this.frameDb)
-      .doc(`${frameId}/${this.frameImageSub}/${this.db.createId()}`);
+      .doc(`${frameId}/${this.frameImageSub}`);
+    const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId, this.authService.currentUser.uid);
     const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);
     const imageRef = this.db.firestore.collection(this.imageDb).doc(imageId);
     const imageFrameRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
@@ -134,6 +134,17 @@ export class FramesService {
     batch.set(imageFrameRef, imageFrame.getData());
     return from(batch.commit()).pipe(
       tap(() => this.frameStore.addImage(frameId, frameImage))
+    );
+  }
+
+  public removeImageWorkflow(frameId: string, imageId: string, frameImageId: string): Observable<void> {
+    const batch = this.db.firestore.batch();
+    // Remove from frame images
+    batch.delete(this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).doc(`${frameImageId}`).ref);
+    // Remove from image frames
+    batch.delete(this.db.collection(`${this.imageDb}/${imageId}/${this.imageFrameSub}`).doc(`${frameId}`).ref);
+    return from(batch.commit()).pipe(
+      tap(() => this.frameStore.removeImage(frameId, frameImageId))
     );
   }
 }

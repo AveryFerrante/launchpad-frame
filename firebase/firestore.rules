@@ -13,14 +13,17 @@ service cloud.firestore {
       }
 
       match /images/{imageId} {
+      	allow read: if getUserFramePermissions(frameId, database) != null;
         allow create: if checkFramePermission('canaddimages', getUserFramePermissions(frameId, database));
+        allow delete: if checkFramePermission('canremoveimages', getUserFramePermissions(frameId, database));
       }
     }
     match /images/{imageId} {
     	allow create: if request.auth.uid == request.resource.data.createdBy;
 
       match /frameInfo/{frameId} {
-        allow create: if request.auth.uid == getImageCreator(imageId, database);
+        allow create: if true;//if request.auth.uid == getImageCreator(imageId, database);
+        allow delete: if checkFramePermission('canremoveimages', getUserFramePermissions(frameId, database));
       }
     }
   }
