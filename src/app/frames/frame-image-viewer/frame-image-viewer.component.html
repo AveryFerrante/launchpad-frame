@@ -8,8 +8,8 @@
          [accept]="'image/jpeg,image/png'" [preserveFiles]="false" [label]="'Drag files (or click)'"></ngx-dropzone>
    </div>
 
-   <ng-container *ngIf="frame$ | async; let frame">
-      <div class="col-md-4 col-sm-12 col-xl-3" *ngFor="let image of frame.images">
+   <ng-container *ngIf="_frame !== null">
+      <div class="col-md-4 col-sm-12 col-xl-3" *ngFor="let image of _frame.images">
          <div class="card mb-2">
             <img [src]="image.downloadPath" class="card-image-top" style="height: 200px">
             <div class="card-body">
@@ -17,7 +17,7 @@
                   <span style="width: 75%;">Added by {{ image.addedBy }} on {{ image.dateAdded.toDateString() }}</span>
                   <button style="height: 40px;" class="btn btn-danger ml-auto align-self-center"
                      (click)="onRemoveImage(image.imageId, image.id)"
-                     *ngIf="ownedFrameIds.includes(frame.id) || image.ownerId === userId">
+                     *ngIf="ownedFrameIds.includes(_frame.id) || image.ownerId === userId">
                      Remove
                   </button>
                </div>

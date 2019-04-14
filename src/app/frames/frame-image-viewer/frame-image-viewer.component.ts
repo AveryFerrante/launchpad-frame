@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FramesService } from 'src/app/services/frames/frames.service';
-import { Observable, combineLatest } from 'rxjs';
-import { finalize, map, first } from 'rxjs/operators';
-import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
-import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
-import { UserInfo } from 'src/app/models/UserInfo';
+import { Component, Input, OnInit } from '@angular/core';
 import { NotifierService } from 'angular-notifier';
+import { combineLatest, Observable } from 'rxjs';
+import { finalize, first, map } from 'rxjs/operators';
+import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
+import { UserInfo } from 'src/app/models/UserInfo';
+import { FramesService } from 'src/app/services/frames/frames.service';
+import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
 
 @Component({
   selector: 'app-frame-image-viewer',
@@ -13,15 +13,10 @@ import { NotifierService } from 'angular-notifier';
   styleUrls: ['./frame-image-viewer.component.css']
 })
 export class FrameImageViewerComponent implements OnInit {
-
-  @Input() set frameId(id: string) {
-    this._frameId = id;
-    this.setFrameObservable();
-  }
-  private _frameId: string;
+  _frame: ClientFrame = null;
   public percentages$: Observable<number>;
-  public frame$: Observable<ClientFrame>;
   public ownedFrameIds: string[];
+  @Input() set frame(frame: ClientFrame) { this._frame = frame; }
   constructor(private framesService: FramesService, private userInfoService: UserInfoService, private notifierService: NotifierService) { }
 
   ngOnInit() {
@@ -37,15 +32,10 @@ export class FrameImageViewerComponent implements OnInit {
         return frameIds;
       })
     ).subscribe((ids: string[]) => this.ownedFrameIds = ids);
-    this.setFrameObservable();
-  }
-
-  setFrameObservable() {
-    this.frame$ = this.framesService.getFrameData(this._frameId);
   }
 
   onFilesAdded(files: File[]) {
-    const frameId = this._frameId; // Since this.frameId can change if the user switches frames during uplaod
+    const frameId = this._frame.id; // Since this.frameId can change if the user switches frames during uplaod
     const percentagesTracker$: Observable<number>[] = [];
     for (const file of files) {
       const task = this.framesService.uploadImageToFrame(file, frameId);
@@ -65,7 +55,7 @@ export class FrameImageViewerComponent implements OnInit {
   }
 
   onRemoveImage(imageId: string, frameImageId: string) {
-    this.framesService.removeImageWorkflow(this._frameId, imageId, frameImageId).subscribe({
+    this.framesService.removeImageWorkflow(this._frame.id, imageId, frameImageId).subscribe({
      complete: () => this.notifierService.notify('success', 'Image has been removed from the frame')
     });
   }

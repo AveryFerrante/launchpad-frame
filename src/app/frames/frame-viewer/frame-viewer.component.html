@@ -1,10 +1,11 @@
-<ng-container *ngIf="(frame$ | async); let frame">
+<ng-container *ngIf="!showSlideshow && (frame$ | async); let frame">
   <div class="light-gray-bg d-flex align-items-center justify-content-center " style="height: 10%">
     <h2>{{ frame.title }}</h2>
+    <button type="button" class="btn btn-primary" (click)="onViewFrame()">View Frame</button>
   </div>
 
   <div style="max-height: 75%; height: 75%; overflow-y: auto;">
-    <app-frame-image-viewer [frameId]="frameId"></app-frame-image-viewer>
+    <app-frame-image-viewer [frame]="frame$ | async"></app-frame-image-viewer>
   </div>
   
   <div class="flex-grow-1 light-gray-bg">
@@ -14,3 +15,11 @@
     Couldn't find frame
   </div>
 </ng-container>
+
+<slideshow #slideshow *ngIf="showSlideshow" style="cursor: none;"
+      [imageUrls]="frameImageUrls" 
+      [showArrows]="false"
+      [fullscreen]="true"
+      [autoPlay]="true"
+      [stopAutoPlayOnSlide]="false"
+      (onFullscreenExit)="onFullscreenExit(slideNumber)"></slideshow>
