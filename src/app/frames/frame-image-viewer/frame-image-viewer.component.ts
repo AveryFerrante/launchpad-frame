@@ -43,7 +43,10 @@ export class FrameImageViewerComponent implements OnInit {
     }
 
     this.percentages$ = combineLatest(percentagesTracker$).pipe(
-      finalize(() => this.percentages$ = null),
+      finalize(() =>  {
+        this.notifierService.notify('success', 'Image(s) added to the frame!');
+        this.percentages$ = null
+      }),
       map((percentages: number[]) => {
         let result = 0;
         for (const percentage of percentages) {

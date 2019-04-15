@@ -93,7 +93,7 @@ export class FramesService {
       last(),
       mergeMap((snapShot: firebase.storage.UploadTaskSnapshot) => from(snapShot.ref.getDownloadURL())),
       mergeMap((dl: string) => this.newImageWorkflow(frameId, dl))
-    ).subscribe(() => this.notifierService.notify('success', 'Image(s) added to the frame!'));
+    ).subscribe();
     return task;
   }
 
