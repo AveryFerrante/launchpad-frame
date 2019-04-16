@@ -16,9 +16,30 @@
   </div>
 
   <div class="mb-4 w-100">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+        </div>
+        <input type="text" class="form-control" formControlName="usernameInput" required placeholder="Username"
+          [ngClass]="{ 'invalid-input': usernameCtrl.errors && checkedUsername }">
+      </div>
+      <span *ngIf="checkedUsername && usernameCtrl.errors && usernameCtrl.errors.required" class="invalid-text">Username is
+        Required</span>
+      <span *ngIf="checkedUsername && usernameCtrl.errors && usernameCtrl.errors.minlength" class="invalid-text">Username must
+        be atleast 2 characters
+      </span>
+      <span *ngIf="checkedUsername && usernameCtrl.errors && usernameCtrl.errors.usernameTaken" class="invalid-text">Username
+        is already taken
+      </span>
+      <span *ngIf="checkedUsername && usernameCtrl.errors && usernameCtrl.errors.maxlength" class="invalid-text">Username
+        cannot exceed 50 characters
+      </span>
+    </div>
+
+  <div class="mb-4 w-100">
     <div class="input-group">
       <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+        <span class="input-group-text"><i class="fas fa-user"></i></span>
       </div>
       <input type="text" class="form-control" formControlName="firstNameInput" required placeholder="First Name"
         [ngClass]="{ 'invalid-input': firstNameCtrl.errors && submitted }">
@@ -30,7 +51,7 @@
   <div class="mb-4 w-100">
     <div class="input-group">
       <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+        <span class="input-group-text"><i class="fas fa-user"></i></span>
       </div>
       <input type="text" class="form-control" formControlName="lastNameInput" required placeholder="Last Name"
         [ngClass]="{ 'invalid-input': lastNameCtrl.errors && submitted }">

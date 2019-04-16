@@ -8,6 +8,7 @@ export const environment = {
   production: false,
   firebaseConfig: FirebaseConfig,
   userDatabase: 'users',
+  usernameDatabase: 'usernames',
   frameDatabase: 'frames',
   frameUserSub: 'userInfo',
   frameImageSub: 'images',

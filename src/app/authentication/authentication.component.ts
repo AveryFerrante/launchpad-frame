@@ -58,11 +58,12 @@ export class AuthenticationComponent implements OnInit {
 
     onCreate(account: CreateAccount) {
       this.authService.createNewEmailAccount(account.userCredentials).pipe(
-        mapTo(new UserInfo(account.firstName, account.lastName, account.userCredentials.email)),
+        mapTo(new UserInfo(account.username, account.firstName, account.lastName, account.userCredentials.email)),
         concatMap((userInfo: UserInfo) => this.userInfoService.addNewUserInfo(userInfo)))
         .subscribe(
           () => this.router.navigate(['/home']),
           (error) => {
+            console.log(error);
             if (error.code === 'auth/weak-password') {
               this.errorMessage = 'Password is not strong enough';
             } else {
