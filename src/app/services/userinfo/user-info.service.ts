@@ -7,6 +7,7 @@ import { map, mapTo, tap } from 'rxjs/operators';
 import { UserInfoStore } from '../stores/userinfostore.service';
 import { UserInfo } from 'src/app/models/UserInfo';
 import { UserFrames } from 'src/app/models/UserFrames';
+import { Username } from 'src/app/models/Username';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +24,23 @@ export class UserInfoService {
   addNewUserInfo(info: UserInfo): Observable<void> {
     const batch = this.db.firestore.batch();
     batch.set(this.db.collection(this.userDb).doc(this.authService.currentUser.uid).ref, info.getData());
-    batch.set(this.db.collection(this.usernameDb).doc(info.username).ref, { info: { [this.authService.currentUser.uid]: true }});
+    batch.set(this.db.collection(this.usernameDb).doc(this.db.createId()).ref, { username: info.username,
+      userid: this.authService.currentUser.uid });
     return from(batch.commit());
   }
 
-  checkUsername(username: string): Observable<boolean> {
-    return from(this.db.collection(this.usernameDb).doc(username).get().pipe(
-      map((val: firebase.firestore.DocumentSnapshot) => !val.exists)
+  checkUsername(username: string): Observable<Username> {
+    return from(this.db.collection(this.usernameDb, (ref) => ref.where('username', '==', username).limit(1)).get().pipe(
+      map((val: firebase.firestore.QuerySnapshot) => {
+        if (val.empty) {
+          return null;
+        } else if (val.docs[0].exists) {
+          const data = val.docs[0].data();
+          return new Username(data.username, data.userid);
+        } else {
+          return null;
+        }
+      })
     ));
   }
 

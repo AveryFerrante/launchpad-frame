@@ -45,7 +45,7 @@ export class FramesService {
     const userFrame = constructUserFrame(frameId, title, 'owner');
     const userInfo = this.userInfoStore.getCurrentSnapshot();
     const frameUserInfo: FrameUserInfo = constructFrameUserInfo(this.authService.currentUser.uid, [], 'owner',
-      userInfo.firstName, userInfo.lastName);
+      userInfo.username);
 
     return from(this.db.firestore.runTransaction((t) => {
       return forkJoin(
@@ -131,7 +131,7 @@ export class FramesService {
 
     const userInfo = this.userInfoStore.getCurrentSnapshot();
     const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId,
-      this.authService.currentUser.uid, new Date(), `${userInfo.firstName} ${userInfo.lastName}`);
+      this.authService.currentUser.uid, new Date(), `${userInfo.username}`);
     const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);
     const imageFrame = new ImageFrame(new Date());
     batch.set(frameImageSubRef, frameImage.getData());
