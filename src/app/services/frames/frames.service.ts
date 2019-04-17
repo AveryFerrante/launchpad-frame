@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import * as firebase from 'firebase';
 import { forkJoin, from, Observable, of } from 'rxjs';
-import { last, map, mergeMap, tap } from 'rxjs/operators';
+import { last, map, mergeMap, tap, mapTo } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { Frame } from 'src/app/models/Frame';
 import { FrameImage } from 'src/app/models/FrameImage';
@@ -39,7 +38,7 @@ export class FramesService {
 
    get currentState(): Observable<Frame[]> { return this.frameStore.frames$; }
 
-  add(title: string, description: string) {
+  add(title: string, description: string): Observable<string> {
     const frameId = this.db.createId();
     const frame = new Frame(frameId, title, description, new Date());
     const userFrame = constructUserFrame(frameId, title, 'owner');
@@ -55,7 +54,8 @@ export class FramesService {
       ).toPromise();
     })).pipe(
       tap(() => this.userInfoStore.addFrame(userFrame)),
-      tap(() => this.frameStore.add(new ClientFrame(frame)))
+      tap(() => this.frameStore.add(new ClientFrame(frame))),
+      mapTo(frame.id)
     );
   }
 

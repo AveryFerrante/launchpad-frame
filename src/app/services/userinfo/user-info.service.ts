@@ -20,17 +20,19 @@ export class UserInfoService {
   }
 
   get currentState(): Observable<UserInfo> { return this.store.userInfo$; }
+  get currentSnapshot(): UserInfo { return this.store.getCurrentSnapshot(); }
 
   addNewUserInfo(info: UserInfo): Observable<void> {
     const batch = this.db.firestore.batch();
     batch.set(this.db.collection(this.userDb).doc(this.authService.currentUser.uid).ref, info.getData());
-    batch.set(this.db.collection(this.usernameDb).doc(this.db.createId()).ref, { username: info.username,
-      userid: this.authService.currentUser.uid });
+    batch.set(this.db.collection(this.usernameDb).doc(this.db.createId()).ref, new Username(info.username,
+        this.authService.currentUser.uid).getData());
     return from(batch.commit());
   }
 
   checkUsername(username: string): Observable<Username> {
-    return from(this.db.collection(this.usernameDb, (ref) => ref.where('username', '==', username).limit(1)).get().pipe(
+    username = username.toLowerCase().trim();
+    return from(this.db.collection(this.usernameDb, (ref) => ref.where('usernametrimmed', '==', username).limit(1)).get().pipe(
       map((val: firebase.firestore.QuerySnapshot) => {
         if (val.empty) {
           return null;

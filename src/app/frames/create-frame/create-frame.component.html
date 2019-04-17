@@ -36,7 +36,11 @@
 
         <div class="row w-100 mb-4">
           <label class="align-self-center col-xl-4 col-lg-5" for="userSelect">Add Users (by username): </label>
-          <input id="userSearch" class="col-xl-8 col-lg-7 form-control" type="text">
+          <input formControlName="userSearchInput" class="col-xl-8 col-lg-7 form-control" type="text" placeholder="Start Typing...">
+
+            <div class="col-3 bg-light" *ngFor="let username of usernameList">
+              {{ username.username }}
+            </div>
         </div>
 
         <div class="w-100 row align-items-center mb-4">

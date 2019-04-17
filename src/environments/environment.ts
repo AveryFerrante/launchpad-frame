@@ -14,6 +14,7 @@ export const environment = {
   frameImageSub: 'images',
   imageDatabase: 'images',
   imageFrameSub: 'frameInfo',
+  notificationsDatabase: 'notifications',
   pictureCache: '60' // In seconds
 };
 
