@@ -10,16 +10,16 @@ service cloud.firestore {
     }
     match /frames/{frameId} {
     	allow create: if isSignedIn();
-      allow read: if getUserFramePermissions(frameId, database) != null;
+      allow read: if getUserFramePermissions(frameId) != null;
 
       match /userInfo/{frameId} {
         allow create: if isSignedIn();
       }
 
       match /images/{imageId} {
-      	allow read: if getUserFramePermissions(frameId, database) != null;
-        allow create: if checkFramePermission('canaddimages', getUserFramePermissions(frameId, database));
-        allow delete: if checkFramePermission('canremoveimages', getUserFramePermissions(frameId, database));
+      	allow read: if getUserFramePermissions(frameId) != null;
+        allow create: if checkFramePermission('canaddimages', getUserFramePermissions(frameId));
+        allow delete: if checkFramePermission('canremoveimages', getUserFramePermissions(frameId));
       }
     }
     match /images/{imageId} {
@@ -27,20 +27,28 @@ service cloud.firestore {
 
       match /frameInfo/{frameId} {
         allow create: if true;//if request.auth.uid == getImageCreator(imageId, database);
-        allow delete: if checkFramePermission('canremoveimages', getUserFramePermissions(frameId, database));
+        allow delete: if checkFramePermission('canremoveimages', getUserFramePermissions(frameId));
       }
     }
-  }
-  function isSignedIn() {
-    return request.auth.uid != null;
-  }
-  function getUserFramePermissions(frameId, database) {
-    return get(/databases/$(database)/documents/frames/$(frameId)/userInfo/$(frameId)).data.users[request.auth.uid];
-  }
-  function checkFramePermission(permission, userPermissions) {
-    return (permission in userPermissions.permissions || userPermissions.role == 'owner');
-  }
-  function getImageCreator(imageId, database) {
-    return get(/databases/$(database)/documents/images/$(imageId)).data.createdBy;
-  }
+    match /notifications/{notifId} {
+    	allow create: if request.auth.uid == request.resource.data.fromuser && 
+        // Adding someone to frame
+        (request.resource.data.type == 1 && request.resource.data.action == 1 && checkAddUserToFramePermission())
+    }
+    function checkAddUserToFramePermission() {
+			return checkFramePermission('canaddusers', getUserFramePermissions(request.resource.data.frameId));
+    }
+    function isSignedIn() {
+    	return request.auth.uid != null;
+    }
+    function getUserFramePermissions(frameId) {
+      return get(/databases/$(database)/documents/frames/$(frameId)/userInfo/$(frameId)).data.users[request.auth.uid];
+    }
+    function checkFramePermission(permission, userPermissions) {
+      return (permission in userPermissions.permissions || userPermissions.role == 'owner');
+    }
+    function getImageCreator(imageId, database) {
+      return get(/databases/$(database)/documents/images/$(imageId)).data.createdBy;
+    }
+	}
 }

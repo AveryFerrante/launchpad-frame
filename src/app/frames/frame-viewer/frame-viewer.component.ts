@@ -39,7 +39,7 @@ export class FrameViewerComponent implements OnInit {
             this.frameNotFound = true;
             this.frame$ = null;
           } else {
-            console.log(error.message);
+            console.error(error.message);
           }
           return of(null);
         })

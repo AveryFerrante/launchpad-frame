@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FramesService } from 'src/app/services/frames/frames.service';
-import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
-import { of, timer, fromEvent, BehaviorSubject, Subject, Observable, Subscription, forkJoin } from 'rxjs';
-import { debounce, debounceTime, throttleTime, map, tap, distinctUntilChanged, filter, switchMap, catchError, mergeMap } from 'rxjs/operators';
-import { Username } from 'src/app/models/Username';
-import { Errors } from 'src/app/models/Errors';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { Username } from 'src/app/models/Username';
+import { FramesService } from 'src/app/services/frames/frames.service';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
+import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
 
 @Component({
   selector: 'app-create-frame',
@@ -28,35 +27,59 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
   userSearch: Subscription;
   usernameList: Username[] = [];
   errorMessage: string = null;
+  loading = false;
   constructor(private frameService: FramesService, private userInfoService: UserInfoService,
     private router: Router, private notificationsService: NotificationsService) {
+  }
+
+  ngOnInit() {
+    this.setUserSearchObservable();
+  }
+
+  private setUserSearchObservable() {
     this.userSearch = this.newFrameForm.controls.userSearchInput.valueChanges.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
       tap((val: string) => {
         if (val.toLowerCase().trim() === this.userInfoService.currentSnapshot.username.toLowerCase().trim()) {
           this.errorMessage = 'You will be added to the frame automatically';
+          this.loading = false;
+        } else {
+          this.errorMessage = null;
         }
       }),
       filter((val: string) => val !== '' && val !== null && val.length >= 2 &&
         val.toLowerCase().trim() !== this.userInfoService.currentSnapshot.username.toLowerCase().trim()),
+      tap(() => this.loading = true),
+      debounceTime(700),
+      distinctUntilChanged(),
       switchMap((val: string) => this.userInfoService.checkUsername(val)),
-      filter((username: Username) => username !== null && this.usernameList.map((u: Username) => u.userid).indexOf(username.userid) === -1)
-    ).subscribe((username: Username) => this.usernameList.push(username));
-  }
-
-  ngOnInit() {
+      tap((username: Username) =>  {
+        if (username !== null && this.usernameList.map((u: Username) => u.userid).indexOf(username.userid) === -1) {
+          return username;
+        } else {
+          this.loading = false;
+          this.errorMessage = 'No matching username';
+          return null;
+        }
+      })
+    ).subscribe((username: Username) => {
+      if (username !== null) {
+        this.usernameList.push(username);
+      }
+      this.loading = false;
+    });
   }
 
   onSubmit() {
     this.submitted = true;
     if (this.newFrameForm.valid) {
-      this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value).pipe(
-        // NEED TO ADD LOGIC TO HANDLE NO USERS ADDED!
-        mergeMap((frameId: string) => forkJoin(this.notificationsService.addNewFrameNotifications(frameId, this.titleCtrl.value,
-          this.usernameList.map(u => u.userid)), of(frameId)))
-      ).subscribe({
-        next: (val: [void, string]) => this.router.navigate(['home', 'frames', val[1]])
+      this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value).subscribe({
+        next: (frameId: string) => {
+          if (this.usernameList.length > 0) {
+            const userids = this.usernameList.map((username: Username) => username.userid);
+            this.notificationsService.addNewFrameNotifications(frameId, this.titleCtrl.value, userids);
+          }
+          this.router.navigate(['home', 'frames', frameId]);
+        }
       });
     }
   }

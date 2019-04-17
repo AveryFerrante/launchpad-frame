@@ -17,7 +17,7 @@ export class NotificationsService {
 
   addNewFrameNotifications(frameId: string, frameName: string, forusers: string[]): Observable<void> {
     const batch = this.db.firestore.batch();
-    for (const user in forusers) {
+    for (const user of forusers) {
       const notificationId = this.db.createId();
       const notification = new Notification(NotificationActions.Added, frameId, frameName,
         this.authService.currentUser.uid, NotificationTypes.Frame, user);
