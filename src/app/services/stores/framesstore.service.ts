@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Frame } from 'src/app/models/Frame';
 import { cloneDeep } from 'lodash';
-import { map, first, skipWhile } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, skipWhile } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { FrameImage } from 'src/app/models/FrameImage';
 

@@ -17,6 +17,7 @@ import { FramesStore } from '../stores/framesstore.service';
 import { UserInfoStore } from '../stores/userinfostore.service';
 import { UserInfoService } from '../userinfo/user-info.service';
 import { NotifierService } from 'angular-notifier';
+import { Username } from 'src/app/models/Username';
 
 @Injectable({
   providedIn: 'root'
@@ -38,13 +39,13 @@ export class FramesService {
 
    get currentState(): Observable<Frame[]> { return this.frameStore.frames$; }
 
-  add(title: string, description: string): Observable<string> {
+  add(title: string, description: string, usersToAdd: Username[] = []): Observable<string> {
     const frameId = this.db.createId();
     const frame = new Frame(frameId, title, description, new Date());
     const userFrame = constructUserFrame(frameId, title, 'owner');
     const userInfo = this.userInfoStore.getCurrentSnapshot();
     const frameUserInfo: FrameUserInfo = constructFrameUserInfo(this.authService.currentUser.uid, [], 'owner',
-      userInfo.username);
+      userInfo.username, usersToAdd);
 
     return from(this.db.firestore.runTransaction((t) => {
       return forkJoin(

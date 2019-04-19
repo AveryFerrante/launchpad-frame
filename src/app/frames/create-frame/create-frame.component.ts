@@ -72,7 +72,7 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.submitted = true;
     if (this.newFrameForm.valid) {
-      this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value).subscribe({
+      this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value, this.usernameList).subscribe({
         next: (frameId: string) => {
           if (this.usernameList.length > 0) {
             const userids = this.usernameList.map((username: Username) => username.userid);

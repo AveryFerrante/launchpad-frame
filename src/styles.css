@@ -48,4 +48,13 @@ body {
 .card {
     border-radius: 0;
     box-shadow: 1px 1px 8px;
+    border: none;
+}
+
+.card-header:first-child {
+    border-radius: 0;
+}
+
+.secondary-puprle-bg {
+    background-color: rgba(120, 45, 104, .8);
 }

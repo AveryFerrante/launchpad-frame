@@ -22,6 +22,7 @@ import { UserInfoService } from './services/userinfo/user-info.service';
 import { UserInfoStore } from './services/stores/userinfostore.service';
 
 import { FramesModule } from './frames/frames.module';
+import { AccountModule } from './account/account.module';
 
 
 import { HomeComponent } from './home/home.component';
@@ -49,6 +50,7 @@ import { ImageCardComponent } from './image-card/image-card.component';
     AngularFireStorageModule,
     NotifierModule,
     FramesModule,
+    AccountModule,
     ReactiveFormsModule,
     BsDropdownModule.forRoot()
   ],

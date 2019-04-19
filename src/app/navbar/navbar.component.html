@@ -17,11 +17,11 @@
         <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
       </a>
       <ul id="account-dropdown" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="account-dropdown-trigger">
-        <li role="menuitem" class="dropdown-item d-flex align-items-center">
+        <li role="menuitem" class="dropdown-item d-flex align-items-center" [routerLink]="['account']">
           <span>Manage</span>
           <i class="fas fa-user ml-auto"></i>
         </li>
-        <li role="menuitem" class="dropdown-item d-flex align-items-center">
+        <li role="menuitem" class="dropdown-item d-flex align-items-center" [routerLink]="['notifications']">
           <span>Alerts</span>
           <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
           <i class="fas fa-bell ml-auto"></i>

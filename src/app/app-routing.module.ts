@@ -8,6 +8,8 @@ import { UnauthGuardGuard } from './services/guards/unauth.guard';
 import { FramesComponent } from './frames/frames/frames.component';
 import { CreateFrameComponent } from './frames/create-frame/create-frame.component';
 import { FrameViewerComponent } from './frames/frame-viewer/frame-viewer.component';
+import { AccountComponent } from './account/account/account.component';
+import { NotificationsComponent } from './account/notifications/notifications.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },
@@ -20,7 +22,9 @@ const homeRoutes: Routes = [
     { path: 'frames', component:  FramesComponent, children: [
       { path: 'create', component: CreateFrameComponent },
       { path: ':id', component: FrameViewerComponent }
-    ] }
+    ] },
+    { path: 'account', component: AccountComponent },
+    { path: 'notifications', component: NotificationsComponent }
   ] }
 ];
 

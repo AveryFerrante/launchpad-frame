@@ -5,7 +5,7 @@ import { NotificationsService } from '../services/notifications/notifications.se
 import { Observable, Subscription } from 'rxjs';
 import { DocumentChangeAction } from '@angular/fire/firestore';
 import { Notification } from 'src/app/models/Notification';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -20,10 +20,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   ngOnInit() {
     this.notifications$ = this.notificationService.getNotificationListener().pipe(
-      map((newNotifications: DocumentChangeAction<Notification>[]) => {
-        for (const n of newNotifications) {
-          const data = n.payload.doc.data();
-          this.notifications.push(new Notification(data.action, data.frameId, data.frameName, data.fromuser, data.type, data.foruser));
+      tap((notifications: Notification[]) =>  {
+        if (notifications != null) {
+          this.notifications = notifications;
         }
       })
     ).subscribe();
