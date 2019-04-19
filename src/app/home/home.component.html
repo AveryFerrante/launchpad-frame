@@ -2,13 +2,6 @@
   <div style="height: 4rem;">
     <app-navbar></app-navbar>
   </div>
-
-  <p>
-  home works!
-  <button type="button" class="btn btn-primary" (click)="onLogout()">Log Out</button>
-  {{ userInfo$ | async | json }}
-</p>
-
   <div class="flex-grow-1">
     <router-outlet></router-outlet>
   </div>

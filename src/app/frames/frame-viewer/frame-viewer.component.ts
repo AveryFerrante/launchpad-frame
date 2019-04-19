@@ -56,6 +56,17 @@ export class FrameViewerComponent implements OnInit {
         self.showSlideshow = false;
       }
     });
+    this.document.addEventListener('mozfullscreenchange', () => {
+      console.log('Firefox event');
+      if (self.showSlideshow === false) {
+        self.showSlideshow = true;
+        self.slideshowFullscreen = true;
+        setTimeout(self.setUpSlideshow, 100); /* THIS IS NOT GOOD....FIND A WAY TO TIE INTO THE ELEMENT CREATION */
+      } else {
+        self.slideshowFullscreen = false;
+        self.showSlideshow = false;
+      }
+    });
     // this.document.addEventListener('webkitfullscreenchange', () => { this.onFullscreenExit(); });
     // this.document.addEventListener('mozfullscreenchange', () => { this.onFullscreenExit(); });
     // this.document.addEventListener('MSFullscreenChange', () => { this.onFullscreenExit(); });
@@ -74,10 +85,10 @@ export class FrameViewerComponent implements OnInit {
   onViewFrame() {
     if (this.elem.requestFullscreen) {
       this.elem.requestFullscreen();
+    } else if (this.elem.mozRequestFullScreen) {
+      /* Firefox */
+      this.elem.mozRequestFullScreen();
     }
-    // } else if (this.elem.mozRequestFullScreen) {
-    //   /* Firefox */
-    //   this.elem.mozRequestFullScreen();
     // } else if (this.elem.webkitRequestFullscreen) {
     //   /* Chrome, Safari and Opera */
     //   this.elem.webkitRequestFullscreen();

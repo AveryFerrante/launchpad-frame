@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { environment } from '../../../environments/environment';
 import { NotificationActions } from 'src/app/models/NotificationActions';
 import { NotificationTypes } from 'src/app/models/NotificationTypes';
@@ -24,5 +24,10 @@ export class NotificationsService {
       batch.set(this.db.collection(this.dbName).doc(notificationId).ref, notification.getData());
     }
     return from(batch.commit());
+  }
+
+  getNotificationListener(): Observable<DocumentChangeAction<Notification>[]> {
+    return this.db.collection<Notification>(this.dbName, (ref) => ref.where('foruser', '==', this.authService.currentUser.uid))
+      .stateChanges(['added']);
   }
 }

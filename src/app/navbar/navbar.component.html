@@ -10,9 +10,27 @@
     <div class="col-lg-1 col-md-2 h-100 d-flex justify-content-center align-items-center clickable">
       <a>My Pictures</a>
     </div>
-    <div class="ml-auto col-auto d-flex justify-content-end align-items-center clickable h-100">
-      <i class="fas fa-user-circle mr-2" style="font-size: 1.5rem;"></i>
-      <span>My Account</span>
+    <div dropdown [autoClose]="true" class="ml-auto mr-3 col-auto d-flex justify-content-end align-items-center clickable h-100">
+      <a id="account-dropdown-trigger" class="d-flex h-100 align-items-center" dropdownToggle (click)="false">
+        <i class="fas fa-user-circle mr-2" style="font-size: 1.5rem;"></i>
+        <span>My Account</span>
+        <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
+      </a>
+      <ul id="account-dropdown" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="account-dropdown-trigger">
+        <li role="menuitem" class="dropdown-item d-flex align-items-center">
+          <span>Manage</span>
+          <i class="fas fa-user ml-auto"></i>
+        </li>
+        <li role="menuitem" class="dropdown-item d-flex align-items-center">
+          <span>Alerts</span>
+          <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
+          <i class="fas fa-bell ml-auto"></i>
+        </li>
+        <li role="menuitem" class="dropdown-item d-flex align-items-center" (click)="onLogout()">
+          <span>Logout</span>
+          <i class="fas fa-sign-out-alt ml-auto"></i>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
