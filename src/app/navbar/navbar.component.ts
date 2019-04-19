@@ -4,7 +4,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 import { NotificationsService } from '../services/notifications/notifications.service';
 import { Observable, Subscription } from 'rxjs';
 import { DocumentChangeAction } from '@angular/fire/firestore';
-import { Notification } from 'src/app/models/Notification'; 
+import { Notification } from 'src/app/models/Notification';
 import { map } from 'rxjs/operators';
 
 @Component({
