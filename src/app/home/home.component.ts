@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { Router } from '@angular/router';
-import { UserInfoService } from '../services/userinfo/user-info.service';
+import { UserInfoService } from '../../UserInfo/user-info.service';
 import { UserInfo } from '../models/UserInfo';
 import { concatMap } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';

@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs
 import { Username } from 'src/app/models/Username';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
-import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
+import { UserInfoService } from 'src/UserInfo/user-info.service';
 
 @Component({
   selector: 'app-create-frame',

@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Notification } from 'src/app/models/Notification';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { NotificationsService } from '../services/notifications/notifications.service';
-import { Observable, Subscription } from 'rxjs';
-import { DocumentChangeAction } from '@angular/fire/firestore';
-import { Notification } from 'src/app/models/Notification';
-import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',

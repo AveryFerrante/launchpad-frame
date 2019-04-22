@@ -5,7 +5,7 @@ import { finalize, first, map } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { UserInfo } from 'src/app/models/UserInfo';
 import { FramesService } from 'src/app/services/frames/frames.service';
-import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
+import { UserInfoService } from 'src/UserInfo/user-info.service';
 
 @Component({
   selector: 'app-frame-image-viewer',

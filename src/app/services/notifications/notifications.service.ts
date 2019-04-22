@@ -7,12 +7,11 @@ import { AuthenticationService } from '../authentication/authentication.service'
 import { Notification } from 'src/app/models/Notification';
 import { from, Observable } from 'rxjs';
 import { NotificationsStore } from '../stores/notificationsstore.service';
-import { UserInfoService } from '../userinfo/user-info.service';
+import { UserInfoService } from '../../../UserInfo/user-info.service';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { FrameUserInfoMetadata } from 'src/app/models/FrameUserInfoMetadata';
 import { UserFrames, constructUserFrame } from 'src/app/models/UserFrames';
-import { UserInfoStore } from '../stores/userinfostore.service';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -24,7 +23,7 @@ export class NotificationsService {
   private frameDb = environment.frameDatabase;
   private frameUserSub = environment.frameUserSub;
   constructor(private db: AngularFirestore, private authService: AuthenticationService,
-    private notificationsStore: NotificationsStore, private userInfoService: UserInfoService, private userInfoStore: UserInfoStore) { }
+    private notificationsStore: NotificationsStore, private userInfoService: UserInfoService) { }
 
   addNewFrameNotifications(frameId: string, frameName: string, forusers: string[]): Observable<void> {
     const batch = this.db.firestore.batch();
@@ -63,7 +62,7 @@ export class NotificationsService {
     this.userInfoService.addFrameBatch(batch, userFrame);
     return from(batch.commit()).pipe(
       tap(() => {
-        this.userInfoStore.addFrame(userFrame);
+        this.userInfoService.addFrame(userFrame);
         this.notificationsStore.removeNotification(notification.id);
       })
     );

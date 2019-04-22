@@ -14,8 +14,7 @@ import { Image } from '../../models/Image';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { ImagesService } from '../images/images.service';
 import { FramesStore } from '../stores/framesstore.service';
-import { UserInfoStore } from '../stores/userinfostore.service';
-import { UserInfoService } from '../userinfo/user-info.service';
+import { UserInfoService } from '../../../UserInfo/user-info.service';
 import { NotifierService } from 'angular-notifier';
 import { Username } from 'src/app/models/Username';
 
@@ -30,7 +29,7 @@ export class FramesService {
   private imageDb = environment.imageDatabase;
   private imageFrameSub = environment.imageFrameSub;
   constructor(private db: AngularFirestore, private authService: AuthenticationService, private frameStore: FramesStore,
-    private userInfoStore: UserInfoStore, private userInfoService: UserInfoService, private storage: AngularFireStorage,
+    private userInfoService: UserInfoService, private storage: AngularFireStorage,
     private imagesService: ImagesService, private notifierService: NotifierService) {
     this.frameDb = environment.frameDatabase;
     this.frameUserSub = environment.frameUserSub;
@@ -43,7 +42,7 @@ export class FramesService {
     const frameId = this.db.createId();
     const frame = new Frame(frameId, title, description, new Date());
     const userFrame = constructUserFrame(frameId, title, 'owner');
-    const userInfo = this.userInfoStore.getCurrentSnapshot();
+    const userInfo = this.userInfoService.currentSnapshot;
     const frameUserInfo: FrameUserInfo = constructFrameUserInfo(this.authService.currentUser.uid, [], 'owner',
       userInfo.username, usersToAdd);
 
@@ -121,7 +120,7 @@ export class FramesService {
     const imageRef = this.db.firestore.collection(this.imageDb).doc(imageId);
     const imageFrameRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
 
-    const userInfo = this.userInfoStore.getCurrentSnapshot();
+    const userInfo = this.userInfoService.currentSnapshot;
     const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId,
       this.authService.currentUser.uid, new Date(), `${userInfo.username}`);
     const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);

@@ -18,8 +18,7 @@ import { NotifierModule } from 'angular-notifier';
 import { environment } from '../environments/environment';
 
 import { AuthenticationService } from './services/authentication/authentication.service';
-import { UserInfoService } from './services/userinfo/user-info.service';
-import { UserInfoStore } from './services/stores/userinfostore.service';
+import { UserInfoService } from '../UserInfo/user-info.service';
 
 import { FramesModule } from './frames/frames.module';
 import { AccountModule } from './account/account.module';
@@ -54,8 +53,7 @@ import { NavbarComponent } from './navbar/navbar.component';
   ],
   providers: [
     AuthenticationService,
-    UserInfoService,
-    UserInfoStore
+    UserInfoService
   ],
   bootstrap: [MainComponent]
 })

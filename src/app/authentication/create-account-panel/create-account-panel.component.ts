@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { CreateAccount } from 'src/app/models/client-side/CreateAccount';
 import { UserCredentials } from 'src/app/models/client-side/UserCredentials';
-import { UserInfoService } from 'src/app/services/userinfo/user-info.service';
+import { UserInfoService } from 'src/UserInfo/user-info.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UserInfoService } from './user-info.service';
+import { UserInfoService } from '../../../UserInfo/user-info.service';
 
 describe('UserInfoService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

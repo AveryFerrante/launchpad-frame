@@ -5,7 +5,7 @@ import { CreateAccount } from '../models/client-side/CreateAccount';
 import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfo } from '../models/UserInfo';
 import { AuthenticationService } from '../services/authentication/authentication.service';
-import { UserInfoService } from '../services/userinfo/user-info.service';
+import { UserInfoService } from '../../UserInfo/user-info.service';
 
 @Component({
   selector: 'app-authentication',
