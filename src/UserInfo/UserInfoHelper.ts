@@ -1,5 +1,5 @@
 import { AngularFirestore } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment'; 
+import { environment } from 'src/environments/environment';
 import { UserInfo } from 'src/app/models/UserInfo';
 import { Username } from 'src/app/models/Username';
 
