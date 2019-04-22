@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, HostBinding, Inject, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of, fromEvent } from 'rxjs';
-import { catchError, switchMap, tap, filter, first } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { ClientFrame } from '../../models/client-side/ClientFrame';
 import { Errors } from '../../models/Errors';
@@ -12,10 +12,10 @@ import { Errors } from '../../models/Errors';
   templateUrl: './frame-viewer.component.html',
   styleUrls: ['./frame-viewer.component.css']
 })
-export class FrameViewerComponent implements OnInit {
+export class FrameViewerComponent implements OnInit, OnDestroy {
 
   constructor(private framesService: FramesService, private route: ActivatedRoute,
-    @Inject(DOCUMENT) private document: any) { }
+    @Inject(DOCUMENT) private document: Document) { }
 
   elem: any;
   frame$: Observable<ClientFrame> = null;
@@ -23,9 +23,19 @@ export class FrameViewerComponent implements OnInit {
   frameNotFound = false;
   showSlideshow = false;
   slideshowFullscreen = false;
+  private fsEventHandler: any = this.onFullscreenChange.bind(this);
   @HostBinding('class') classes = 'h-100 d-flex flex-column';
   ngOnInit() {
     this.elem = this.document.documentElement;
+    this.initFrameObservable();
+    this.document.addEventListener('fullscreenchange', this.fsEventHandler);
+    this.document.addEventListener('mozfullscreenchange', this.fsEventHandler);
+    this.document.addEventListener('webkitfullscreenchange', this.fsEventHandler);
+    this.document.addEventListener('mozfullscreenchange', this.fsEventHandler);
+    this.document.addEventListener('MSFullscreenChange', this.fsEventHandler);
+  }
+
+  private initFrameObservable() {
     this.frame$ = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => this.framesService.getFrameData(params.get('id')).pipe(
         tap((cf: ClientFrame) => {
@@ -45,35 +55,10 @@ export class FrameViewerComponent implements OnInit {
         })
       )),
     );
-    const self = this;
-    this.document.addEventListener('fullscreenchange', () => {
-      if (self.showSlideshow === false) {
-        self.showSlideshow = true;
-        self.slideshowFullscreen = true;
-        setTimeout(self.setUpSlideshow, 100); /* THIS IS NOT GOOD....FIND A WAY TO TIE INTO THE ELEMENT CREATION */
-      } else {
-        self.slideshowFullscreen = false;
-        self.showSlideshow = false;
-      }
-    });
-    this.document.addEventListener('mozfullscreenchange', () => {
-      console.log('Firefox event');
-      if (self.showSlideshow === false) {
-        self.showSlideshow = true;
-        self.slideshowFullscreen = true;
-        setTimeout(self.setUpSlideshow, 100); /* THIS IS NOT GOOD....FIND A WAY TO TIE INTO THE ELEMENT CREATION */
-      } else {
-        self.slideshowFullscreen = false;
-        self.showSlideshow = false;
-      }
-    });
-    // this.document.addEventListener('webkitfullscreenchange', () => { this.onFullscreenExit(); });
-    // this.document.addEventListener('mozfullscreenchange', () => { this.onFullscreenExit(); });
-    // this.document.addEventListener('MSFullscreenChange', () => { this.onFullscreenExit(); });
   }
 
   setUpSlideshow() {
-    const ss = document.getElementById('slideshow');
+    const ss = this.document.querySelector('#slideshow');
     ss.removeChild(ss.firstChild); // Removes 'X' in upper right
     const tags = ss.getElementsByTagName('a');
     for (let i = 0; i < tags.length; i++) {
@@ -82,19 +67,35 @@ export class FrameViewerComponent implements OnInit {
       tags.item(i).style.cursor = 'none';
     }
   }
+
+  onFullscreenChange() {
+    if (this.showSlideshow === false) {
+      this.showSlideshow = true;
+      this.slideshowFullscreen = true;
+      setTimeout(this.setUpSlideshow, 100); /* THIS IS NOT GOOD....FIND A WAY TO TIE INTO THE ELEMENT CREATION */
+    } else {
+      this.slideshowFullscreen = false;
+      this.showSlideshow = false;
+    }
+  }
+
   onViewFrame() {
     if (this.elem.requestFullscreen) {
       this.elem.requestFullscreen();
-    } else if (this.elem.mozRequestFullScreen) {
-      /* Firefox */
+    } else if (this.elem.mozRequestFullScreen) { /* Firefox */
       this.elem.mozRequestFullScreen();
+    } else if (this.elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      this.elem.webkitRequestFullscreen();
+    } else if (this.elem.msRequestFullscreen) { /* IE/Edge */
+      this.elem.msRequestFullscreen();
     }
-    // } else if (this.elem.webkitRequestFullscreen) {
-    //   /* Chrome, Safari and Opera */
-    //   this.elem.webkitRequestFullscreen();
-    // } else if (this.elem.msRequestFullscreen) {
-    //   /* IE/Edge */
-    //   this.elem.msRequestFullscreen();
-    // }
+  }
+
+  ngOnDestroy() {
+    this.document.removeEventListener('fullscreenchange', this.fsEventHandler);
+    this.document.removeEventListener('mozfullscreenchange', this.fsEventHandler);
+    this.document.removeEventListener('webkitfullscreenchange', this.fsEventHandler);
+    this.document.removeEventListener('mozfullscreenchange', this.fsEventHandler);
+    this.document.removeEventListener('MSFullscreenChange', this.fsEventHandler);
   }
 }

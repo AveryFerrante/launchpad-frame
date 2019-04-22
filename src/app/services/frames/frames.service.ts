@@ -47,32 +47,23 @@ export class FramesService {
     const frameUserInfo: FrameUserInfo = constructFrameUserInfo(this.authService.currentUser.uid, [], 'owner',
       userInfo.username, usersToAdd);
 
-    return from(this.db.firestore.runTransaction((t) => {
-      return forkJoin(
-        this.userInfoService.getAddFrameTransaction(t, userFrame),
-        this.getAddFrameTransaction(t, frame),
-        this.getAddFrameUserTransaction(t, frame.id, frameUserInfo)
-      ).toPromise();
-    })).pipe(
-      tap(() => this.userInfoStore.addFrame(userFrame)),
-      tap(() => this.frameStore.add(new ClientFrame(frame))),
+    const batch = this.db.firestore.batch();
+    this.userInfoService.addFrameBatch(batch, userFrame);
+    this.addFrameBatch(batch, frame);
+    this.addFrameUserBatch(batch, frame.id, frameUserInfo);
+    return from(batch.commit()).pipe(
       mapTo(frame.id)
     );
   }
 
-  getAddFrameTransaction(t: firebase.firestore.Transaction, frame: Frame) {
+  addFrameBatch(b: firebase.firestore.WriteBatch, frame: Frame) {
     const docRef = this.db.firestore.collection(this.frameDb).doc(frame.id);
-    return of(t.set(docRef, frame.getData()));
+    b.set(docRef, frame.getData());
   }
 
-  getAddFrameUserTransaction(t: firebase.firestore.Transaction, frameId: string, frameUserInfo: FrameUserInfo) {
+  addFrameUserBatch(b: firebase.firestore.WriteBatch, frameId: string, frameUserInfo: FrameUserInfo) {
     const docRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameUserSub}/${frameId}`);
-    return of(t.set(docRef, frameUserInfo));
-  }
-
-  getAddFrameImageTransaction(t: firebase.firestore.Transaction, frameId: string, frameImage: FrameImage) {
-    const docRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameImageSub}/${this.db.createId()}`);
-    return of(t.set(docRef, frameImage.getData()));
+    b.set(docRef, frameUserInfo);
   }
 
   getFrameData(frameId: string): Observable<ClientFrame> {

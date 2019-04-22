@@ -77,8 +77,8 @@ export class UserInfoService {
   addFrameBatch(batch: firebase.firestore.WriteBatch, frames: UserFrames) {
     const docRef = this.db.firestore.doc(`${this.userDb}/${this.authService.currentUser.uid}`);
     const updates = {
-      frames
+      frames // this relies on the variable being named 'frames'
     };
-    batch.update(docRef, updates);
+    batch.set(docRef, updates, { merge: true });
   }
 }

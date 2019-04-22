@@ -12,25 +12,11 @@ import { cloneDeep } from 'lodash';
 })
 export class NotificationsStore {
 
-  private readonly _notifications = new BehaviorSubject<Notification[]>(null);
-  readonly frames$ = this._notifications.asObservable();
+  private _notifications: BehaviorSubject<Notification[]>;
+  private notifications$: Observable<Notification[]>;
   private dbName = environment.notificationsDatabase;
-  constructor(private db: AngularFirestore, private authService: AuthenticationService) {
-    this.db.collection<Notification>(this.dbName, (ref) => ref.where('foruser', '==', this.authService.currentUser.uid))
-      .stateChanges(['added']).pipe(
-        map((newNotifications: DocumentChangeAction<Notification>[]) => {
-          console.log('Recieved a new notification');
-          const notifications: Notification[] = [];
-          for (const n of newNotifications) {
-            const data = n.payload.doc.data();
-            notifications.push(new Notification(n.payload.doc.id, data.action, data.frameId, data.frameName,
-              data.fromuser, data.fromusername, data.type, data.foruser));
-          }
-          return notifications;
-        }),
-        tap((nots: Notification[]) => this.addNotifications(nots))
-      ).subscribe();
-  }
+  private isInit = false;
+  constructor(private db: AngularFirestore, private authService: AuthenticationService) {  }
 
   private get notifications(): Notification[] {
     return this._notifications.getValue();
@@ -51,7 +37,33 @@ export class NotificationsStore {
   }
 
   public get notificationsWatcher(): Observable<Notification[]> {
-    return this.frames$;
+    if (!this.isInit) {
+      this._notifications = new BehaviorSubject<Notification[]>(null);
+      this.notifications$ = this._notifications.asObservable();
+      this.isInit = true;
+      this.db.collection<Notification>(this.dbName, (ref) => ref.where('foruser', '==', this.authService.currentUser.uid))
+        .stateChanges(['added']).pipe(
+          map((newNotifications: DocumentChangeAction<Notification>[]) => {
+            console.log('Recieved a new notification');
+            const notifications: Notification[] = [];
+            for (const n of newNotifications) {
+              const data = n.payload.doc.data();
+              notifications.push(new Notification(n.payload.doc.id, data.action, data.frameId, data.frameName,
+                data.fromuser, data.fromusername, data.type, data.foruser));
+            }
+            return notifications;
+          }),
+          tap((nots: Notification[]) => this.addNotifications(nots))
+        ).subscribe();
+    }
+    return this.notifications$;
+  }
+
+  public stopNotificationWatcher() {
+    this.isInit = false;
+    this._notifications.complete();
+    this._notifications = null;
+    this.notifications$ = null;
   }
 
   public removeNotification(id: string) {

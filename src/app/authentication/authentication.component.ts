@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService } from '../services/authentication/authentication.service';
+import { concatMap, mapTo } from 'rxjs/operators';
 import { CreateAccount } from '../models/client-side/CreateAccount';
 import { UserCredentials } from '../models/client-side/UserCredentials';
-import { UserInfoService } from '../services/userinfo/user-info.service';
-import { UserInfoStore } from '../services/stores/userinfostore.service';
 import { UserInfo } from '../models/UserInfo';
-import { concatMap, mapTo } from 'rxjs/operators';
+import { AuthenticationService } from '../services/authentication/authentication.service';
+import { UserInfoService } from '../services/userinfo/user-info.service';
 
 @Component({
   selector: 'app-authentication',
@@ -20,7 +19,7 @@ export class AuthenticationComponent implements OnInit {
   panelTitle: string;
   errorMessage: string;
   constructor(private activatedRoute: ActivatedRoute, private authService: AuthenticationService,
-    private userInfoService: UserInfoService, private router: Router, private userInfoStore: UserInfoStore) { }
+    private userInfoService: UserInfoService, private router: Router) { }
 
   ngOnInit() {
     this.activatedRoute.url.subscribe((u) => {

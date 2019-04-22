@@ -27,7 +27,6 @@ import { AccountModule } from './account/account.module';
 
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { ImageCardComponent } from './image-card/image-card.component';
 
 @NgModule({
   declarations: [
@@ -36,8 +35,7 @@ import { ImageCardComponent } from './image-card/image-card.component';
     LoginPanelComponent,
     CreateAccountPanelComponent,
     HomeComponent,
-    NavbarComponent,
-    ImageCardComponent
+    NavbarComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),

@@ -29,6 +29,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
+    this.notificationService.stopNotificationListener();
     this.authService.signOut().subscribe(
       () => this.router.navigate(['login'])
     );

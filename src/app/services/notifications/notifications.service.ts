@@ -41,6 +41,10 @@ export class NotificationsService {
     return this.notificationsStore.notificationsWatcher;
   }
 
+  stopNotificationListener() {
+    this.notificationsStore.stopNotificationWatcher();
+  }
+
   acceptNotification(notification: Notification): Observable<void> {
     const frameUserInfoRef = this.db.collection(`${this.frameDb}/${notification.frameId}/${this.frameUserSub}`)
     .doc(`${notification.frameId}`).ref;
@@ -57,8 +61,11 @@ export class NotificationsService {
     batch.update(frameUserInfoRef, updates);
     batch.delete(notificationRef);
     this.userInfoService.addFrameBatch(batch, userFrame);
-    return from(batch.commit().then(() => this.notificationsStore.removeNotification(notification.id))).pipe(
-      tap(() => this.userInfoStore.addFrame(userFrame))
+    return from(batch.commit()).pipe(
+      tap(() => {
+        this.userInfoStore.addFrame(userFrame);
+        this.notificationsStore.removeNotification(notification.id);
+      })
     );
   }
 }
