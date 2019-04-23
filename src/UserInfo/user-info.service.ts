@@ -16,14 +16,13 @@ import { UserInfoHelper } from './UserInfoHelper';
 export class UserInfoService {
 
   private userDb = environment.userDatabase;
-  private usernameDb = environment.usernameDatabase;
   private userInfoStore = UserInfoStore.getInstance();
   private userInfoHelper: UserInfoHelper;
   constructor(private db: AngularFirestore, private authService: AuthenticationService) {
     this.userInfoHelper = new UserInfoHelper(this.db);
   }
 
-  get currentState(): Observable<UserInfo> { return this.userInfoStore.getWatcher(); }
+  get currentState(): Observable<UserInfo> { return this.userInfoStore.getNonNullWatcher(); }
   get currentSnapshot(): UserInfo { return this.userInfoStore.getCurrent(); }
 
   addNewUserInfo(info: UserInfo): Observable<void> {
@@ -38,36 +37,13 @@ export class UserInfoService {
   }
 
   checkUsername(username: string): Observable<Username> {
-    username = username.toLowerCase().trim();
-    return from(this.db.collection(this.usernameDb, (ref) => ref.where('usernametrimmed', '==', username).limit(1)).get().pipe(
-      map((val: firebase.firestore.QuerySnapshot) => {
-        if (val.empty) {
-          return null;
-        } else if (val.docs[0].exists) {
-          const data = val.docs[0].data();
-          return new Username(data.username, data.userid);
-        } else {
-          return null;
-        }
-      })
-    ));
+    return this.userInfoHelper.searchUsername(username);
   }
 
-  initializeUserInfo(): Observable<void> {
-    if (this.userInfoStore.getCurrent() === null) {
-      return from(this.db.collection(this.userDb).doc(this.authService.currentUser.uid).get().pipe(
-        map((response: firebase.firestore.DocumentSnapshot) => {
-          try {
-            const data = response.data();
-            return new UserInfo(data.username, data.firstName, data.lastName, data.email, data.frames);
-          } catch {
-            throw new Error('Userinfo does not exist for signed in user');
-          }
-        }),
-        tap((user: UserInfo) => this.userInfoStore.set(user)),
-        mapTo(null)
-      ));
-    }
+  getUserInfo(userId: string) {
+    return this.userInfoHelper.getUserInfo(userId).pipe(
+      tap((userInfo: UserInfo) => this.userInfoStore.set(userInfo))
+    );
   }
 
   addFrameBatch(batch: firebase.firestore.WriteBatch, frames: UserFrames) {

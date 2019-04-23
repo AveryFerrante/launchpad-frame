@@ -1,10 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 import { UserInfoService } from '../../../UserInfo/user-info.service';
-import { UserInfo } from '../../models/UserInfo';
 import { UserFrameMetadata } from '../../models/UserFramesMetadata';
-import { skipWhile } from 'rxjs/operators';
+import { UserInfo } from '../../models/UserInfo';
 
 @Component({
   selector: 'app-sidenav',
@@ -15,12 +13,10 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   private userInfo$: Subscription = null;
   public frames = [];
-  constructor(private userService: UserInfoService, private router: Router) { }
+  constructor(private userService: UserInfoService) { }
 
   ngOnInit() {
-    this.userInfo$ = this.userService.currentState.pipe(
-      skipWhile((u: UserInfo) => u == null),
-    ).subscribe((userInfo: UserInfo) => {
+    this.userInfo$ = this.userService.currentState.subscribe((userInfo: UserInfo) => {
         this.frames = [];
         for (const frameId in userInfo.frames) {
           const metaData: UserFrameMetadata = userInfo.frames[frameId];
@@ -30,15 +26,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
         });
       }
     });
-  }
-
-  onCreateNew() {
-    this.router.navigate(['home', 'frames', 'create']);
-  }
-
-  viewFrame(id: string) {
-    console.log('view frame', id);
-    this.router.navigate(['home', 'frames', id]);
   }
 
   ngOnDestroy() {

@@ -10,6 +10,7 @@ import { CreateFrameComponent } from './frames/create-frame/create-frame.compone
 import { FrameViewerComponent } from './frames/frame-viewer/frame-viewer.component';
 import { AccountComponent } from './account/account/account.component';
 import { NotificationsComponent } from './account/notifications/notifications.component';
+import { UserInfoResolveService } from './services/resolvers/user-info-resolve.service';
 
 const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },
@@ -18,7 +19,7 @@ const appRoutes: Routes = [
 ];
 
 const homeRoutes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], children: [
+  { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], resolve: { UserInfo: UserInfoResolveService }, children: [
     { path: 'frames', component:  FramesComponent, children: [
       { path: 'create', component: CreateFrameComponent },
       { path: ':id', component: FrameViewerComponent }

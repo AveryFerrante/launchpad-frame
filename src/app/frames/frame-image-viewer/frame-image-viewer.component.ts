@@ -6,6 +6,7 @@ import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { UserInfo } from 'src/app/models/UserInfo';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { UserInfoService } from 'src/UserInfo/user-info.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
   selector: 'app-frame-image-viewer',
@@ -16,12 +17,14 @@ export class FrameImageViewerComponent implements OnInit {
   _frame: ClientFrame = null;
   public percentages$: Observable<number>;
   public ownedFrameIds: string[];
-  @Input() set frame(frame: ClientFrame) { this._frame = frame; }
-  constructor(private framesService: FramesService, private userInfoService: UserInfoService, private notifierService: NotifierService) { }
+  public userId: string;
+  @Input() set frame(frame: ClientFrame) { this._frame = frame; console.log(frame); }
+  constructor(private framesService: FramesService, private userInfoService: UserInfoService, private notifierService: NotifierService,
+    private authService: AuthenticationService) { }
 
   ngOnInit() {
+    this.userId = this.authService.currentUser.uid;
     this.userInfoService.currentState.pipe(
-      first((ui: UserInfo) => ui !== null),
       map((ui: UserInfo) => {
         const frameIds = [];
         for (const id in ui.frames) {
