@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { concatMap, mapTo } from 'rxjs/operators';
+import { concatMap, mapTo, tap } from 'rxjs/operators';
 import { CreateAccount } from '../models/client-side/CreateAccount';
 import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfo } from '../models/UserInfo';
@@ -22,7 +22,7 @@ export class AuthenticationComponent implements OnInit {
     private userInfoService: UserInfoService, private router: Router) { }
 
   ngOnInit() {
-    this.activatedRoute.url.subscribe((u) => {
+    this.activatedRoute.url.pipe(tap((u) => console.log(u[0]))).subscribe((u) => {
       if (u[0] && u[0].path === 'login') {
         this.showLoginForm = true;
         this.showCreateAccountForm = false;

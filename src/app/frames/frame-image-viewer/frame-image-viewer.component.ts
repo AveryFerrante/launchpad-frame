@@ -7,6 +7,7 @@ import { UserInfo } from 'src/app/models/UserInfo';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { UserInfoService } from 'src/UserInfo/user-info.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-frame-image-viewer',
@@ -19,12 +20,12 @@ export class FrameImageViewerComponent implements OnInit {
   public ownedFrameIds: string[];
   public userId: string;
   @Input() set frame(frame: ClientFrame) { this._frame = frame; console.log(frame); }
-  constructor(private framesService: FramesService, private userInfoService: UserInfoService, private notifierService: NotifierService,
+  constructor(private framesService: FramesService, private router: ActivatedRoute, private notifierService: NotifierService,
     private authService: AuthenticationService) { }
 
   ngOnInit() {
     this.userId = this.authService.currentUser.uid;
-    this.userInfoService.storeWatcher.pipe(
+    (this.router.snapshot.data['UserInfo'] as Observable<UserInfo>).pipe(
       map((ui: UserInfo) => {
         const frameIds = [];
         for (const id in ui.frames) {

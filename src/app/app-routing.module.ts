@@ -15,15 +15,12 @@ import { UserInfoResolveService } from './services/resolvers/user-info-resolve.s
 const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },
   { path: 'create-account', component: AuthenticationComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
-];
-
-const homeRoutes: Routes = [
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'frames', component:  FramesComponent, canActivate: [UnauthGuardGuard], resolve: { UserInfo: UserInfoResolveService }, children: [
+    { path: 'create', component: CreateFrameComponent },
+    { path: ':id', component: FrameViewerComponent, resolve: { UserInfo: UserInfoResolveService } }
+  ] },
   { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], children: [
-    { path: 'frames', component:  FramesComponent, resolve: { UserInfo: UserInfoResolveService }, children: [
-      { path: 'create', component: CreateFrameComponent },
-      { path: ':id', component: FrameViewerComponent }
-    ] },
     { path: 'account', component: AccountComponent },
     { path: 'notifications', component: NotificationsComponent }
   ] }
@@ -32,8 +29,7 @@ const homeRoutes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forRoot(appRoutes, { enableTracing: false }),
-    RouterModule.forChild(homeRoutes)
+    RouterModule.forRoot(appRoutes, { enableTracing: false })
   ],
   exports: [
     RouterModule

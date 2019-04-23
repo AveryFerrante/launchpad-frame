@@ -1,2 +1,11 @@
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->
+<div class="h-100 d-flex flex-column">
+    <div style="height: 4rem;" *ngIf="showNavbar">
+        <app-navbar></app-navbar>
+    </div>
+    <div class="flex-grow-1">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
 <notifier-container></notifier-container>
