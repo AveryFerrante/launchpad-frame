@@ -39,7 +39,7 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
   private setUserSearchObservable() {
     this.userSearch = this.newFrameForm.controls.userSearchInput.valueChanges.pipe(
       tap((val: string) => {
-        if (val.toLowerCase().trim() === this.userInfoService.currentSnapshot.username.toLowerCase().trim()) {
+        if (val.toLowerCase().trim() === this.userInfoService.currentState.username.toLowerCase().trim()) {
           this.errorMessage = 'You will be added to the frame automatically';
           this.loading = false;
         } else {
@@ -47,7 +47,7 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
         }
       }),
       filter((val: string) => val !== '' && val !== null && val.length >= 2 &&
-        val.toLowerCase().trim() !== this.userInfoService.currentSnapshot.username.toLowerCase().trim()),
+        val.toLowerCase().trim() !== this.userInfoService.currentState.username.toLowerCase().trim()),
       tap(() => this.loading = true),
       debounceTime(700),
       distinctUntilChanged(),

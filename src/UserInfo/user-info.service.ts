@@ -22,8 +22,8 @@ export class UserInfoService {
     this.userInfoHelper = new UserInfoHelper(this.db);
   }
 
-  get currentState(): Observable<UserInfo> { return this.userInfoStore.getNonNullWatcher(); }
-  get currentSnapshot(): UserInfo { return this.userInfoStore.getCurrent(); }
+  get storeWatcher(): Observable<UserInfo> { return this.userInfoStore.getNonNullWatcher(); }
+  get currentState(): UserInfo { return this.userInfoStore.getCurrent(); }
 
   addNewUserInfo(info: UserInfo): Observable<void> {
     const userId = this.authService.currentUser.uid;

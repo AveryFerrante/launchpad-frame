@@ -30,7 +30,7 @@ export class NotificationsService {
     for (const user of forusers) {
       const notificationId = this.db.createId();
       const notification = new Notification(notificationId, NotificationActions.Added, frameId, frameName,
-        this.authService.currentUser.uid, this.userInfoService.currentSnapshot.username, NotificationTypes.Frame, user);
+        this.authService.currentUser.uid, this.userInfoService.currentState.username, NotificationTypes.Frame, user);
       batch.set(this.db.collection(this.dbName).doc(notificationId).ref, notification.getData());
     }
     return from(batch.commit());
@@ -52,7 +52,7 @@ export class NotificationsService {
 
     const userFrame: UserFrames = constructUserFrame(notification.frameId, notification.frameName, 'participant');
     const updates = {};
-    const frameUserInfo: FrameUserInfoMetadata = { username: this.userInfoService.currentSnapshot.username,
+    const frameUserInfo: FrameUserInfoMetadata = { username: this.userInfoService.currentState.username,
       role: 'participant', permissions: ['canaddimages'] };
     updates[`pendingUsers.${this.authService.currentUser.uid}`] = firebase.firestore.FieldValue.delete();
     updates[`users.${this.authService.currentUser.uid}`] = frameUserInfo;

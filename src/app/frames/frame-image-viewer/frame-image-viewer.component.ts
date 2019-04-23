@@ -24,7 +24,7 @@ export class FrameImageViewerComponent implements OnInit {
 
   ngOnInit() {
     this.userId = this.authService.currentUser.uid;
-    this.userInfoService.currentState.pipe(
+    this.userInfoService.storeWatcher.pipe(
       map((ui: UserInfo) => {
         const frameIds = [];
         for (const id in ui.frames) {

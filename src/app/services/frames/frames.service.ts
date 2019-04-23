@@ -42,7 +42,7 @@ export class FramesService {
     const frameId = this.db.createId();
     const frame = new Frame(frameId, title, description, new Date());
     const userFrame = constructUserFrame(frameId, title, 'owner');
-    const userInfo = this.userInfoService.currentSnapshot;
+    const userInfo = this.userInfoService.currentState;
     const frameUserInfo: FrameUserInfo = constructFrameUserInfo(this.authService.currentUser.uid, [], 'owner',
       userInfo.username, usersToAdd);
 
@@ -120,7 +120,7 @@ export class FramesService {
     const imageRef = this.db.firestore.collection(this.imageDb).doc(imageId);
     const imageFrameRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
 
-    const userInfo = this.userInfoService.currentSnapshot;
+    const userInfo = this.userInfoService.currentState;
     const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId,
       this.authService.currentUser.uid, new Date(), `${userInfo.username}`);
     const image = new Image(imageId, new Date(), frameImage.downloadPath, this.authService.currentUser.uid);
