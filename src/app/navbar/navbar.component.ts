@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Notification } from 'src/app/models/Notification';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { NotificationsService } from '../services/notifications/notifications.service';
+import { GlobalEventsService } from '../services/global/global-events.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,11 +14,19 @@ import { NotificationsService } from '../services/notifications/notifications.se
 })
 export class NavbarComponent implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthenticationService, private router: Router, private notificationService: NotificationsService) { }
+  constructor(private authService: AuthenticationService, private router: Router, private notificationService: NotificationsService,
+    private globalEventsService: GlobalEventsService) { }
 
   notifications$: Subscription;
   notifications: Notification[] = [];
+  showHamburger = false;
   ngOnInit() {
+    this.globalEventsService.showHamburgerEmitter.subscribe(
+      (show) =>  {
+        this.showHamburger = show;
+      }
+    );
+
     this.notifications$ = this.notificationService.getNotificationListener().pipe(
       tap((notifications: Notification[]) =>  {
         if (notifications != null) {
@@ -25,6 +34,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe();
+  }
+
+  onToggleSidenav() {
+    this.globalEventsService.toggleSidenav();
   }
 
   onLogout() {

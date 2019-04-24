@@ -65,6 +65,7 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
       tags.item(i).removeAttribute('href');
       tags.item(i).removeAttribute('title');
       tags.item(i).style.cursor = 'none';
+      setTimeout(() => tags.item(i).style.backgroundSize = 'stretch', 500);
     }
   }
 

@@ -4,6 +4,7 @@ import { UserInfoService } from '../../../UserInfo/user-info.service';
 import { UserFrameMetadata } from '../../models/UserFramesMetadata';
 import { UserInfo } from '../../models/UserInfo';
 import { ActivatedRoute } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidenav',
@@ -17,7 +18,8 @@ export class SidenavComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.userInfo$ = (this.route.snapshot.data['UserInfo'] as Observable<UserInfo>).subscribe((userInfo: UserInfo) => {
+    this.userInfo$ = (this.route.snapshot.data['UserInfo'] as Observable<UserInfo>)
+    .subscribe((userInfo: UserInfo) => {
         this.frames = [];
         for (const frameId in userInfo.frames) {
           const metaData: UserFrameMetadata = userInfo.frames[frameId];

@@ -69,6 +69,7 @@ export class UserInfoStore {
     }
 
     private set userInfo(value: UserInfo) {
+        console.log(value);
         this._userInfo.next(value);
     }
 

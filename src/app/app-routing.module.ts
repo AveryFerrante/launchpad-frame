@@ -16,11 +16,12 @@ const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },
   { path: 'create-account', component: AuthenticationComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'frames', component:  FramesComponent, canActivate: [UnauthGuardGuard], resolve: { UserInfo: UserInfoResolveService }, children: [
+  { path: 'frames', component:  FramesComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard],
+    resolve: { UserInfo: UserInfoResolveService }, children: [
     { path: 'create', component: CreateFrameComponent },
     { path: ':id', component: FrameViewerComponent, resolve: { UserInfo: UserInfoResolveService } }
   ] },
-  { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], children: [
+  { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard], children: [
     { path: 'account', component: AccountComponent },
     { path: 'notifications', component: NotificationsComponent }
   ] }

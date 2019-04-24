@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, UrlSegment, Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { GlobalEventsService } from '../services/global/global-events.service';
 
 @Component({
   selector: 'app-main',
@@ -9,17 +8,12 @@ import { tap } from 'rxjs/operators';
 })
 export class MainComponent implements OnInit {
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(private globalEventService: GlobalEventsService) { }
 
   showNavbar = false;
   ngOnInit() {
-    console.log(this.router.url);
-    this.activatedRoute.url.pipe(tap((u) => console.log(u))).subscribe((u: UrlSegment[]) => {
-      if (u[0] && (u[0].path === 'login' || u[0].path === 'create-account')) {
-        this.showNavbar = false;
-      } else {
-        this.showNavbar = true;
-      }
+    this.globalEventService.showNavBarEmitter.subscribe((show) => {
+      this.showNavbar = show;
     });
   }
 

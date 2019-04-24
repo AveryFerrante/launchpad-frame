@@ -1,6 +1,7 @@
 <div class="w-100 h-100 background-color font-color">
   <div class="d-flex align-items-center h-100">
     <div class="col-xl-2 col-lg-3 col-sm-4 d-none d-md-flex align-items-center" style="font-size: 1.5rem;">
+      <i class="fas fa-bars mr-3 clickable" *ngIf="showHamburger" (click)="onToggleSidenav()"></i>
       <span>Launchpad Frame</span>
       <i class="fas fa-space-shuttle ml-3"></i>
     </div>
@@ -17,11 +18,11 @@
         <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
       </a>
       <ul id="account-dropdown" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="account-dropdown-trigger">
-        <li role="menuitem" class="dropdown-item d-flex align-items-center" [routerLink]="['account']">
+        <li role="menuitem" class="dropdown-item d-flex align-items-center" [routerLink]="['home', 'account']">
           <span>Manage</span>
           <i class="fas fa-user ml-auto"></i>
         </li>
-        <li role="menuitem" class="dropdown-item d-flex align-items-center" [routerLink]="['notifications']">
+        <li role="menuitem" class="dropdown-item d-flex align-items-center" [routerLink]="['home', 'notifications']">
           <span>Alerts</span>
           <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
           <i class="fas fa-bell ml-auto"></i>

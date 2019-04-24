@@ -1,6 +1,6 @@
 <div class="container-fluid h-100">
     <div class="row h-100">
-        <div class="col-2 p-0">
+        <div class="p-0" *ngIf="showSidenav" [@enterAnimation] style="width: 280px;" [ngClass]="{'sidebar-overlay': overlaySidebar}">
             <app-sidenav></app-sidenav>
         </div>
         <div class="col p-0 d-flex flex-column">

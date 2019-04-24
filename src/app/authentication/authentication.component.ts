@@ -6,6 +6,7 @@ import { UserCredentials } from '../models/client-side/UserCredentials';
 import { UserInfo } from '../models/UserInfo';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { UserInfoService } from '../../UserInfo/user-info.service';
+import { GlobalEventsService } from '../services/global/global-events.service';
 
 @Component({
   selector: 'app-authentication',
@@ -19,7 +20,7 @@ export class AuthenticationComponent implements OnInit {
   panelTitle: string;
   errorMessage: string;
   constructor(private activatedRoute: ActivatedRoute, private authService: AuthenticationService,
-    private userInfoService: UserInfoService, private router: Router) { }
+    private userInfoService: UserInfoService, private router: Router, private globalEventService: GlobalEventsService) { }
 
   ngOnInit() {
     this.activatedRoute.url.pipe(tap((u) => console.log(u[0]))).subscribe((u) => {
@@ -37,7 +38,10 @@ export class AuthenticationComponent implements OnInit {
 
   onLogin(login: UserCredentials) {
       this.authService.signInWithEmail(login).subscribe(
-        () => this.router.navigate(['/home']),
+        () => {
+          this.globalEventService.showNavBar(true);
+          this.router.navigate(['/home']);
+        },
         error => {
           const errorCode = error.code;
           if (errorCode === 'auth/wrong-password') {
@@ -60,7 +64,10 @@ export class AuthenticationComponent implements OnInit {
         mapTo(new UserInfo(account.username, account.firstName, account.lastName, account.userCredentials.email)),
         concatMap((userInfo: UserInfo) => this.userInfoService.addNewUserInfo(userInfo)))
         .subscribe(
-          () => this.router.navigate(['/home']),
+          () => {
+            this.globalEventService.showNavBar(true);
+            this.router.navigate(['/home']);
+          },
           (error) => {
             console.log(error);
             if (error.code === 'auth/weak-password') {
