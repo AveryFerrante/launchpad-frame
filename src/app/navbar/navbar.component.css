@@ -10,6 +10,11 @@
     background-color: rgba(68, 45, 63, 1);
 }
 
+.clickable:hover.button-clickable {
+    background-color: rgba(68, 45, 63, 1);
+    border-radius: 30px;
+}
+
 .active {
     background-color: rgba(68, 45, 63, 1);
 }

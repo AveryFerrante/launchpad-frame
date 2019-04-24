@@ -33,7 +33,7 @@ export class FramesComponent implements OnInit, OnDestroy {
           const sidenav = document.getElementById('frameSidenav');
           console.log('fired sidenav sizing logic');
           sidenav.setAttribute('style', sidenav.getAttribute('style') + ' ' +
-            `height: calc(${document.body.scrollHeight}px - ${navbar.offsetHeight}px);`); }, 1);
+            `height: calc(${document.body.scrollHeight}px - ${navbar.offsetHeight}px);`); });
         }
       }
     );

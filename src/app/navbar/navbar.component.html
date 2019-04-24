@@ -1,20 +1,24 @@
 <div class="w-100 h-100 background-color font-color" id="topNav">
   <div class="d-flex align-items-center h-100">
-    <div class="col-xl-2 col-lg-3 col-sm-4 d-none d-md-flex align-items-center" style="font-size: 1.5rem;">
-      <i class="fas fa-bars mr-3 clickable" *ngIf="showHamburger" (click)="onToggleSidenav()"></i>
-      <span>Launchpad Frame</span>
-      <i class="fas fa-space-shuttle ml-3"></i>
+    <div class="h-100 d-flex justify-content-center align-items-center ml-3 clickable button-clickable" (click)="onToggleSidenav()">
+        <i class="fas fa-bars ml-3 mr-3" *ngIf="showHamburger"></i>
     </div>
-    <div class="col-lg-1 col-md-2 h-100 d-flex justify-content-center align-items-center clickable" routerLink="/frames" routerLinkActive="active">
-      <a>My Frames</a>
+    <div class="h-100 d-flex justify-content-center align-items-center clickable" routerLink="/home" routerLinkActive="active" style="width: 150px;">
+      <i class="fas fa-space-shuttle ml-3 mr-3"></i>
+      <a class="mr-3 d-none d-md-block">Home</a>
     </div>
-    <div class="col-lg-1 col-md-2 h-100 d-flex justify-content-center align-items-center clickable">
-      <a>My Pictures</a>
+    <div class="h-100 d-flex justify-content-center align-items-center clickable" routerLink="/frames" routerLinkActive="active" style="width: 150px;">
+      <i class="fas fa-images ml-3 mr-3"></i>
+      <a class="mr-3 d-none d-md-block">My Frames</a>
     </div>
-    <div dropdown [autoClose]="true" class="ml-auto mr-3 col-auto d-flex justify-content-end align-items-center clickable h-100">
-      <a id="account-dropdown-trigger" class="d-flex h-100 align-items-center" dropdownToggle (click)="false">
-        <i class="fas fa-user-circle mr-2" style="font-size: 1.5rem;"></i>
-        <span>My Account</span>
+    <div class="h-100 d-flex justify-content-center align-items-center clickable"style="width: 150px;"> 
+        <i class="fas fa-camera ml-3 mr-3"></i>
+      <a class="mr-3 d-none d-md-block">My Pictures</a>
+    </div>
+    <div dropdown [autoClose]="true" class="ml-auto mr-3 col-auto d-flex justify-content-end align-items-center clickable h-100" style="width: 150px;">
+      <a id="account-dropdown-trigger" class="d-flex h-100 align-items-center justify-content-center" dropdownToggle (click)="false">
+        <i class="fas fa-user-circle mr-2"></i>
+        <span class="d-none d-md-block" >My Account</span>
         <span *ngIf="notifications.length > 0" class="badge ml-2 badge-pill badge-danger">{{ notifications.length }}</span>
       </a>
       <ul id="account-dropdown" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="account-dropdown-trigger">

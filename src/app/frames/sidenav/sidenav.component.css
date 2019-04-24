@@ -12,7 +12,8 @@
 }
 
 .active { 
-    background-color: rgba(120, 45, 104, 1);   
+    background-color: rgba(120, 45, 104, 1);
+    border-radius: 0px 30px 30px 0px;
 }
 
 .active:focus {
