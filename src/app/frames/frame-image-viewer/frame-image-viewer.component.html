@@ -8,7 +8,14 @@
          [accept]="'image/jpeg,image/png'" [preserveFiles]="false" [label]="'Drag files (or click)'"></ngx-dropzone>
    </div>
 
-   <ng-container *ngIf="_frame !== null">
+   <div class="d-flex flex-column align-items-start mr-5" *ngFor="let group of groupedImages">
+      <span><em>{{ group.key }}</em></span>
+      <div class="d-flex">
+         <img [src]="image.downloadPath" *ngFor="let image of group.Images" class="ml-1 mr-1" style="height: 250px; width: auto;">
+      </div>
+   </div>
+
+   <!-- <ng-container *ngIf="_frame !== null">
       <div class="col-md-4 col-sm-12 col-xl-3" *ngFor="let image of _frame.images">
          <div class="card mb-2">
             <img [src]="image.downloadPath" class="card-image-top" style="height: 200px">
@@ -24,5 +31,5 @@
             </div>
          </div>
       </div>
-   </ng-container>
+   </ng-container> -->
 </div>

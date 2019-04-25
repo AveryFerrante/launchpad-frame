@@ -1,13 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { combineLatest, Observable } from 'rxjs';
-import { finalize, first, map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
+import { GroupedFrameImages } from 'src/app/models/GroupedFrameImages';
 import { UserInfo } from 'src/app/models/UserInfo';
-import { FramesService } from 'src/app/services/frames/frames.service';
-import { UserInfoService } from 'src/UserInfo/user-info.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { ActivatedRoute } from '@angular/router';
+import { FramesService } from 'src/app/services/frames/frames.service';
+import { groupBy, Dictionary } from 'lodash';
+import { FrameImage } from 'src/app/models/FrameImage';
 
 @Component({
   selector: 'app-frame-image-viewer',
@@ -16,10 +18,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FrameImageViewerComponent implements OnInit {
   _frame: ClientFrame = null;
+  groupedImages: GroupedFrameImages[] = [];
   public percentages$: Observable<number>;
   public ownedFrameIds: string[];
   public userId: string;
-  @Input() set frame(frame: ClientFrame) { this._frame = frame; console.log(frame); }
+  @Input() set frame(frame: ClientFrame) {
+    this._frame = frame;
+    this.groupImages();
+  }
   constructor(private framesService: FramesService, private router: ActivatedRoute, private notifierService: NotifierService,
     private authService: AuthenticationService) { }
 
@@ -36,6 +42,12 @@ export class FrameImageViewerComponent implements OnInit {
         return frameIds;
       })
     ).subscribe((ids: string[]) => this.ownedFrameIds = ids);
+  }
+
+  groupImages() {
+    // const group = groupBy(this._frame.images, (img: FrameImage) => img.dateAdded.toLocaleDateString());
+    const group = groupBy(this._frame.images, (img: FrameImage) => img.addedBy);
+    this.groupedImages = Object.keys(group).map(key => ({ key: key, Images: group[key] }));
   }
 
   onFilesAdded(files: File[]) {
