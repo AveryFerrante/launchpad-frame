@@ -19,7 +19,6 @@ import { FrameImage } from 'src/app/models/FrameImage';
 export class FrameImageViewerComponent implements OnInit {
   _frame: ClientFrame = null;
   groupedImages: GroupedFrameImages[] = [];
-  private imagesToDelete: FrameImage[] = [];
   public percentages$: Observable<number>;
   public ownedFrameIds: string[];
   public userId: string;

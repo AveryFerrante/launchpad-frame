@@ -8,7 +8,7 @@ import { Notification } from 'src/app/models/Notification';
 import { from, Observable } from 'rxjs';
 import { NotificationsStore } from '../stores/notificationsstore.service';
 import { UserInfoService } from '../../../UserInfo/user-info.service';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { FrameUserInfoMetadata } from 'src/app/models/FrameUserInfoMetadata';
 import { UserFrames, constructUserFrame } from 'src/app/models/UserFrames';
