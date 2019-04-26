@@ -20,7 +20,7 @@ export class FramesComponent implements OnInit, OnDestroy {
   constructor(private globalEventsService: GlobalEventsService) { }
   // Handle sidenav show/hide/toggle
   @HostListener('window:resize', ['$event']) onResize(event) {
-    this.checkWidth(window.innerWidth);
+    this.checkWidth();
   }
   ngOnInit() {
     // Create Macrotask to avoid updating out of check. May need to redesign....
@@ -37,10 +37,11 @@ export class FramesComponent implements OnInit, OnDestroy {
         }
       }
     );
+    this.checkWidth();
   }
 
-  private checkWidth(width) {
-    if (width < 992) {
+  private checkWidth() {
+    if (window.innerWidth < 992) {
       if (!this.hasBeenHiddenOnSmall) {
         this.globalEventsService.showSidenav(false);
         this.hasBeenHiddenOnSmall = true;
