@@ -3,15 +3,22 @@
 </div>
 
 <div class="d-flex flex-wrap mt-2">
-   <div class="col-md-4 col-sm-12 col-xl-3">
+   <!-- <div class="col-md-4 col-sm-12 col-xl-3">
       <ngx-dropzone style="height: 200px" (filesAdded)="onFilesAdded($event)" [multiple]="true"
          [accept]="'image/jpeg,image/png'" [preserveFiles]="false" [label]="'Drag files (or click)'"></ngx-dropzone>
-   </div>
+   </div> -->
 
    <div class="d-flex flex-column align-items-start mr-5" *ngFor="let group of groupedImages">
       <span><em>{{ group.key }}</em></span>
       <div class="d-flex flex-wrap">
-         <img [src]="image.downloadPath" *ngFor="let image of group.Images" class="ml-1 mr-1" style="height: 250px; width: auto;">
+        <ng-container *ngFor="let image of group.Images">
+          <div class="image-container ml-1 mr-1">
+            <img [src]="image.downloadPath" style="height: 250px; width: auto;">
+            <div class="overlay">
+              <i class="fas fa-trash content clickable" (click)="onRemoveImage(image.imageId, image.id)"></i>
+            </div>
+          </div>
+        </ng-container>
       </div>
    </div>
 
@@ -33,45 +40,3 @@
       </div>
    </ng-container> -->
 </div>
-
-<!-- 
-<html>
-  <body class="vh-100">
-    <div class="h-100 d-flex flex-column">
-      <div class="bg-purple text-center" style="height: 48px;">
-        This is the navbar
-      </div> -->
-      
-      <!-- ADJUSTMENT -->
-      <!-- <div class="flex-grow-1" style="height: calc(100% - 48px);">
-        
-        <div class="container-fluid h-100">
-          <div class="row h-100"> -->
-            
-            <!-- ADJUSTMENT -->
-            <!-- <div class="d-flex flex-column w-100" style="height: 100%;">
-            
-              <div class="h-100 d-flex flex-column">
-                
-                <div class="d-flex align-items-center justify-content-center bg-red" style="height: 7%">
-                </div>
-                <div class="d-flex align-items-center justify-content-center bg-red" style="height: 3%">
-                </div>
-                <div class="bg-green" style="max-height: 75%; height: 75%; overflow-y: auto;">
-                  <div class="bg-gray m-4" style="height: 2000px;">
-                    The height of this content causes BOTH scroll bars to appear. I only want a bar on the 
-                    'green section'
-                  </div>
-                </div>
-                <div class="bg-red flex-grow-1">
-                </div>
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    </div>
-  </body>
-</html> -->
