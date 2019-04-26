@@ -17,6 +17,7 @@ import { FramesStore } from '../stores/framesstore.service';
 import { UserInfoService } from '../../../UserInfo/user-info.service';
 import { NotifierService } from 'angular-notifier';
 import { Username } from 'src/app/models/Username';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -139,6 +140,10 @@ export class FramesService {
     batch.delete(this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).doc(`${frameImageId}`).ref);
     // Remove from image frames
     batch.delete(this.db.collection(`${this.imageDb}/${imageId}/${this.imageFrameSub}`).doc(`${frameId}`).ref);
+    // Decrement frame count on the image
+    // batch.update(this.db.collection(`${this.imageDb}`).doc(`${imageId}`).ref, {
+    //   'totalCount': firebase.firestore.FieldValue.increment(-1)
+    // });
     return from(batch.commit()).pipe(
       tap(() => this.frameStore.removeImage(frameId, frameImageId))
     );

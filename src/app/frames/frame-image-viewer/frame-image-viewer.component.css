@@ -10,3 +10,34 @@
 .card {
     border: none;
 }
+
+.image-container {
+    position: relative;
+}
+
+.image-container .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    color: #FFF
+}
+
+.image-container:hover .overlay {
+    display: block;
+    background-color: rgba(0, 0, 0, .1);
+}
+
+.image-container .overlay .content {
+    margin-right: 5px;
+    margin-top: 5px;
+    position: absolute;
+    right: 0;
+    opacity: .5;
+}
+
+.image-container .overlay .content:hover {
+    opacity: 1;
+}

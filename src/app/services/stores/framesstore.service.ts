@@ -65,7 +65,6 @@ export class FramesStore {
   }
 
   removeImage(frameId: string, frameImageId: string) {
-    console.log('Finding frame: ', frameId);
     const oldFrame = this.get(frameId);
     if (oldFrame) {
       const frame = cloneDeep(oldFrame);
