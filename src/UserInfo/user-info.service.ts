@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { from, Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { map, mapTo, tap } from 'rxjs/operators';
 import { UserFrames } from 'src/app/models/UserFrames';
 import { UserInfo } from 'src/app/models/UserInfo';
@@ -37,6 +37,9 @@ export class UserInfoService {
   }
 
   checkUsername(username: string): Observable<Username> {
+    if (username === null) {
+      return of(null);
+    }
     return this.userInfoHelper.searchUsername(username);
   }
 

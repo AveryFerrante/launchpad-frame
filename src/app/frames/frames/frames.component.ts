@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, AfterViewChecked, HostList
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { Frame } from 'src/app/models/Frame';
 import { concatMap, take, filter, debounceTime } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of, Observable, Subscribable, Subscription } from 'rxjs';
 import { GlobalEventsService } from 'src/app/services/global/global-events.service';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { UserInfo } from 'src/app/models/UserInfo';
@@ -20,6 +20,7 @@ export class FramesComponent implements OnInit, OnDestroy {
   hasBeenHiddenOnSmall = false; // Used so we only auto hide sidenav once after going small
   hasBeenShownOnBig = false; // Used so we only auto show sidenav once after getting big
   userInfo$: Observable<UserInfo>;
+  sidenavSubscription: Subscription;
   constructor(private globalEventsService: GlobalEventsService, private route: ActivatedRoute) { }
   // Handle sidenav show/hide/toggle
   @HostListener('window:resize', ['$event']) onResize(event) {
@@ -29,7 +30,7 @@ export class FramesComponent implements OnInit, OnDestroy {
     // Create Macrotask to avoid updating out of check. May need to redesign....
     setTimeout(() => this.globalEventsService.showHamburger(true));
     this.userInfo$ = (this.route.snapshot.data['UserInfo'] as Observable<UserInfo>);
-    this.globalEventsService.showSidenavEmitter.subscribe(
+    this.sidenavSubscription = this.globalEventsService.showSidenavEmitter.subscribe(
       (show) => {
         this.showSidenav = show;
         if (window.innerWidth < 992 && this.showSidenav === true && this.hasBeenHiddenOnSmall) {
@@ -62,6 +63,7 @@ export class FramesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.sidenavSubscription.unsubscribe();
     this.globalEventsService.showHamburger(false);
   }
 

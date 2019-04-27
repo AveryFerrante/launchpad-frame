@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FrameImageViewerComponent } from './frame-image-viewer/frame-image-viewer.component';
 import { SlideshowModule } from 'ng-simple-slideshow';
+import { RemovablePillComponent } from './removable-pill/removable-pill.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { SlideshowModule } from 'ng-simple-slideshow';
     SidenavComponent,
     CreateFrameComponent,
     FrameViewerComponent,
-    FrameImageViewerComponent
+    FrameImageViewerComponent,
+    RemovablePillComponent
   ],
   exports: [FramesComponent]
 })

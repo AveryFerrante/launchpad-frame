@@ -1,69 +1,76 @@
-<div class="d-flex flex-column justify-content-center align-items-center w-100">
-  <div class="card w-50 mt-5">
-    <h2 class="card-header text-center">
-      Create a Frame
-    </h2>
-    <div class="card-body d-flex flex-column">
-      <form [formGroup]="newFrameForm" (ngSubmit)="onSubmit()"
-        class="d-flex flex-column w-100 justify-content-center align-items-center">
+<div class="d-flex w-100 align-items-center justify-content-center">
+  <div class="col d-flex justify-content-center">
+    <div class="card mt-3 w-100" style="max-width: 750px;">
+      <h2 class="card-header text-center">
+        Create a Frame
+      </h2>
+      <div class="card-body d-flex flex-column">
+        <form [formGroup]="newFrameForm" (ngSubmit)="onSubmit()"
+          class="d-flex flex-column w-100 justify-content-center align-items-center">
 
-        <div class="mb-4 w-100">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          <div class="mb-4 w-100">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-pen"></i></span>
+              </div>
+              <input type="text" class="form-control" formControlName="titleInput" required placeholder="Frame Title"
+                [ngClass]="{ 'invalid-input': titleCtrl.errors && submitted }">
             </div>
-            <input type="text" class="form-control" formControlName="titleInput" required placeholder="Frame Title"
-              [ngClass]="{ 'invalid-input': titleCtrl.errors && submitted }">
-          </div>
-          <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.required" class="invalid-text">Title is
-            Required</span>
-          <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.minlength" class="invalid-text">Title must be
-            atleast 2 characters</span>
+            <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.required" class="invalid-text">Title is
+              Required</span>
+            <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.minlength" class="invalid-text">Title must be
+              atleast 2 characters</span>
             <span *ngIf="submitted && titleCtrl.errors && titleCtrl.errors.maxlength" class="invalid-text">Title cannot
-                exceed 100 characters</span>
-        </div>
+              exceed 100 characters</span>
+          </div>
 
-        <div class="w-100 mb-4">
-          <textarea type="text" class="form-control" rows="5" formControlName="descriptionInput" placeholder="Frame Description"
-            [ngClass]="{ 'invalid-input': descriptionCtrl.errors && submitted }"></textarea>
-          <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.required" class="invalid-text">Description
-            is Required</span>
-          <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.minlength" class="invalid-text">Description
-              must be atleast 2 characters</span>
-          <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.maxlength" class="invalid-text">Description
+          <div class="w-100 mb-4">
+            <textarea type="text" class="form-control" rows="5" formControlName="descriptionInput"
+              placeholder="Frame Description"
+              [ngClass]="{ 'invalid-input': descriptionCtrl.errors && submitted }"></textarea>
+            <span *ngIf="submitted && descriptionCtrl.errors && descriptionCtrl.errors.maxlength"
+              class="invalid-text">Description
               cannot exceed 1000 characters</span>
-        </div>
+          </div>
 
-        <div class="row w-100 mb-4">
-          <label class="align-self-center col-xl-4 col-lg-5" for="userSelect">Add Users (by username): </label>
-          <input formControlName="userSearchInput" class="col-xl-7 col-lg-6 form-control" type="text"
-            placeholder="Start Typing...">
-          <div class="col-lg-1">
-            <i class="fas fa-circle-notch fa-spin" style="font-size: 1.5rem;" *ngIf="loading"></i>
+          <div class="row w-100">
+            <div class="align-self-center col-xl-4 col-lg-5 col-12 d-flex p-0 align-items-center">
+                <label for="userSelect">Add Users (by username): </label>
+                <i class="ml-auto fas fa-circle-notch fa-spin d-md-none" *ngIf="loading"></i>
+            </div> 
+            <input formControlName="userSearchInput" class="col-xl-7 col-lg-6 form-control" type="text"
+              placeholder="Start Typing...">
+            <div class="col-lg-1">
+              <i class="fas fa-circle-notch fa-spin d-none d-md-block" style="font-size: 1.5rem;" *ngIf="loading"></i>
+            </div>
           </div>
-          <span *ngIf="errorMessage"
-            class="pl-0 col-xl-8 col-lg-7 offset-lg-5 offset-xl-4 invalid-text">*{{ errorMessage }}</span>
-        
-          <div class="col-3 bg-light" *ngFor="let username of usernameList">
-            {{ username.username }}
-          </div>
-        </div>
 
-        <div class="w-100 row align-items-center mb-4">
-          <div class="col-md-4 col-sm-12 d-flex">
-            <span class="mr-2">Public: </span>
-            <input class="tgl tgl-flat" id="publicTgl" type="checkbox" />
-            <label class="tgl-btn" for="publicTgl"></label>
+          <div class="row w-100" *ngIf="errorMessage">
+              <span class="pl-0 col-xl-8 col-lg-7 offset-lg-5 offset-xl-4 invalid-text">*{{ errorMessage }}</span>
           </div>
-        
-          <div class="col-md-4 col-sm-12 d-flex">
-            <span class="mr-2">Read Only: </span>
-            <input class="tgl tgl-flat" id="readOnlyTgl" type="checkbox" />
-            <label class="tgl-btn" for="readOnlyTgl"></label>
+
+          <div class="row w-100 mt-2">
+            <div class="p-0 mr-2" *ngFor="let username of usernameList">
+              <app-removable-pill [username]="username" [nameCutoff]="10" (remove)="onRemoveUsername(username)"></app-removable-pill>
+            </div>
           </div>
-        </div>
-        <button type="submit" class="btn btn-primary align-self-start">Create</button>
-      </form>
+
+          <div class="w-100 row align-items-center mb-4 mt-4">
+            <div class="col-md-4 col-sm-12 d-flex">
+              <span class="mr-2">Public: </span>
+              <input class="tgl tgl-flat" id="publicTgl" type="checkbox" />
+              <label class="tgl-btn" for="publicTgl"></label>
+            </div>
+
+            <div class="col-md-4 col-sm-12 d-flex">
+              <span class="mr-2">Read Only: </span>
+              <input class="tgl tgl-flat" id="readOnlyTgl" type="checkbox" />
+              <label class="tgl-btn" for="readOnlyTgl"></label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary align-self-start">Create</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
