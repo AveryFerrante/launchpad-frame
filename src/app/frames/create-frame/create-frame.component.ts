@@ -78,7 +78,7 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
             const userids = this.usernameList.map((username: Username) => username.userid);
             this.notificationsService.addNewFrameNotifications(frameId, this.titleCtrl.value, userids);
           }
-          this.router.navigate(['home', 'frames', frameId]);
+          this.router.navigate(['frames', frameId]);
         }
       });
     }

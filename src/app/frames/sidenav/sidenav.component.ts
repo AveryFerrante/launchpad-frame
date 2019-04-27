@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { UserInfoService } from '../../../UserInfo/user-info.service';
 import { UserFrameMetadata } from '../../models/UserFramesMetadata';
@@ -13,26 +13,24 @@ import { tap } from 'rxjs/operators';
 })
 export class SidenavComponent implements OnInit, OnDestroy {
 
-  private userInfo$: Subscription = null;
-  public frames = [];
+  @Input() set frames(val: UserInfo) { this.constructNavigationObject(val); }
+  public _frames = [];
   constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    this.userInfo$ = (this.route.snapshot.data['UserInfo'] as Observable<UserInfo>)
-    .subscribe((userInfo: UserInfo) => {
-        this.frames = [];
+  ngOnInit() { }
+
+  private constructNavigationObject(userInfo: UserInfo) {
+    this._frames = [];
         for (const frameId in userInfo.frames) {
           const metaData: UserFrameMetadata = userInfo.frames[frameId];
-          this.frames.push({
+          this._frames.push({
             name: metaData.name,
-            id: frameId
+            id: frameId,
+            role: metaData.role
         });
       }
-    });
   }
 
-  ngOnDestroy() {
-    this.userInfo$.unsubscribe();
-  }
+  ngOnDestroy() { }
 
 }

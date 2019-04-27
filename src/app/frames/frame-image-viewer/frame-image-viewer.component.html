@@ -14,7 +14,7 @@
       <div class="d-flex flex-wrap">
         <ng-container *ngFor="let image of group.Images">
           <div class="image-container ml-1 mr-1">
-            <img [src]="image.downloadPath" style="height: 250px; width: auto;">
+            <img [src]="image.downloadPath" style="height: 250px; width: auto; max-width: 100%;">
             <div class="overlay" *ngIf="ownedFrameIds.includes(_frame.id) || image.ownerId === userId">
               <i class="fas fa-trash content clickable" (click)="onRemoveImage(image.imageId, image.id)"></i>
             </div>

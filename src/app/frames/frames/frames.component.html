@@ -2,7 +2,7 @@
     <div class="row h-100">
         <div class="p-0" *ngIf="showSidenav" id="frameSidenav" style="width: 280px;"
             [ngClass]="{'sidebar-overlay': overlaySidebar}">
-            <app-sidenav></app-sidenav>
+            <app-sidenav [frames]="userInfo$ | async"></app-sidenav>
         </div>
         <div class="col p-0 h-100">
             <router-outlet></router-outlet>

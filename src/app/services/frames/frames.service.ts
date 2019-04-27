@@ -41,7 +41,7 @@ export class FramesService {
 
   add(title: string, description: string, usersToAdd: Username[] = []): Observable<string> {
     const frameId = this.db.createId();
-    const frame = new Frame(frameId, title, description, new Date());
+    const frame = new Frame(frameId, title, description, new Date(), this.userInfoService.currentState.username);
     const userFrame = constructUserFrame(frameId, title, 'owner');
     const userInfo = this.userInfoService.currentState;
     const frameUserInfo: FrameUserInfo = constructFrameUserInfo(this.authService.currentUser.uid, [], 'owner',
@@ -98,7 +98,7 @@ export class FramesService {
       this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).get()).pipe(
         map((val: [firebase.firestore.DocumentSnapshot, firebase.firestore.QuerySnapshot]) => {
           const data = val[0].data();
-          const frame = new Frame(val[0].id, data.title, data.description, data.createdDate);
+          const frame = new Frame(val[0].id, data.title, data.description, data.createdDate, data.createdBy);
           const frameImages: FrameImage[] = [];
           for (const doc of val[1].docs) {
             const subData = doc.data();

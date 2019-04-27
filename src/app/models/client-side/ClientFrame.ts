@@ -6,7 +6,7 @@ export class ClientFrame extends Frame {
     isOwner: boolean;
 
     constructor(frame: Frame, images: FrameImage[] = [], isOwner: boolean = false) {
-        super(frame.id, frame.title, frame.description, frame.createdDate);
+        super(frame.id, frame.title, frame.description, frame.createdDate, frame.createdBy);
         this.images = images;
         this.isOwner = isOwner;
     }

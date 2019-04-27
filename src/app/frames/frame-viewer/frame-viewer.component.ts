@@ -6,6 +6,7 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { ClientFrame } from '../../models/client-side/ClientFrame';
 import { Errors } from '../../models/Errors';
+import { UserInfo } from 'src/app/models/UserInfo';
 
 @Component({
   selector: 'app-frame-viewer',
@@ -15,7 +16,7 @@ import { Errors } from '../../models/Errors';
 export class FrameViewerComponent implements OnInit, OnDestroy {
 
   constructor(private framesService: FramesService, private route: ActivatedRoute,
-    @Inject(DOCUMENT) private document: Document) { }
+    @Inject(DOCUMENT) private document: Document, private router: ActivatedRoute) { }
 
   elem: any;
   frame$: Observable<ClientFrame> = null;
@@ -23,6 +24,9 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
   frameNotFound = false;
   showSlideshow = false;
   slideshowFullscreen = false;
+  userInfo$: Observable<UserInfo> = null;
+  frameId: string;
+  loading = true;
   private fsEventHandler: any = this.onFullscreenChange.bind(this);
   @HostBinding('class') classes = 'h-100 d-flex flex-column';
   ngOnInit() {
@@ -37,12 +41,18 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
 
   private initFrameObservable() {
     this.frame$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => this.framesService.getFrameData(params.get('id')).pipe(
+      tap((params: ParamMap) => {
+        this.loading = true;
+        this.frameId = params.get('id');
+        this.userInfo$ = (this.router.snapshot.data['UserInfo'] as Observable<UserInfo>);
+      }),
+      switchMap(() => this.framesService.getFrameData(this.frameId).pipe(
         tap((cf: ClientFrame) => {
           this.frameImageUrls = [];
           for (const img of cf.images) {
             this.frameImageUrls.push(img.downloadPath);
           }
+          this.loading = false;
         }),
         catchError((error: Error) => {
           if (error.message === Errors.InvalidFrameId) {
@@ -51,6 +61,7 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
           } else {
             console.error(error.message);
           }
+          this.loading = false;
           return of(null);
         })
       )),
