@@ -11,13 +11,16 @@ import { FrameImageViewerComponent } from './frame-image-viewer/frame-image-view
 import { SlideshowModule } from 'ng-simple-slideshow';
 import { RemovablePillComponent } from './removable-pill/removable-pill.component';
 
+import { LoaderModule } from '../loader/loader.module';
+
 @NgModule({
   imports: [
     CommonModule,
     AppRoutingModule,
     ReactiveFormsModule,
     NgxDropzoneModule,
-    SlideshowModule
+    SlideshowModule,
+    LoaderModule
   ],
   declarations: [
     FramesComponent,
