@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, switchMap, tap, map } from 'rxjs/operators';
+import { pipe, Subscription } from 'rxjs';
+import { debounceTime, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Username } from 'src/app/models/Username';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
@@ -18,7 +18,7 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
     titleInput: new FormControl('', { updateOn: 'submit', validators: [Validators.required, Validators.minLength(2),
       Validators.maxLength(100)] }),
     descriptionInput: new FormControl('', { updateOn: 'submit', validators: [Validators.maxLength(1000)] }),
-    userSearchInput: new FormControl()
+    userSearchInput: new FormControl('')
   });
   get titleCtrl() { return this.newFrameForm.controls.titleInput; }
   get descriptionCtrl() { return this.newFrameForm.controls.descriptionInput; }
@@ -35,50 +35,44 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
     this.setUserSearchObservable();
   }
 
-  private setUserSearchObservable() {
-    this.userSearch = this.newFrameForm.controls.userSearchInput.valueChanges.pipe(
-      map((val: string) => {
-        if (val !== '' && val !== null && val.length >= 2) {
-          this.errorMessage = null;
-          return val;
-        } else {
-          return null;
-        }
-      }),
-      filter((val: string) => val !== null),
-      tap(() => this.loading = true),
-      debounceTime(700),
-      map((val: string) => {
-        if (this.usernamesMatch(val)) {
-          this.errorMessage = 'You will be added to the frame automatically';
-          this.loading = false;
-          return null;
-        } else {
-          return val;
-        }
-      }),
-      switchMap((val: string) => this.userInfoService.checkUsername(val)),
-      map((username: Username) =>  {
-        if (username === null) {
-          if (this.errorMessage === null) { // Make sure that we don't overwrite 'You will be added message' from above
-            this.errorMessage = 'No matching username';
-          }
-          this.loading = false;
-          return null;
-        } else if (this.usernameList.map((u: Username) => u.userid).indexOf(username.userid) !== -1) {
-          this.errorMessage = 'User is already added';
-          this.loading = false;
-          return null;
-        } else {
-          return username;
-        }
-      })
-    ).subscribe((username: Username) => {
-      if (username !== null) {
-        this.usernameList.push(username);
-      }
-      this.loading = false;
+  private filterValuesWithErrorMessages() {
+    return pipe(
+      tap((val: string) => { if (this.usernamesMatch(val)) { this.errorMessage = 'You will be added to the frame automatically'; }}),
+      tap((val: string) => { if (this.usernameInArray(val)) { this.errorMessage = 'User is already added'; }}),
+      tap((val: string) => { if (val.length < 2) { this.errorMessage = ''; }}),
+      filter((val: string) => (val.length >= 2 && !this.usernamesMatch(val) && !this.usernameInArray(val))),
+    );
+  }
+
+  private checkResponseNull() {
+    return pipe(
+      tap((val: Username) => { if (val === null) { this.errorMessage = 'No matching username'; }}),
+      filter((val: Username) => val !== null)
+    );
+  }
+
+  private addUsername() {
+    return tap((val: Username) => {
+      this.usernameList.push(val);
+      this.errorMessage = '';
     });
+  }
+
+  private setUserSearchObservable() {
+    const userSearch$ = this.newFrameForm.controls.userSearchInput.valueChanges;
+    this.userSearch = userSearch$.pipe(
+      debounceTime(500),
+      tap(() => this.loading = false),
+      this.filterValuesWithErrorMessages(),
+      tap(() => this.loading = true),
+      switchMap((val: string) => this.userInfoService.checkUsername(val).pipe(
+        takeUntil(userSearch$)
+      )),
+      tap(() => this.loading = false),
+      this.checkResponseNull(),
+      this.addUsername(),
+      tap(() => this.newFrameForm.controls.userSearchInput.setValue(''))
+    ).subscribe();
   }
 
   onRemoveUsername(username: Username) {
@@ -87,6 +81,11 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
 
   private usernamesMatch(val: string): boolean {
     return val.toLowerCase().trim() === this.userInfoService.currentState.username.toLowerCase().trim();
+  }
+
+  private usernameInArray(value: string): boolean {
+    const valueTrimmed = value.toLowerCase().trim();
+    return this.usernameList.map((uname: Username) => uname.usernametrimmed).indexOf(valueTrimmed) !== -1;
   }
 
   onSubmit() {

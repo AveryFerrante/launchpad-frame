@@ -15,3 +15,9 @@
 .active:focus {
     outline: 0;
 }
+
+.elipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

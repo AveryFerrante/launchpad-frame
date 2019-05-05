@@ -61,4 +61,8 @@
     left: 50%;
     background: rgba(120, 45, 104, .8);
   }
+
+  label {
+    margin: 0;
+  }
   

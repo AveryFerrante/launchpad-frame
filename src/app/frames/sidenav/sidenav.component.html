@@ -10,7 +10,7 @@
       <div class="clickable d-flex p-2" *ngFor="let frame of _frames" [routerLink]="[frame.id]"
         routerLinkActive="active" #rla="routerLinkActive">
         <i class="fas fa-circle align-self-center mr-2" style="font-size: .5rem;" *ngIf="rla.isActive"></i>
-        <span style="font-size: 1.3rem;">{{ frame.name }}</span>
+        <span class="elipsis" style="font-size: 1.3rem;">{{ frame.name }}</span>
         <i class="fas fa-key ml-3 align-self-center" style="text-decoration: none; font-size: .75rem;" *ngIf="frame.role === 'owner'"></i>
       </div>
     </div> 
