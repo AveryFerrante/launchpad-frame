@@ -1,12 +1,9 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
-import { FramesService } from 'src/app/services/frames/frames.service';
-import { Frame } from 'src/app/models/Frame';
-import { concatMap, take, filter, debounceTime } from 'rxjs/operators';
-import { of, Observable, Subscribable, Subscription } from 'rxjs';
-import { GlobalEventsService } from 'src/app/services/global/global-events.service';
-import { trigger, style, animate, transition } from '@angular/animations';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { UserInfo } from 'src/app/models/UserInfo';
-import { ActivatedRoute } from '@angular/router';
+import { GlobalEventsService } from 'src/app/services/global/global-events.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-frames',
@@ -21,7 +18,7 @@ export class FramesComponent implements OnInit, OnDestroy {
   hasBeenShownOnBig = false; // Used so we only auto show sidenav once after getting big
   userInfo$: Observable<UserInfo>;
   sidenavSubscription: Subscription;
-  constructor(private globalEventsService: GlobalEventsService, private route: ActivatedRoute) { }
+  constructor(private globalEventsService: GlobalEventsService, private route: ActivatedRoute, private router: Router) { }
   // Handle sidenav show/hide/toggle
   @HostListener('window:resize', ['$event']) onResize(event) {
     this.checkWidth();
@@ -30,14 +27,26 @@ export class FramesComponent implements OnInit, OnDestroy {
     // Create Macrotask to avoid updating out of check. May need to redesign....
     setTimeout(() => this.globalEventsService.showHamburger(true));
     this.userInfo$ = (this.route.snapshot.data['UserInfo'] as Observable<UserInfo>);
+    this.userInfo$.pipe(
+      map((ui: UserInfo) => {
+        if (Object.keys(ui.frames).length > 0) {
+          const frameId = Object.keys(ui.frames)[0];
+          this.router.navigate(['/frames', frameId]);
+        } else {
+          this.router.navigate(['/frames', 'create']);
+        }
+      })
+    ).subscribe().unsubscribe();
     this.sidenavSubscription = this.globalEventsService.showSidenavEmitter.subscribe(
       (show) => {
         this.showSidenav = show;
-        if (window.innerWidth < 992 && this.showSidenav === true && this.hasBeenHiddenOnSmall) {
-          setTimeout(() => { const navbar = document.getElementById('topNav');
-          const sidenav = document.getElementById('frameSidenav');
-          sidenav.setAttribute('style', sidenav.getAttribute('style') + ' ' +
-            `height: calc(${document.body.scrollHeight}px - ${navbar.offsetHeight}px);`); });
+        if (this.showSidenav === true && this.hasBeenHiddenOnSmall) {
+          setTimeout(() => {
+            const navbar = document.getElementById('topNav');
+            const sidenav = document.getElementById('frameSidenav');
+            sidenav.setAttribute('style', sidenav.getAttribute('style') + ' ' +
+              `height: calc(${document.body.offsetHeight}px - ${navbar.offsetHeight}px);`);
+          });
         }
       }
     );

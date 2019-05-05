@@ -46,7 +46,7 @@ export class NotificationsService {
 
   acceptNotification(notification: Notification): Observable<void> {
     const frameUserInfoRef = this.db.collection(`${this.frameDb}/${notification.frameId}/${this.frameUserSub}`)
-    .doc(`${notification.frameId}`).ref;
+      .doc(`${notification.frameId}`).ref;
     const notificationRef = this.db.collection(this.dbName).doc(notification.id).ref;
     const batch = this.db.firestore.batch();
 
