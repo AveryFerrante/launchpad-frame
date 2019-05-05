@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-end">
+    <span class="flex-grow"></span>
+    <h2>Manage Frame</h2>
+    <div class="d-flex flex-grow justify-content-end">
+      <span class="mr-2 clickable" style="font-size: 2rem;" (click)="onClose()">&times;</span>
+    </div>
+</div> 
+
+<div class="col-xl-9 align-self-center mt-2">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Username</th>
+        <th scope="col">Joined</th>
+        <th scope="col">Pictures</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let uid of objectKeys(frameUserInfo.users); let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ frameUserInfo.users[uid].username }}</td>
+        <td>Coming Soon</td>
+        <td>Coming Soon</td>
+        <td>
+            <i class="fas fa-trash clickable invalid-text"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

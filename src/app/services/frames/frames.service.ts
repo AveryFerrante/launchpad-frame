@@ -95,8 +95,9 @@ export class FramesService {
    */
   private fetchFrameData(frameId: string): Observable<ClientFrame> {
     return forkJoin(this.db.collection(this.frameDb).doc(frameId).get(),
-      this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).get()).pipe(
-        map((val: [firebase.firestore.DocumentSnapshot, firebase.firestore.QuerySnapshot]) => {
+      this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).get(),
+      this.db.collection(`${this.frameDb}/${frameId}/${this.frameUserSub}`).get()).pipe(
+        map((val: [firebase.firestore.DocumentSnapshot, firebase.firestore.QuerySnapshot, firebase.firestore.QuerySnapshot]) => {
           const data = val[0].data();
           const frame = new Frame(val[0].id, data.title, data.description, data.createdDate, data.createdBy);
           const frameImages: FrameImage[] = [];
@@ -106,7 +107,8 @@ export class FramesService {
             frameImages.push(new FrameImage(doc.id, subData.downloadPath, subData.imageId, subData.ownerId,
               dateAdded, subData.addedBy));
           }
-          return new ClientFrame(frame, frameImages);
+          const frameUserInfo: any = val[2].docs[0].data();
+          return new ClientFrame(frame, frameImages, frameUserInfo);
         }),
         tap((val: ClientFrame) => this.frameStore.add(val)),
         mergeMap(() => this.frameStore.getFrameWatcher(frameId))

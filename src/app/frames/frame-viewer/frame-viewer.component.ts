@@ -1,12 +1,15 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, HostBinding, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { FramesService } from 'src/app/services/frames/frames.service';
 import { ClientFrame } from '../../models/client-side/ClientFrame';
 import { Errors } from '../../models/Errors';
 import { UserInfo } from 'src/app/models/UserInfo';
+import { FrameUserInfoMetadata } from 'src/app/models/FrameUserInfoMetadata';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { Username } from 'src/app/models/Username';
 
 @Component({
   selector: 'app-frame-viewer',
@@ -16,10 +19,13 @@ import { UserInfo } from 'src/app/models/UserInfo';
 export class FrameViewerComponent implements OnInit, OnDestroy {
 
   constructor(private framesService: FramesService, private route: ActivatedRoute,
-    @Inject(DOCUMENT) private document: Document, private router: ActivatedRoute) { }
+    @Inject(DOCUMENT) private document: Document, private router: ActivatedRoute, private authService: AuthenticationService) { }
 
   elem: any;
-  frame$: Observable<ClientFrame> = null;
+  view = 'images';
+  frameSubscription: Subscription;
+  frame: ClientFrame = null;
+  frameUsers: Username[] = [];
   frameImageUrls: string[] = [];
   frameNotFound = false;
   showSlideshow = false;
@@ -40,7 +46,7 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
   }
 
   private initFrameObservable() {
-    this.frame$ = this.route.paramMap.pipe(
+    this.frameSubscription = this.route.paramMap.pipe(
       tap((params: ParamMap) => {
         this.loading = true;
         this.frameId = params.get('id');
@@ -49,15 +55,17 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
       switchMap(() => this.framesService.getFrameData(this.frameId).pipe(
         tap((cf: ClientFrame) => {
           this.frameImageUrls = [];
+          this.frameUsers = [];
           for (const img of cf.images) {
             this.frameImageUrls.push(img.downloadPath);
           }
+          this.frame = cf;
           this.loading = false;
         }),
         catchError((error: Error) => {
           if (error.message === Errors.InvalidFrameId) {
             this.frameNotFound = true;
-            this.frame$ = null;
+            this.frame = null;
           } else {
             console.error(error.message);
           }
@@ -65,7 +73,15 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
           return of(null);
         })
       )),
-    );
+    ).subscribe();
+  }
+
+  onFrameInfo() {
+    this.view = 'info';
+  }
+
+  onCloseInfo() {
+    this.view = 'images';
   }
 
   setUpSlideshow() {
@@ -104,6 +120,7 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.frameSubscription.unsubscribe();
     this.document.removeEventListener('fullscreenchange', this.fsEventHandler);
     this.document.removeEventListener('mozfullscreenchange', this.fsEventHandler);
     this.document.removeEventListener('webkitfullscreenchange', this.fsEventHandler);

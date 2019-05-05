@@ -12,6 +12,7 @@ import { SlideshowModule } from 'ng-simple-slideshow';
 import { RemovablePillComponent } from './removable-pill/removable-pill.component';
 
 import { LoaderModule } from '../loader/loader.module';
+import { FrameInfoComponent } from './frame-info/frame-info.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { LoaderModule } from '../loader/loader.module';
     CreateFrameComponent,
     FrameViewerComponent,
     FrameImageViewerComponent,
-    RemovablePillComponent
+    RemovablePillComponent,
+    FrameInfoComponent
   ],
   exports: [FramesComponent]
 })
