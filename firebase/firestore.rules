@@ -14,7 +14,8 @@ service cloud.firestore {
 
       match /userInfo/{frameId} {
         allow create: if isSignedIn();
-        allow update: if true;
+        allow read: if getUserFramePermissions(frameId) != null;
+        allow update: if checkUpdateFrameUser(getUserFramePermissions(frameId));
       }
 
       match /images/{imageId} {
@@ -34,6 +35,10 @@ service cloud.firestore {
         checkFramePermission('canremoveimages', getUserFramePermissions(frameId));
       }
     }
+    match /imageFrameCounts/{imageId} {
+    	allow create: if getAfter(/databases/$(database)/documents/images/$(imageId)) != null;
+      allow update: if true;
+    }
     match /notifications/{notifId} {
     	allow read: if request.auth.uid == resource.data.foruser;
       allow delete: if request.auth.uid == resource.data.foruser;
@@ -43,6 +48,36 @@ service cloud.firestore {
     }
     function checkAddUserToFramePermission() {
 			return checkFramePermission('canaddusers', getUserFramePermissions(request.resource.data.frameId));
+    }
+    function checkUpdateFrameUser(existingData) {
+    	return (checkFramePermission('canaddusers', existingData) ||
+      	checkSelfUpdatingPictureCount(existingData)
+      );
+    }
+    function checkSelfUpdatingPictureCount(existingData) {
+    	return 
+      (
+      	request.resource.data.users.size() == 1 &&
+        checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], existingData) ||
+        (
+          // checkFramePermission('canremoveimages', existingData) &&
+          // (
+          //   request.resource.data.users[request.resource.data.users.keys()[0]].role == existingData.role &&
+
+          // )
+          false
+        )
+      );
+    }
+    function checkPictureCountFieldUpdate(incomingData, existingData) {
+      (
+        incomingData.pictureCount == (existingData.pictureCount + 1) ||
+        incomingData.pictureCount == (existingData.pictureCount - 1)
+      ) &&
+      incomingData.role == existingData.role &&
+      incomingData.username == existingData.username &&
+      incomingData.joined == existingData.joined &&
+      incomingData.permissions == existingData.permissions
     }
     function isSignedIn() {
     	return request.auth.uid != null;

@@ -29,7 +29,7 @@ export class FramesComponent implements OnInit, OnDestroy {
     this.userInfo$ = (this.route.snapshot.data['UserInfo'] as Observable<UserInfo>);
     this.userInfo$.pipe(
       map((ui: UserInfo) => {
-        if (Object.keys(ui.frames).length > 0) {
+        if (ui.frames && Object.keys(ui.frames).length > 0) {
           const frameId = Object.keys(ui.frames)[0];
           this.router.navigate(['/frames', frameId]);
         } else {

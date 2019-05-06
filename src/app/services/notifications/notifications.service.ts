@@ -53,7 +53,7 @@ export class NotificationsService {
     const userFrame: UserFrames = constructUserFrame(notification.frameId, notification.frameName, 'participant');
     const updates = {};
     const frameUserInfo: FrameUserInfoMetadata = { username: this.userInfoService.currentState.username,
-      role: 'participant', permissions: ['canaddimages'] };
+      role: 'participant', permissions: ['canaddimages'], joined: new Date(), pictureCount: 0 };
     updates[`pendingUsers.${this.authService.currentUser.uid}`] = firebase.firestore.FieldValue.delete();
     updates[`users.${this.authService.currentUser.uid}`] = frameUserInfo;
 

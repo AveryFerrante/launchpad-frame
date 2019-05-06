@@ -23,7 +23,7 @@ const appRoutes: Routes = [
   ] },
   { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard], children: [
     { path: 'account', component: AccountComponent },
-    { path: 'notifications', component: NotificationsComponent }
+    { path: 'notifications', component: NotificationsComponent, resolve: { UserInfo: UserInfoResolveService } }
   ] }
 ];
 

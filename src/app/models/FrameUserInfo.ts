@@ -18,7 +18,9 @@ export function constructFrameUserInfo(userId: string, permissions: string[] = [
             [userId]: {
                 permissions: permissions,
                 role: role,
-                username: username
+                username: username,
+                joined: new Date(),
+                pictureCount: 0
             }
         },
         pendingUsers: { }
