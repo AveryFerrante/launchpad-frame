@@ -76,6 +76,15 @@ export class FramesStore {
     }
   }
 
+  alterImageCount(frameId: string, userId: string, incrementValue: number) {
+    const oldFrame = this.get(frameId);
+    if (oldFrame) {
+      const frame = cloneDeep(oldFrame);
+      frame.users.users[userId].pictureCount += incrementValue;
+      this.frames = this.replaceFrame(oldFrame, frame);
+    }
+  }
+
   // addMultiple(val: ClientFrame[]) {
   //   if (this.frames == null) {
   //     this.frames = val;

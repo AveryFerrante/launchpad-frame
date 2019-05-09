@@ -45,8 +45,8 @@ export class FrameImageViewerComponent implements OnInit {
   }
 
   groupImages() {
-    // const group = groupBy(this._frame.images, (img: FrameImage) => img.dateAdded.toLocaleDateString());
-    const group = groupBy(this._frame.images, (img: FrameImage) => img.addedBy);
+    const group = groupBy(this._frame.images, (img: FrameImage) => img.dateAdded.toLocaleDateString());
+    // const group = groupBy(this._frame.images, (img: FrameImage) => img.addedBy);
     this.groupedImages = Object.keys(group).map(key => ({ key: key, Images: group[key] }));
   }
 
@@ -73,8 +73,8 @@ export class FrameImageViewerComponent implements OnInit {
     );
   }
 
-  onRemoveImage(imageId: string, frameImageId: string) {
-    this.framesService.removeImageWorkflow(this._frame.id, imageId, frameImageId).subscribe({
+  onRemoveImage(imageId: string, frameImageId: string, userId: string) {
+    this.framesService.removeImageWorkflow(this._frame.id, imageId, frameImageId, userId).subscribe({
      complete: () => this.notifierService.notify('success', 'Image has been removed from the frame')
     });
   }

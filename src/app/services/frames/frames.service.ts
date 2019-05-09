@@ -18,6 +18,7 @@ import { UserInfoService } from '../../../UserInfo/user-info.service';
 import { NotifierService } from 'angular-notifier';
 import { Username } from 'src/app/models/Username';
 import * as firebase from 'firebase/app';
+import { _getComponentHostLElementNode } from '@angular/core/src/render3/instructions';
 
 @Injectable({
   providedIn: 'root'
@@ -108,8 +109,15 @@ export class FramesService {
             frameImages.push(new FrameImage(doc.id, subData.downloadPath, subData.imageId, subData.ownerId,
               dateAdded, subData.addedBy));
           }
-          const frameUserInfo = (val[2].docs[0].data()) as FrameUserInfo;
-          return new ClientFrame(frame, frameImages, frameUserInfo);
+
+          const frameUserInfo = (val[2].docs[0].data());
+          console.log(frameUserInfo);
+          for (const key in frameUserInfo.users) {
+            console.log(frameUserInfo.users[key].joined);
+            frameUserInfo.users[key].joined = new Date(frameUserInfo.users[key].joined.seconds * 1000);
+            console.log(frameUserInfo.users[key].joined);
+          }
+          return new ClientFrame(frame, frameImages, frameUserInfo as FrameUserInfo);
         }),
         tap((val: ClientFrame) => this.frameStore.add(val)),
         mergeMap(() => this.frameStore.getFrameWatcher(frameId))
@@ -137,19 +145,25 @@ export class FramesService {
       [`users.${this.authService.currentUser.uid}.pictureCount`]: firebase.firestore.FieldValue.increment(1)
     });
     return from(batch.commit()).pipe(
-      tap(() => this.frameStore.addImage(frameId, frameImage))
+      tap(() => this.frameStore.addImage(frameId, frameImage)),
+      tap(() => this.frameStore.alterImageCount(frameId, this.authService.currentUser.uid, 1))
     );
   }
 
-  public removeImageWorkflow(frameId: string, imageId: string, frameImageId: string): Observable<void> {
+  public removeImageWorkflow(frameId: string, imageId: string, frameImageId: string, userId: string): Observable<void> {
     const batch = this.db.firestore.batch();
     // Remove from frame images
     batch.delete(this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).doc(`${frameImageId}`).ref);
     // Remove from image frames
     batch.delete(this.db.collection(`${this.imageDb}/${imageId}/${this.imageFrameSub}`).doc(`${frameId}`).ref);
     // Decrement image
+    const frameUserRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameUserSub}/${frameId}`);
+    batch.update(frameUserRef, {
+      [`users.${userId}.pictureCount`]: firebase.firestore.FieldValue.increment(-1)
+    });
     return from(batch.commit()).pipe(
-      tap(() => this.frameStore.removeImage(frameId, frameImageId))
+      tap(() => this.frameStore.removeImage(frameId, frameImageId)),
+      tap(() => this.frameStore.alterImageCount(frameId, userId, -1))
     );
   }
 }

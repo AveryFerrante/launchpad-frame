@@ -9,10 +9,9 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class FrameInfoComponent implements OnInit {
 
-
   private _frameUserInfo: FrameUserInfoMetadata;
   objectKeys = Object.keys;
-  @Input() set frameUserInfo(val: FrameUserInfoMetadata) { this._frameUserInfo = val; console.log(this._frameUserInfo); }
+  @Input() set frameUserInfo(val: FrameUserInfoMetadata) { this._frameUserInfo = val; }
   get frameUserInfo() { return this._frameUserInfo; }
   @Output() close = new EventEmitter();
   constructor(private authService: AuthenticationService) { }
@@ -23,5 +22,4 @@ export class FrameInfoComponent implements OnInit {
   onClose() {
     this.close.emit();
   }
-
 }

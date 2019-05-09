@@ -50,26 +50,27 @@ service cloud.firestore {
 			return checkFramePermission('canaddusers', getUserFramePermissions(request.resource.data.frameId));
     }
     function checkUpdateFrameUser(existingData) {
-    	return (checkFramePermission('canaddusers', existingData) ||
-      	checkSelfUpdatingPictureCount(existingData)
-      );
-    }
-    function checkSelfUpdatingPictureCount(existingData) {
-    	return 
-      (
-      	request.resource.data.users.size() == 1 &&
-        checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], existingData) ||
+    	return
         (
-          // checkFramePermission('canremoveimages', existingData) &&
-          // (
-          //   request.resource.data.users[request.resource.data.users.keys()[0]].role == existingData.role &&
-
-          // )
-          false
+          checkFramePermission('canaddusers', existingData) ||
+          checkSelfUpdatingPictureCount(existingData
         )
       );
     }
+    function checkSelfUpdatingPictureCount(userData) {
+    	return 
+      (
+        checkFramePermission('canremoveimages', userData) &&
+        (
+          checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], userData) ||
+          // Check removing someone elses images
+          checkPictureCountFieldUpdate(request.resource.data.users[request.resource.data.users.keys()[0]], userData)
+        ) 
+        // request.resource.data.users.size() == 2 && THIS NEEDS TO BE LOOKED AT!
+      );
+    }
     function checkPictureCountFieldUpdate(incomingData, existingData) {
+      return
       (
         incomingData.pictureCount == (existingData.pictureCount + 1) ||
         incomingData.pictureCount == (existingData.pictureCount - 1)

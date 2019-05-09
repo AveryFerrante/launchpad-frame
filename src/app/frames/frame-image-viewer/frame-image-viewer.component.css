@@ -1,16 +1,3 @@
-.item-size {
-    width: 350px;
-    height: 200px;
-}
-
-.item-width {
-    width: 350px;
-}
-
-.card {
-    border: none;
-}
-
 .image-container {
     position: relative;
 }

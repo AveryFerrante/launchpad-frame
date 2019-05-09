@@ -21,8 +21,8 @@
       <tr *ngFor="let uid of objectKeys(frameUserInfo.users); let i = index">
         <th scope="row">{{ i + 1 }}</th>
         <td>{{ frameUserInfo.users[uid].username }}</td>
-        <td>Coming Soon</td>
-        <td>Coming Soon</td>
+        <td>{{ frameUserInfo.users[uid].joined | date }}</td>
+        <td>{{ frameUserInfo.users[uid].pictureCount }}</td>
         <td>
             <i class="fas fa-trash clickable invalid-text"></i>
         </td>
