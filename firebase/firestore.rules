@@ -51,16 +51,19 @@ service cloud.firestore {
     }
     function checkUpdateFrameUser(existingData) {
     	return
-        (
+      (
           checkFramePermission('canaddusers', existingData) ||
-          checkSelfUpdatingPictureCount(existingData
-        )
+          checkSelfUpdatingPictureCount(existingData)
       );
     }
     function checkSelfUpdatingPictureCount(userData) {
     	return 
       (
-        checkFramePermission('canremoveimages', userData) &&
+      	(
+        	// Deleting own picture or has the permission to delete any
+        	request.resource.data.users.keys()[0] == request.auth.uid ||
+        	checkFramePermission('canremoveimages', userData)
+      	) &&
         (
           checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], userData) ||
           // Check removing someone elses images
