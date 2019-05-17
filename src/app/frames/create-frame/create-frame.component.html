@@ -33,7 +33,12 @@
               cannot exceed 1000 characters</span>
           </div>
 
-          <app-user-add class="w-100"></app-user-add>
+          <app-user-add class="w-100" (usernames)="onNewUsernames($event)"></app-user-add>
+          <div class="row w-100 mt-2">
+            <div class="p-0 mr-2" *ngFor="let username of usernameList">
+              <app-removable-pill [username]="username" nameCutoff="10" (remove)="onRemoveUsername(username)"></app-removable-pill>
+            </div>
+          </div>
 
           <div class="w-100 row align-items-center mb-4 mt-4">
             <div class="col-md-4 col-sm-12 d-flex">

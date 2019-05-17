@@ -5,7 +5,7 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { CreateFrameComponent } from './create-frame/create-frame.component';
 import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
 import { AppRoutingModule } from '../app-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FrameImageViewerComponent } from './frame-image-viewer/frame-image-viewer.component';
 import { SlideshowModule } from 'ng-simple-slideshow';
@@ -19,6 +19,7 @@ import { UserAddComponent } from './user-add/user-add.component';
   imports: [
     CommonModule,
     AppRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     NgxDropzoneModule,
     SlideshowModule,
