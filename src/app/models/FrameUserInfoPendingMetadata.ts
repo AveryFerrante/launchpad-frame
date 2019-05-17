@@ -1,5 +1,6 @@
 export type FrameUserInfoPendingMetadata = {
-    userName: string;
+    username: string;
     invitedOn: Date;
-    invitedBy: string;
+    invitedById: string;
+    invitedByUsername: string;
 };

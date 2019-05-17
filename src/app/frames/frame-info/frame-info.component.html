@@ -6,6 +6,11 @@
     </div>
 </div> 
 
+<div class="col-xl-9 align-self-center mt-2 d-flex flex-wrap" *ngIf="usernames.length > 0">
+  <span class="mr-2">Pending User Invites:</span>
+  <app-removable-pill [username]="pendingUsername" *ngFor="let pendingUsername of usernames"></app-removable-pill>
+</div>
+
 <div class="col-xl-9 align-self-center mt-2">
   <table class="table">
     <thead>
@@ -14,7 +19,7 @@
         <th scope="col">Username</th>
         <th scope="col">Joined</th>
         <th scope="col">Pictures</th>
-        <th scope="col">Actions</th>
+        <th scope="col" *ngIf="frameUserInfo.users[userId].role === 'owner'">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -23,7 +28,7 @@
         <td>{{ frameUserInfo.users[uid].username }}</td>
         <td>{{ frameUserInfo.users[uid].joined | date }}</td>
         <td>{{ frameUserInfo.users[uid].pictureCount }}</td>
-        <td>
+        <td *ngIf="frameUserInfo.users[userId].role === 'owner'">
             <i class="fas fa-trash clickable invalid-text"></i>
         </td>
       </tr>

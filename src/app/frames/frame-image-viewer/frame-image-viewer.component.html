@@ -13,7 +13,7 @@
       <span><em>{{ group.key }}</em></span>
       <div class="d-flex flex-wrap">
         <div class="col-3 mb-4" *ngFor="let image of group.Images">
-          <div class="image-container" style="background-color: rgba(0, 0, 0, .5);">
+          <div class="image-container" style="background-color: #DCDCDC;">
             <img [src]="image.downloadPath" style="object-fit: contain; width: 100%; height: 250px;">
             <div class="overlay" *ngIf="ownedFrameIds.includes(_frame.id) || image.ownerId === userId">
               <i class="fas fa-trash content clickable" (click)="onRemoveImage(image.imageId, image.id, image.ownerId)"></i>

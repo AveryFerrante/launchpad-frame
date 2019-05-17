@@ -45,8 +45,8 @@ export class FrameImageViewerComponent implements OnInit {
   }
 
   groupImages() {
-    const group = groupBy(this._frame.images, (img: FrameImage) => img.dateAdded.toLocaleDateString());
-    // const group = groupBy(this._frame.images, (img: FrameImage) => img.addedBy);
+    // const group = groupBy(this._frame.images, (img: FrameImage) => img.dateAdded.toLocaleDateString());
+    const group = groupBy(this._frame.images, (img: FrameImage) => img.addedBy);
     this.groupedImages = Object.keys(group).map(key => ({ key: key, Images: group[key] }));
   }
 

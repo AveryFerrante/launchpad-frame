@@ -13,6 +13,7 @@ import { RemovablePillComponent } from './removable-pill/removable-pill.componen
 
 import { LoaderModule } from '../loader/loader.module';
 import { FrameInfoComponent } from './frame-info/frame-info.component';
+import { UserAddComponent } from './user-add/user-add.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { FrameInfoComponent } from './frame-info/frame-info.component';
     FrameViewerComponent,
     FrameImageViewerComponent,
     RemovablePillComponent,
-    FrameInfoComponent
+    FrameInfoComponent,
+    UserAddComponent
   ],
   exports: [FramesComponent]
 })

@@ -53,24 +53,43 @@ service cloud.firestore {
     	return
       (
           checkFramePermission('canaddusers', existingData) ||
-          checkSelfUpdatingPictureCount(existingData)
+          checkUpdatingPictureCount(existingData)
       );
     }
-    function checkSelfUpdatingPictureCount(userData) {
-    	return 
+    function checkUpdatingPictureCount(userData) {
+    	return
       (
-      	(
-        	// Deleting own picture or has the permission to delete any
-        	request.resource.data.users.keys()[0] == request.auth.uid ||
-        	checkFramePermission('canremoveimages', userData)
-      	) &&
         (
-          checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], userData) ||
-          // Check removing someone elses images
-          checkPictureCountFieldUpdate(request.resource.data.users[request.resource.data.users.keys()[0]], userData)
-        ) 
-        // request.resource.data.users.size() == 2 && THIS NEEDS TO BE LOOKED AT!
+          // Only altering one object
+          request.resource.data.users.keys()[0] != null &&
+          request.resource.data.users.keys()[1] == null
+        ) &&
+        (
+          (
+            // Altering own record
+            request.resource.data.users.keys()[0] == request.auth.uid &&
+            checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], userData)
+          ) ||
+          (
+            // Altering another user record
+            checkFramePermission('canremoveimages', userData) &&
+            checkPictureCountFieldUpdate(request.resource.data.users[request.resource.data.users.keys()[0]], userData)
+          )
+        )
       );
+      // (
+      // 	(
+      //   	// Deleting own picture or has the permission to delete any
+      //   	request.resource.data.users.keys()[0] == request.auth.uid ||
+      //   	checkFramePermission('canremoveimages', userData)
+      // 	) &&
+      //   (
+      //     checkPictureCountFieldUpdate(request.resource.data.users[request.auth.uid], userData) ||
+      //     // Check removing someone elses images
+      //     checkPictureCountFieldUpdate(request.resource.data.users[request.resource.data.users.keys()[0]], userData)
+      //   ) 
+      //   // request.resource.data.users.size() == 2 && THIS NEEDS TO BE LOOKED AT!
+      // );
     }
     function checkPictureCountFieldUpdate(incomingData, existingData) {
       return

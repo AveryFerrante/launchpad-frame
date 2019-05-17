@@ -131,7 +131,6 @@ export class FramesService {
       .doc();
     const imageRef = this.db.firestore.collection(this.imageDb).doc(imageId);
     const imageFrameRef = this.db.firestore.collection(this.imageDb).doc(`${imageId}/${this.imageFrameSub}/${frameId}`);
-    const frameUserRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameUserSub}/${frameId}`);
 
     const userInfo = this.userInfoService.currentState;
     const frameImage = new FrameImage(frameImageSubRef.id, downloadPath, imageId,
@@ -141,9 +140,6 @@ export class FramesService {
     batch.set(frameImageSubRef, frameImage.getData());
     batch.set(imageRef, image.getData());
     batch.set(imageFrameRef, imageFrame.getData());
-    batch.update(frameUserRef, {
-      [`users.${this.authService.currentUser.uid}.pictureCount`]: firebase.firestore.FieldValue.increment(1)
-    });
     return from(batch.commit()).pipe(
       tap(() => this.frameStore.addImage(frameId, frameImage)),
       tap(() => this.frameStore.alterImageCount(frameId, this.authService.currentUser.uid, 1))
@@ -156,11 +152,6 @@ export class FramesService {
     batch.delete(this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).doc(`${frameImageId}`).ref);
     // Remove from image frames
     batch.delete(this.db.collection(`${this.imageDb}/${imageId}/${this.imageFrameSub}`).doc(`${frameId}`).ref);
-    // Decrement image
-    const frameUserRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameUserSub}/${frameId}`);
-    batch.update(frameUserRef, {
-      [`users.${userId}.pictureCount`]: firebase.firestore.FieldValue.increment(-1)
-    });
     return from(batch.commit()).pipe(
       tap(() => this.frameStore.removeImage(frameId, frameImageId)),
       tap(() => this.frameStore.alterImageCount(frameId, userId, -1))

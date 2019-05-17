@@ -51,12 +51,12 @@ export class NotificationsService {
     const batch = this.db.firestore.batch();
 
     const userFrame: UserFrames = constructUserFrame(notification.frameId, notification.frameName, 'participant');
-    const updates = {};
     const frameUserInfo: FrameUserInfoMetadata = { username: this.userInfoService.currentState.username,
       role: 'participant', permissions: ['canaddimages'], joined: new Date(), pictureCount: 0 };
-    updates[`pendingUsers.${this.authService.currentUser.uid}`] = firebase.firestore.FieldValue.delete();
-    updates[`users.${this.authService.currentUser.uid}`] = frameUserInfo;
-
+    const updates = {
+      [`pendingUsers.${this.authService.currentUser.uid}`]: firebase.firestore.FieldValue.delete(),
+      [`users.${this.authService.currentUser.uid}`]: frameUserInfo
+    };
     batch.update(frameUserInfoRef, updates);
     batch.delete(notificationRef);
     this.userInfoService.addFrameBatch(batch, userFrame);

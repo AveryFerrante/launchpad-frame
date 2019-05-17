@@ -27,9 +27,10 @@ export function constructFrameUserInfo(userId: string, permissions: string[] = [
     };
     for (const user of usersToAdd) {
         const pendingUser: FrameUserInfoPendingMetadata = {
-            userName: user.username,
+            username: user.username,
             invitedOn: new Date(),
-            invitedBy: userId
+            invitedById: userId,
+            invitedByUsername: username
         };
         fui.pendingUsers[user.userid] = pendingUser;
     }

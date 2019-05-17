@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FrameUserInfoMetadata } from 'src/app/models/FrameUserInfoMetadata';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { Username } from 'src/app/models/Username';
+import { FrameUserInfo } from 'src/app/models/FrameUserInfo';
 
 @Component({
   selector: 'app-frame-info',
@@ -9,14 +11,23 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class FrameInfoComponent implements OnInit {
 
-  private _frameUserInfo: FrameUserInfoMetadata;
+  private _frameUserInfo: FrameUserInfo;
+  usernames: Username[] = [];
+  userId = this.authService.currentUser.uid;
   objectKeys = Object.keys;
-  @Input() set frameUserInfo(val: FrameUserInfoMetadata) { this._frameUserInfo = val; }
+  @Input() set frameUserInfo(val: FrameUserInfo) { this._frameUserInfo = val; console.log(val); this.setUsernames(); }
   get frameUserInfo() { return this._frameUserInfo; }
   @Output() close = new EventEmitter();
   constructor(private authService: AuthenticationService) { }
 
   ngOnInit() {
+  }
+
+  setUsernames() {
+    this.usernames = [];
+    for (const pendingId in this.frameUserInfo.pendingUsers) {
+      this.usernames.push(new Username(this.frameUserInfo.pendingUsers[pendingId].username, pendingId));
+    }
   }
 
   onClose() {
