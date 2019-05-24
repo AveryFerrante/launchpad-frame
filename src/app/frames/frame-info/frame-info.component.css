@@ -2,8 +2,3 @@
     display: flex;
     flex-direction: column;
 }
-
-div.wrapper {
-    width: 100%;
-    font-weight: inherit;
-}

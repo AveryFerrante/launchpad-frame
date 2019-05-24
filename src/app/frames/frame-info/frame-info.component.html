@@ -1,22 +1,29 @@
-<lib-angular-collapse class="col-xl-9 align-self-center mt-2">
-  <div header>Invite New Users</div>
+<lib-angular-collapse class="col-xl-9 align-self-center mt-2 mb-5">
+  <div class="clickable" header (click)="collapsed = !collapsed">
+    Invite New Users 
+    <i class="ml-2 fas fa-caret-right" *ngIf="!collapsed"></i>
+    <i class="ml-2 fas fa-caret-down" *ngIf="collapsed"></i>
+  </div>
   <div body>
     <div class="d-flex flex-wrap">
-      <app-user-add class="col-xl-6" (usernames)="onNewUsernames($event)"></app-user-add>
-      <div class="p-0 mr-2" *ngFor="let username of usernamesToAdd">
+      <app-user-add class="w-50" (usernames)="onNewUsernames($event)" (loading)="userSearchLoading = $event;"></app-user-add>
+      <div style="height: 40px; width: 40px;">
+        <app-loader *ngIf="userSearchLoading"></app-loader>
+      </div>
+      <button type="button" style="max-height: 40px;" class="btn btn-primary btn-small ml-2" *ngIf="usernamesToAdd.length > 0">Invite</button>
+    </div>
+    <div class="d-flex flex-wrap mt-2">
+      <div class="p-0 mr-2 align-self-center" *ngFor="let username of usernamesToAdd">
         <app-removable-pill [username]="username" nameCutoff="10" (remove)="onRemoveUsername(username)">
         </app-removable-pill>
       </div>
-      <button type="button" class="btn btn-primary btn-small ml-auto" *ngIf="usernamesToAdd.length > 0">Invite</button>
     </div>
   </div>
 </lib-angular-collapse>
 
-
-
-<div class="col-xl-9 align-self-center mt-2 d-flex flex-wrap" *ngIf="usernames.length > 0">
+<div class="col-xl-9 align-self-center mt-2 d-flex flex-wrap" *ngIf="pendingUsers.length > 0">
   <span class="mr-2">Pending Invites:</span>
-  <app-removable-pill [username]="pendingUsername" *ngFor="let pendingUsername of usernames"></app-removable-pill>
+  <app-removable-pill [username]="pendingUsername" *ngFor="let pendingUsername of pendingUsers"></app-removable-pill>
 </div>
 
 <div class="col-xl-9 align-self-center mt-2">

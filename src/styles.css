@@ -58,3 +58,25 @@ body {
 .secondary-puprle-bg {
     background-color: rgba(120, 45, 104, .8);
 }
+
+/* Altering default style of lib-angular-collapse */
+div.wrapper {
+    width: 100% !important;
+    font-weight: inherit !important;
+}
+
+div.wrapper header div {
+    padding: 1rem;
+}
+
+div.wrapper header {
+    background-color: rgba(120, 45, 104, .8);
+    color: white;
+    padding: 0;
+}
+
+div.wrapper body {
+    font-size: 1rem;
+    border: 2px solid rgb(204,204,204);
+    border-top: 0;
+}

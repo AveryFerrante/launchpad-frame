@@ -1,15 +1,8 @@
 <div class="d-flex flex-wrap w-100">
-  <div class="align-self-center col-xl-4 col-lg-5 col-sm-4 col-12 d-flex p-0 align-items-center">
-      <label for="userSelect">Add Users (by username): </label>
-      <app-loader *ngIf="loading" class="w-100 d-block d-sm-none" style="max-width: 30px;"></app-loader>
-  </div> 
-  <input id="userSelect" class="col-xl-7 col-lg-6 col-sm-7 form-control" (keyup)="onUserType()" [(ngModel)]="userSerachValue" type="text"
-    [ngModelOptions]="{standalone: true}" placeholder="Start Typing...">
-  <div class="col-sm-1">
-    <app-loader *ngIf="loading" class="w-100 d-none d-sm-block"></app-loader>
-  </div>
-</div>
+    <input id="userSelect" class="form-control" (keyup)="onUserType()" [(ngModel)]="userSerachValue" type="text"
+        [ngModelOptions]="{standalone: true}" placeholder="Search Usernames...">
 
-<div class="d-flex flex-wrap w-100" *ngIf="errorMessage">
-    <span class="pl-0 col-xl-8 col-lg-7 offset-lg-5 offset-xl-4 invalid-text">*{{ errorMessage }}</span>
+    <div class="w-100" *ngIf="errorMessage">
+        <span class="invalid-text">*{{ errorMessage }}</span>
+    </div>
 </div>
