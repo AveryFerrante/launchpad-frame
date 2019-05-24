@@ -3,6 +3,7 @@
     flex-direction: column;
 }
 
-.flex-grow {
-    flex-grow: 1;
+div.wrapper {
+    width: 100%;
+    font-weight: inherit;
 }

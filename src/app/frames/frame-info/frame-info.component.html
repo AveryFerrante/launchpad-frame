@@ -1,13 +1,21 @@
-<div class="d-flex justify-content-end">
-    <span class="flex-grow"></span>
-    <h2>Manage Frame</h2>
-    <div class="d-flex flex-grow justify-content-end">
-      <span class="mr-2 clickable" style="font-size: 2rem;" (click)="onClose()">&times;</span>
+<lib-angular-collapse class="col-xl-9 align-self-center mt-2">
+  <div header>Invite New Users</div>
+  <div body>
+    <div class="d-flex flex-wrap">
+      <app-user-add class="col-xl-6" (usernames)="onNewUsernames($event)"></app-user-add>
+      <div class="p-0 mr-2" *ngFor="let username of usernamesToAdd">
+        <app-removable-pill [username]="username" nameCutoff="10" (remove)="onRemoveUsername(username)">
+        </app-removable-pill>
+      </div>
+      <button type="button" class="btn btn-primary btn-small ml-auto" *ngIf="usernamesToAdd.length > 0">Invite</button>
     </div>
-</div> 
+  </div>
+</lib-angular-collapse>
+
+
 
 <div class="col-xl-9 align-self-center mt-2 d-flex flex-wrap" *ngIf="usernames.length > 0">
-  <span class="mr-2">Pending User Invites:</span>
+  <span class="mr-2">Pending Invites:</span>
   <app-removable-pill [username]="pendingUsername" *ngFor="let pendingUsername of usernames"></app-removable-pill>
 </div>
 

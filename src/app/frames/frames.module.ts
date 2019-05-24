@@ -7,6 +7,7 @@ import { FrameViewerComponent } from './frame-viewer/frame-viewer.component';
 import { AppRoutingModule } from '../app-routing.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { AngularCollapseModule } from 'angular-collapse';
 import { FrameImageViewerComponent } from './frame-image-viewer/frame-image-viewer.component';
 import { SlideshowModule } from 'ng-simple-slideshow';
 import { RemovablePillComponent } from './removable-pill/removable-pill.component';
@@ -23,7 +24,8 @@ import { UserAddComponent } from './user-add/user-add.component';
     ReactiveFormsModule,
     NgxDropzoneModule,
     SlideshowModule,
-    LoaderModule
+    LoaderModule,
+    AngularCollapseModule
   ],
   declarations: [
     FramesComponent,

@@ -16,7 +16,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
   userInputSubject = new Subject<string>();
   loading = false;
   usernameList: Username[] = [];
-  @Output() usernames = new EventEmitter<Username[]>();
+  @Output() usernames = new EventEmitter<Username[]>(); // This is shared with the parent...not a true copy...works for my cases
   constructor(private userInfoService: UserInfoService) { }
 
   ngOnInit() {
