@@ -1,9 +1,10 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FrameUserInfoMetadata } from 'src/app/models/FrameUserInfoMetadata';
 import { NotifierService } from 'angular-notifier';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { Username } from 'src/app/models/Username';
 import { FrameUserInfo } from 'src/app/models/FrameUserInfo';
+import { FramesService } from 'src/app/services/frames/frames.service';
+import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 
 @Component({
   selector: 'app-frame-info',
@@ -12,27 +13,31 @@ import { FrameUserInfo } from 'src/app/models/FrameUserInfo';
 })
 export class FrameInfoComponent implements OnInit {
 
-  private _frameUserInfo: FrameUserInfo;
+  private _frame: ClientFrame;
   pendingUsers: Username[] = [];
   existingUserIds: string[] = [];
   usernamesToAdd: Username[] = [];
   userId = this.authService.currentUser.uid;
   objectKeys = Object.keys;
-  @Input() set frameUserInfo(val: FrameUserInfo) { this._frameUserInfo = val; this.setUsernames(); }
-  get frameUserInfo() { return this._frameUserInfo; }
+  @Input() set frame(val: ClientFrame) {
+    this._frame = val;
+    this.setUsernames();
+  }
+  get frame() { return this._frame; }
   @Output() close = new EventEmitter();
-  constructor(private authService: AuthenticationService, private notifierService: NotifierService) { }
+  constructor(private authService: AuthenticationService, private notifierService: NotifierService, private framesService: FramesService) { }
 
   ngOnInit() {
   }
 
   setUsernames() {
+    console.log('In setUsernames in frame-info.component.ts');
     this.pendingUsers = [];
-    for (const pendingId in this.frameUserInfo.pendingUsers) {
-      this.pendingUsers.push(new Username(this.frameUserInfo.pendingUsers[pendingId].username, pendingId));
+    for (const pendingId in this.frame.users.pendingUsers) {
+      this.pendingUsers.push(new Username(this.frame.users.pendingUsers[pendingId].username, pendingId));
     }
     this.existingUserIds = [];
-    for (const ids in this.frameUserInfo.users) {
+    for (const ids in this.frame.users.users) {
       this.existingUserIds.push(ids);
     }
   }
@@ -53,6 +58,16 @@ export class FrameInfoComponent implements OnInit {
       }
     });
     this.usernamesToAdd = usernames;
+  }
+
+  inviteUsers() {
+    const observer = {
+      complete: () => {
+        this.notifierService.notify('success', 'User(s) have been invited!');
+        this.usernamesToAdd.splice(0, this.usernamesToAdd.length);
+      }
+    };
+    this.framesService.inviteUsers(this.frame.id, this.frame.title, this.usernamesToAdd).subscribe(observer);
   }
 
   onRemoveUsername(username: Username) {

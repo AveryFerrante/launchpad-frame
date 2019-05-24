@@ -46,10 +46,6 @@ export class CreateFrameComponent implements OnInit, OnDestroy {
     if (this.newFrameForm.valid) {
       this.frameService.add(this.titleCtrl.value, this.descriptionCtrl.value, this.usernameList).subscribe({
         next: (frameId: string) => {
-          if (this.usernameList.length > 0) {
-            const userids = this.usernameList.map((username: Username) => username.userid);
-            this.notificationsService.addNewFrameNotifications(frameId, this.titleCtrl.value, userids);
-          }
           this.router.navigate(['frames', frameId]);
         }
       });

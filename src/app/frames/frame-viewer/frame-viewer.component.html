@@ -22,7 +22,7 @@
   <div class="flex-grow-1" style="overflow-y: auto;">
     <ng-container *ngIf="!loading;">
       <app-frame-image-viewer *ngIf="view === 'images'" [frame]="frame"></app-frame-image-viewer>
-      <app-frame-info *ngIf="view === 'info'" [frameUserInfo]="frame.users" (close)="onCloseInfo()"></app-frame-info>
+      <app-frame-info *ngIf="view === 'info'" [frame]="frame" (close)="onCloseInfo()"></app-frame-info>
     </ng-container>
   </div>
 </ng-container>

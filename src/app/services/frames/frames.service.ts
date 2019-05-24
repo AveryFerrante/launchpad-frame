@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { forkJoin, from, Observable, of, TimeoutError } from 'rxjs';
-import { last, map, mergeMap, tap, mapTo } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
+import { forkJoin, from, Observable } from 'rxjs';
+import { last, map, mapTo, mergeMap, tap } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { Frame } from 'src/app/models/Frame';
 import { FrameImage } from 'src/app/models/FrameImage';
-import { constructFrameUserInfo, FrameUserInfo } from 'src/app/models/FrameUserInfo';
+import { constructFrameUserInfo, FrameUserInfo, constructFrameUserInfoPending } from 'src/app/models/FrameUserInfo';
 import { ImageFrame } from 'src/app/models/ImageFrame';
 import { constructUserFrame } from 'src/app/models/UserFrames';
+import { Username } from 'src/app/models/Username';
 import { environment } from '../../../environments/environment';
+import { UserInfoService } from '../../../UserInfo/user-info.service';
 import { Image } from '../../models/Image';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { ImagesService } from '../images/images.service';
 import { FramesStore } from '../stores/framesstore.service';
-import { UserInfoService } from '../../../UserInfo/user-info.service';
-import { NotifierService } from 'angular-notifier';
-import { Username } from 'src/app/models/Username';
-import * as firebase from 'firebase/app';
-import { _getComponentHostLElementNode } from '@angular/core/src/render3/instructions';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +29,7 @@ export class FramesService {
   private imageDb = environment.imageDatabase;
   private imageFrameSub = environment.imageFrameSub;
   constructor(private db: AngularFirestore, private authService: AuthenticationService, private frameStore: FramesStore,
-    private userInfoService: UserInfoService, private storage: AngularFireStorage,
-    private imagesService: ImagesService, private notifierService: NotifierService) {
+    private userInfoService: UserInfoService, private storage: AngularFireStorage, private notificationService: NotificationsService) {
     this.frameDb = environment.frameDatabase;
     this.frameUserSub = environment.frameUserSub;
     this.frameImageSub = environment.frameImageSub;
@@ -52,9 +49,24 @@ export class FramesService {
     this.userInfoService.addFrameBatch(batch, userFrame);
     this.addFrameBatch(batch, frame);
     this.addFrameUserBatch(batch, frame.id, frameUserInfo);
+    this.notificationService.addNewFrameNotificationsBatch(batch, frameId, frame.title, usersToAdd.map((username: Username) => username.userid));
     return from(batch.commit()).pipe(
-      tap(() => this.userInfoService.addFrame(constructUserFrame(frame.id, title, 'owner'))),
-      mapTo(frame.id)
+        tap(() => this.userInfoService.addFrame(userFrame)),
+        tap(() => this.frameStore.add(new ClientFrame(frame, [], frameUserInfo, true))),
+        mapTo(frame.id)
+      );
+  }
+
+  inviteUsers(frameId: string, frameTitle: string, usersToAdd: Username[]) {
+    const batch = this.db.firestore.batch();
+    const pendingUsers = {};
+    usersToAdd.forEach(user => {
+      pendingUsers[user.userid] = constructFrameUserInfoPending(user.username, this.authService.currentUser.uid, this.userInfoService.currentState.username);
+    });
+    this.notificationService.addNewFrameNotificationsBatch(batch, frameId, frameTitle, usersToAdd.map((username: Username) => username.userid));
+    this.addPendingUsersBatch(batch, frameId, pendingUsers);
+    return from(batch.commit()).pipe(
+      tap(() => this.frameStore.updatePendingUsers(frameId, this.authService.currentUser.uid, this.userInfoService.currentState.username, usersToAdd))
     );
   }
 
@@ -66,6 +78,14 @@ export class FramesService {
   addFrameUserBatch(b: firebase.firestore.WriteBatch, frameId: string, frameUserInfo: FrameUserInfo) {
     const docRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameUserSub}/${frameId}`);
     b.set(docRef, frameUserInfo);
+  }
+
+  addPendingUsersBatch(b: firebase.firestore.WriteBatch, frameId: string, pendingUsers: Object) {
+    const docRef = this.db.firestore.collection(this.frameDb).doc(`${frameId}/${this.frameUserSub}/${frameId}`);
+    const updates = {
+      pendingUsers
+    };
+    b.set(docRef, updates, { merge: true })
   }
 
   getFrameData(frameId: string): Observable<ClientFrame> {

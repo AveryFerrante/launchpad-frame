@@ -10,7 +10,7 @@
       <div style="height: 40px; width: 40px;">
         <app-loader *ngIf="userSearchLoading"></app-loader>
       </div>
-      <button type="button" style="max-height: 40px;" class="btn btn-primary btn-small ml-2" *ngIf="usernamesToAdd.length > 0">Invite</button>
+      <button type="button" (click)="inviteUsers()" style="max-height: 40px;" class="btn btn-primary btn-small ml-2" *ngIf="usernamesToAdd.length > 0">Invite</button>
     </div>
     <div class="d-flex flex-wrap mt-2">
       <div class="p-0 mr-2 align-self-center" *ngFor="let username of usernamesToAdd">
@@ -34,16 +34,16 @@
         <th scope="col">Username</th>
         <th scope="col">Joined</th>
         <th scope="col">Pictures</th>
-        <th scope="col" *ngIf="frameUserInfo.users[userId].role === 'owner'">Actions</th>
+        <th scope="col" *ngIf="frame.users.users[userId].role === 'owner'">Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let uid of objectKeys(frameUserInfo.users); let i = index">
+      <tr *ngFor="let uid of objectKeys(frame.users.users); let i = index">
         <th scope="row">{{ i + 1 }}</th>
-        <td>{{ frameUserInfo.users[uid].username }}</td>
-        <td>{{ frameUserInfo.users[uid].joined | date }}</td>
-        <td>{{ frameUserInfo.users[uid].pictureCount }}</td>
-        <td *ngIf="frameUserInfo.users[userId].role === 'owner'">
+        <td>{{ frame.users.users[uid].username }}</td>
+        <td>{{ frame.users.users[uid].joined | date }}</td>
+        <td>{{ frame.users.users[uid].pictureCount }}</td>
+        <td *ngIf="frame.users.users[userId].role === 'owner'">
             <i class="fas fa-trash clickable invalid-text"></i>
         </td>
       </tr>

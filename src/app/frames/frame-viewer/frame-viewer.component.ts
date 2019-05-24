@@ -52,6 +52,7 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
         this.frameId = params.get('id');
         this.userInfo$ = (this.router.snapshot.data['UserInfo'] as Observable<UserInfo>);
       }),
+      tap(() => console.log('Frame Viewer Component Switching')),
       switchMap(() => this.framesService.getFrameData(this.frameId).pipe(
         tap((cf: ClientFrame) => {
           this.frameImageUrls = [];

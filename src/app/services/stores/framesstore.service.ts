@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, skipWhile } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
 import { FrameImage } from 'src/app/models/FrameImage';
+import { Username } from 'src/app/models/Username';
+import { FrameUserInfoPendingMetadata } from 'src/app/models/FrameUserInfoPendingMetadata';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,28 @@ export class FramesStore {
       this.frames = [val];
     } else {
       this.frames = [...this.frames, val];
+    }
+  }
+
+  updatePendingUsers(frameId: string, invitedById: string, invitedByUsername: string, usersToAdd: Username[]) {
+    console.log('Updating Pending Users');
+    const frame = this.get(frameId);
+    if (frame) {
+      const newFrame = cloneDeep(frame);
+      usersToAdd.forEach(user => {
+        const pendingUser: FrameUserInfoPendingMetadata = {
+          username: user.username,
+          invitedById: invitedById,
+          invitedByUsername: invitedByUsername,
+          invitedOn: new Date()
+        };
+        newFrame.users.pendingUsers[user.userid] = pendingUser;
+      });
+      this.frames = this.replaceFrame(frame, newFrame);
+      console.log('Value of frames store after update');
+      console.log(this.frames);
+    } else {
+      throw new Error('Can\'t find frame to update image');
     }
   }
 
@@ -84,50 +108,6 @@ export class FramesStore {
       this.frames = this.replaceFrame(oldFrame, frame);
     }
   }
-
-  // addMultiple(val: ClientFrame[]) {
-  //   if (this.frames == null) {
-  //     this.frames = val;
-  //   } else {
-  //     this.frames = [...this.frames].concat(val);
-  //   }
-  // }
-
-  // get(val: string): Observable<Frame> {
-  //   return this.frames$.pipe(
-  //     skipWhile((f: Frame[]) => f === null),
-  //     map((frames: Frame[]) => {
-  //       const matches = frames.filter((f: Frame) => f.id === val);
-  //       if (matches.length > 0) {
-  //         return matches[0];
-  //       } else {
-  //         return null;
-  //       }
-  //     })
-  //   );
-  // }
-
-  // addImage(frame: Frame, imageId: string, imagePath: string) {
-  //   // let imageIdArray = frame.imageIds;
-  //   // let imagePathArray = frame.imagePaths;
-  //   // if (imageIdArray === null) {
-  //   //   imageIdArray = [imageId];
-  //   // } else {
-  //   //   imageIdArray = [...imageIdArray, imageId];
-  //   // }
-  //   // if (imagePathArray === null) {
-  //   //   imagePathArray = [imagePath];
-  //   // } else {
-  //   //   imagePathArray = [...imagePathArray, imagePath];
-  //   // }
-  //   // const newFrame = new Frame(frame.id, frame.title, frame.description, frame.createdDate,
-  //   //   frame.createdBy, frame.endDate, imagePathArray, imageIdArray);
-  //   // this.frames = this.replaceFrame(frame, newFrame);
-  // }
-
-  // clear(): void {
-  //   this.frames = null;
-  // }
 
   private replaceFrame(oldFrame: ClientFrame, newFrame: ClientFrame): ClientFrame[] {
     const frameSnapshot = cloneDeep(this.frames);

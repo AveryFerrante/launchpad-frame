@@ -36,3 +36,12 @@ export function constructFrameUserInfo(userId: string, permissions: string[] = [
     }
     return fui;
 }
+
+export function constructFrameUserInfoPending(username: string, invitedById: string, invitedByUsername: string): FrameUserInfoPendingMetadata {
+    return {
+        username: username,
+        invitedOn: new Date(),
+        invitedById: invitedById,
+        invitedByUsername: invitedByUsername
+    }
+}

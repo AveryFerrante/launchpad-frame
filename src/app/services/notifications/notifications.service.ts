@@ -25,15 +25,13 @@ export class NotificationsService {
   constructor(private db: AngularFirestore, private authService: AuthenticationService,
     private notificationsStore: NotificationsStore, private userInfoService: UserInfoService) { }
 
-  addNewFrameNotifications(frameId: string, frameName: string, forusers: string[]): Observable<void> {
-    const batch = this.db.firestore.batch();
+  addNewFrameNotificationsBatch(b: firebase.firestore.WriteBatch, frameId: string, frameName: string, forusers: string[]) {
     for (const user of forusers) {
       const notificationId = this.db.createId();
       const notification = new Notification(notificationId, NotificationActions.Added, frameId, frameName,
         this.authService.currentUser.uid, this.userInfoService.currentState.username, NotificationTypes.Frame, user);
-      batch.set(this.db.collection(this.dbName).doc(notificationId).ref, notification.getData());
+      b.set(this.db.collection(this.dbName).doc(notificationId).ref, notification.getData());
     }
-    return from(batch.commit());
   }
 
   getNotificationListener(): Observable<Notification[]> {
