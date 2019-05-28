@@ -11,6 +11,7 @@ export class RemovablePillComponent implements OnInit {
   displayName: string;
   @Input() username: Username;
   @Input() nameCutoff = 8;
+  @Input() showX = true;
   @Output() remove = new EventEmitter<Username>();
   constructor() { }
 

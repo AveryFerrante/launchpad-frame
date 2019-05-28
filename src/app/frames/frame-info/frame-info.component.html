@@ -23,7 +23,7 @@
 
 <div class="col-xl-9 align-self-center mt-2 d-flex flex-wrap" *ngIf="pendingUsers.length > 0">
   <span class="mr-2">Pending Invites:</span>
-  <app-removable-pill [username]="pendingUsername" *ngFor="let pendingUsername of pendingUsers"></app-removable-pill>
+  <app-removable-pill [username]="pendingUsername" *ngFor="let pendingUsername of pendingUsers" [showX]="false"></app-removable-pill>
 </div>
 
 <div class="col-xl-9 align-self-center mt-2">

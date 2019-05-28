@@ -1,16 +1,25 @@
 <ng-container *ngIf="!showSlideshow && frame">
   <div class="light-gray-bg d-flex align-items-center justify-content-between" style="min-height: 75px; max-height: 75px;">
     <ng-container *ngIf="!loading">
-      <div class="ml-1 d-flex align-self-start align-items-center" style="font-size: .85rem;">
-          <i class="fas fa-key mr-1"></i>
-          <span>Owner: 
-            <span *ngIf="(userInfo$ | async).frames[frameId].role === 'owner'; else notOwner">You ({{ (userInfo$ | async).username }})</span>
-            <ng-template #notOwner>{{ frame.createdBy }}</ng-template>
-        </span>
+      <div class="d-flex flex-column align-self-start h-100">
+        <div class="ml-1 d-flex align-items-center" style="font-size: .85rem;">
+            <i class="fas fa-key mr-1"></i>
+            <span>Owner: 
+              <span *ngIf="(userInfo$ | async).frames[frameId].role === 'owner'; else notOwner">You ({{ (userInfo$ | async).username }})</span>
+              <ng-template #notOwner>{{ frame.createdBy }}</ng-template>
+          </span>
+        </div>
+        <div class="mt-auto ml-1">
+          <span class="clickable" (click)="onFrameInfo()" *ngIf="view === 'images'">
+            <i class="mr-1 fas fa-info-circle"></i>Frame Info
+          </span>
+          <span class="clickable" (click)="onFrameInfo()" *ngIf="view === 'info'">
+              <i class="mr-1 fas fa-image"></i>Frame Images
+            </span>
+        </div>
       </div>
       <div class="d-flex">
         <h2>{{ frame.title }}</h2>
-        <i class="ml-2 fas fa-info-circle clickable" (click)="onFrameInfo()" style="opacity: .7;"></i>
       </div>
       <a (click)="onViewFrame()" class="clickable mr-2 align-self-end"><i class="fas fa-eye"></i> View Frame</a>
     </ng-container>
