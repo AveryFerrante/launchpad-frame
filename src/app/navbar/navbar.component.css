@@ -18,3 +18,7 @@
 .active {
     background-color: rgba(68, 45, 63, 1);
 }
+
+.notification {
+    margin-left: -1rem;
+}

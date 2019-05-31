@@ -1,0 +1,9 @@
+.notification-nav {
+    width: 280px;
+    height: 100vh;
+    position: absolute;
+    z-index: 10;
+    background-color: gray;
+    left: calc(100vw - 280px);
+    top: 0;
+}

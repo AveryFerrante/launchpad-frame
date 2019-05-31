@@ -1,3 +1,9 @@
+.card-header {
+  background-color: rgba(120, 45, 104, .8);
+  color: white;
+}
+
+
 .tgl {
     display: none;
   }

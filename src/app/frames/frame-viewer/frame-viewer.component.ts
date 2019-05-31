@@ -77,12 +77,8 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  onFrameInfo() {
-    this.view = 'info';
-  }
-
-  onCloseInfo() {
-    this.view = 'images';
+  changeView(view: string) {
+    this.view = view;
   }
 
   setUpSlideshow() {

@@ -10,10 +10,10 @@
           </span>
         </div>
         <div class="mt-auto ml-1">
-          <span class="clickable" (click)="onFrameInfo()" *ngIf="view === 'images'">
+          <span class="clickable" (click)="changeView('info')" *ngIf="view === 'images'">
             <i class="mr-1 fas fa-info-circle"></i>Frame Info
           </span>
-          <span class="clickable" (click)="onFrameInfo()" *ngIf="view === 'info'">
+          <span class="clickable" (click)="changeView('images')" *ngIf="view === 'info'">
               <i class="mr-1 fas fa-image"></i>Frame Images
             </span>
         </div>
