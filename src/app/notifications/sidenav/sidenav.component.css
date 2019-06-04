@@ -1,9 +1,30 @@
+.opaque-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    opacity: .3;
+    z-index: 9;
+}
+
 .notification-nav {
-    width: 280px;
+    width: 380px;
     height: 100vh;
     position: absolute;
     z-index: 10;
-    background-color: gray;
-    left: calc(100vw - 280px);
+    background-color: whitesmoke;
+    left: calc(100vw - 380px);
     top: 0;
+    overflow-y: auto;
+}
+
+.notification-header {
+    background: rgba(120, 45, 104, .8);
+    padding-left: 16px;
+    padding-right: 10px;
+    font-size: 20px;
+    color: white;
+    height: 48px;
 }

@@ -1,3 +1,8 @@
-<div class="notification-nav" *ngIf="showNotificationSidenav">
-  TEXT HERE WTF
+<div class="opaque-bg" *ngIf="showNotificationSidenav"></div>
+<div class="notification-nav d-flex flex-column" *ngIf="showNotificationSidenav">
+  <header class="notification-header d-flex align-items-center">
+    <div>Alerts</div>
+    <i class="fas fa-times ml-auto clickable" (click)="onClose()"></i>
+  </header>
+  <ng-content></ng-content>
 </div>
