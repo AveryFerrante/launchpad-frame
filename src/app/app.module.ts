@@ -14,7 +14,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-import { NotificationsModule } from './notifications/notifications.module';
 import { NotifierModule } from 'angular-notifier';
 import { environment } from '../environments/environment';
 
@@ -23,6 +22,8 @@ import { UserInfoService } from '../UserInfo/user-info.service';
 
 import { FramesModule } from './frames/frames.module';
 import { AccountModule } from './account/account.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationModule } from './notification/notification.module';
 
 
 import { HomeComponent } from './home/home.component';
@@ -50,6 +51,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     FramesModule,
     AccountModule,
     NotificationsModule,
+    NotificationModule,
     ReactiveFormsModule,
     BsDropdownModule.forRoot()
   ],

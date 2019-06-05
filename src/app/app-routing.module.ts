@@ -9,7 +9,6 @@ import { FramesComponent } from './frames/frames/frames.component';
 import { CreateFrameComponent } from './frames/create-frame/create-frame.component';
 import { FrameViewerComponent } from './frames/frame-viewer/frame-viewer.component';
 import { AccountComponent } from './account/account/account.component';
-import { NotificationsComponent } from './account/notifications/notifications.component';
 import { UserInfoResolveService } from './services/resolvers/user-info-resolve.service';
 
 const appRoutes: Routes = [
@@ -23,7 +22,6 @@ const appRoutes: Routes = [
   ] },
   { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard], children: [
     { path: 'account', component: AccountComponent },
-    { path: 'notifications', component: NotificationsComponent, resolve: { UserInfo: UserInfoResolveService } }
   ] }
 ];
 

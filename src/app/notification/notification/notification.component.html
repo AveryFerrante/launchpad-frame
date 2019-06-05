@@ -1,0 +1,32 @@
+<!-- <div class="row justify-content-center">
+  <div class="card-header secondary-puprle-bg">
+    <span *ngIf="notification.type === 1 && notification.action === 1">You've been invited to join a new
+      frame!</span>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Join <em>{{ notification.frameName }}?</em></h5>
+    <div class="card-text d-flex flex-column">
+      <div class="mb-2">{{ notification.fromusername }} has invited you to join a new frame!</div>
+      <div class="d-flex justify-content-between align-items-center">
+        <a class="text-success clickable" (click)="onAccept(notification)"><i class="far fa-check-circle"></i>
+          Join</a>
+        <a class="text-danger clickable"><i class="far fa-times-circle"></i> Pass</a>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="w-100 d-flex flex-column mt-2 mb-3 pl-2 pr-2 notification-card">
+  <div>
+    <em>From {{ notification.fromusername }}</em>
+  </div>
+  <div *ngIf="notification.type === 1 && notification.action === 1">
+     You're invited to join a new frame: {{ notification.frameName }}
+  </div>
+  <div class="d-flex">
+    <a class="text-success clickable" (click)="onAccept(notification)"><i class="far fa-check-circle"></i>
+      Join</a>
+    <a class="ml-auto text-danger clickable"><i class="far fa-times-circle"></i> Pass</a>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+.notification-card {
+    box-shadow: 1px 2px 5px 1px grey;
+    border-left: 5px solid dodgerblue; 
+    background-color: lightgray
+}

@@ -10,14 +10,26 @@
 }
 
 .notification-nav {
-    width: 380px;
     height: 100vh;
     position: absolute;
     z-index: 10;
     background-color: whitesmoke;
-    left: calc(100vw - 380px);
     top: 0;
     overflow-y: auto;
+}
+
+@media only screen and (max-width: 379px) {
+    .notification-nav {
+        width: 100vw;
+        left: 0;
+    }
+}
+
+@media only screen and (min-width: 380px) {
+    .notification-nav {
+        width: 380px;
+        left: calc(100vw - 380px);;
+    }
 }
 
 .notification-header {
@@ -27,4 +39,5 @@
     font-size: 20px;
     color: white;
     height: 48px;
+    min-height: 48px;
 }
