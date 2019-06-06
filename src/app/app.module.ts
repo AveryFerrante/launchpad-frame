@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainComponent } from './main/main.component';
@@ -52,8 +51,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     AccountModule,
     SidenavModule,
     NotificationModule,
-    ReactiveFormsModule,
-    BsDropdownModule.forRoot()
+    ReactiveFormsModule
   ],
   providers: [
     AuthenticationService,

@@ -1,13 +1,13 @@
 import { SidenavModule } from './sidenav.module';
 
 describe('NotificationsModule', () => {
-  let notificationsModule: SidenavModule;
+  let sidenanModule: SidenavModule;
 
   beforeEach(() => {
-    notificationsModule = new SidenavModule();
+    sidenanModule = new SidenavModule();
   });
 
   it('should create an instance', () => {
-    expect(notificationsModule).toBeTruthy();
+    expect(sidenanModule).toBeTruthy();
   });
 });
