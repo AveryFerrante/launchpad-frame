@@ -25,7 +25,8 @@ export class FrameInfoComponent implements OnInit {
   }
   get frame() { return this._frame; }
   @Output() close = new EventEmitter();
-  constructor(private authService: AuthenticationService, private notifierService: NotifierService, private framesService: FramesService) { }
+  constructor(private authService: AuthenticationService, private notifierService: NotifierService,
+    private framesService: FramesService) { }
 
   ngOnInit() {
   }

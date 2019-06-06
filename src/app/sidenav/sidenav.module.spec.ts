@@ -1,10 +1,10 @@
-import { NotificationsModule } from './notifications.module';
+import { SidenavModule } from './sidenav.module';
 
 describe('NotificationsModule', () => {
-  let notificationsModule: NotificationsModule;
+  let notificationsModule: SidenavModule;
 
   beforeEach(() => {
-    notificationsModule = new NotificationsModule();
+    notificationsModule = new SidenavModule();
   });
 
   it('should create an instance', () => {

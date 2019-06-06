@@ -22,7 +22,7 @@ import { UserInfoService } from '../UserInfo/user-info.service';
 
 import { FramesModule } from './frames/frames.module';
 import { AccountModule } from './account/account.module';
-import { NotificationsModule } from './notifications/notifications.module';
+import { SidenavModule } from './sidenav/sidenav.module';
 import { NotificationModule } from './notification/notification.module';
 
 
@@ -50,7 +50,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     NotifierModule,
     FramesModule,
     AccountModule,
-    NotificationsModule,
+    SidenavModule,
     NotificationModule,
     ReactiveFormsModule,
     BsDropdownModule.forRoot()

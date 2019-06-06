@@ -9,4 +9,4 @@ import { SidenavComponent } from './sidenav/sidenav.component';
   declarations: [SidenavComponent],
   exports: [SidenavComponent]
 })
-export class NotificationsModule { }
+export class SidenavModule { }
