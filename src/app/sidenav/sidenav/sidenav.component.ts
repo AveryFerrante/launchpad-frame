@@ -3,28 +3,31 @@ import { fromEvent, Subscription } from 'rxjs';
 import { tap, skip } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-notification-sidenav',
+  selector: 'app-floating-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit, OnDestroy {
 
   _show = false;
-  @Input() set showNotificationSidenav(val: boolean) { this._show = val; this.handleClickListener(); }
-  get showNotificationSidenav() { return this._show; }
-  @Output() showNotificationSidenavChange = new EventEmitter<boolean>();
+  @Input() title: string;
+  @Input() side: 'left' | 'right';
+  @Input() bgColor: 'white' | 'purple';
+  @Input() set showSidenav(val: boolean) { this._show = val; this.handleClickListener(); }
+  get showSidenav() { return this._show; }
+  @Output() showSidenavChange = new EventEmitter<boolean>();
   clickSub: Subscription = null;
   constructor() { }
 
   ngOnInit() { }
 
   onClose() {
-    this.showNotificationSidenav = false;
-    this.showNotificationSidenavChange.emit(false);
+    this.showSidenav = false;
+    this.showSidenavChange.emit(false);
   }
 
   handleClickListener() {
-    if (this.showNotificationSidenav) {
+    if (this.showSidenav) {
       this.initClickListener();
     } else {
       this.destroyClickListener();

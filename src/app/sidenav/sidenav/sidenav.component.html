@@ -1,12 +1,18 @@
-<div class="opaque-bg" *ngIf="showNotificationSidenav"></div>
-<div class="notification-nav d-flex flex-column" *ngIf="showNotificationSidenav">
+<div class="opaque-bg" *ngIf="showSidenav"></div>
+
+<div class="notification-nav d-flex flex-column bg-white" *ngIf="showSidenav"
+  [ngClass]="{'notification-nav-left': side === 'left', 'notification-nav-right': side === 'right'}">
+
   <header class="notification-header d-flex align-items-center">
-    <div>Alerts</div>
+    <div>{{ title }}</div>
     <i class="fas fa-times ml-auto clickable" (click)="onClose()"></i>
   </header>
 
-  <!-- Body Content -->
-  <div class="p-2"> 
-    <ng-content></ng-content>
+  <div class="d-flex flex-column nav-content"
+    [ngClass]="{'bg-white': bgColor === 'white', 'bg-purple': bgColor === 'purple'}">
+    <!-- Body Content -->
+    <div class="p-2">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>

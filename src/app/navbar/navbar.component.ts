@@ -14,19 +14,12 @@ import { GlobalEventsService } from '../services/global/global-events.service';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthenticationService, private router: Router, private notificationService: NotificationsService,
-    private globalEventsService: GlobalEventsService) { }
+  constructor(private authService: AuthenticationService, private router: Router, private notificationService: NotificationsService) { }
 
   notifications$: Subscription;
   notifications: Notification[] = [];
   showHamburger = false;
   ngOnInit() {
-    this.globalEventsService.showHamburgerEmitter.subscribe(
-      (show) =>  {
-        this.showHamburger = show;
-      }
-    );
-
     this.notifications$ = this.notificationService.getNotificationListener().pipe(
       tap((notifications: Notification[]) =>  {
         if (notifications != null) {
@@ -36,15 +29,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  onToggleSidenav() {
-    this.globalEventsService.toggleSidenav();
-  }
-
   onLogout() {
     this.notificationService.stopNotificationListener();
     this.authService.signOut().subscribe(
       () => this.router.navigate(['login'])
     );
+  }
+
+  onHamburgerNav() {
+    this.showHamburger = true;
   }
 
   ngOnDestroy() {

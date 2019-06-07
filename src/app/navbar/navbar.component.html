@@ -1,15 +1,23 @@
 <div class="w-100 h-100 background-color font-color" id="topNav">
   <div class="d-flex align-items-center h-100">
-    <div class="h-100 d-flex justify-content-center align-items-center ml-3 clickable button-clickable" (click)="onToggleSidenav()">
-        <i class="fas fa-bars ml-3 mr-3" *ngIf="showHamburger"></i>
+    <div class="h-100 d-flex justify-content-center align-items-center ml-3 clickable button-clickable d-block d-md-none"
+      (click)="onHamburgerNav()">
+        <i class="fas fa-bars ml-3 mr-3"></i>
     </div>
-    <div class="h-100 d-flex justify-content-center align-items-center clickable" routerLink="/home" routerLinkActive="active" style="width: 150px;">
-      <i class="fas fa-space-shuttle ml-3 mr-3"></i>
-      <a class="mr-3 d-none d-md-block">Home</a>
-    </div>
-    <div class="h-100 d-flex justify-content-center align-items-center clickable" routerLink="/frames" routerLinkActive="active" style="width: 150px;">
-      <i class="fas fa-images ml-3 mr-3"></i>
-      <a class="mr-3 d-none d-md-block">My Frames</a>
+    <!-- Hide buttons on md screen and switch to hamburger nav -->
+    <div class="d-none d-md-block h-100">
+      <div class="d-flex align-items-center h-100">
+        <div class="h-100 d-flex justify-content-center align-items-center clickable" routerLink="/home"
+          routerLinkActive="active" style="width: 150px;">
+          <i class="fas fa-space-shuttle ml-3 mr-3"></i>
+          <a class="mr-3">Home</a>
+        </div>
+        <div class="h-100 d-flex justify-content-center align-items-center clickable" routerLink="/frames"
+          routerLinkActive="active" style="width: 150px;">
+          <i class="fas fa-images ml-3 mr-3"></i>
+          <a class="mr-3">My Frames</a>
+        </div>
+      </div>
     </div>
     <!-- <div class="h-100 d-flex justify-content-center align-items-center clickable"style="width: 150px;"> 
         <i class="fas fa-camera ml-3 mr-3"></i>
@@ -31,8 +39,12 @@
   </div>
 </div>
 
-<app-notification-sidenav [(showNotificationSidenav)]="showNotifications">
+<app-floating-sidenav [(showSidenav)]="showNotifications" title="Alerts" side="right" bgColor="white">
   <ng-container *ngFor="let notification of notifications">
     <app-notification [notification]="notification"></app-notification>
   </ng-container>
-</app-notification-sidenav>
+</app-floating-sidenav>
+
+<app-floating-sidenav [(showSidenav)]="showHamburger" title="Navigation" side="left" bgColor="purple">
+
+  </app-floating-sidenav>
