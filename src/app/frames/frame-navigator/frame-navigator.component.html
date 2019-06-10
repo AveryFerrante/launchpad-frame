@@ -1,0 +1,11 @@
+<div class="w-100 h-100 sidenav-main-background flex-grow-1 d-flex flex-column" style="overflow-y: auto;">
+  <div class="pl-2 pt-3 clickable pb-3" [routerLink]="['create']" routerLinkActive="active">
+    Create New Frame <i class="fas fa-plus ml-2"></i>
+  </div>
+  <div class="clickable d-flex p-2" *ngFor="let frame of frames" [routerLink]="[frame.id]"
+    routerLinkActive="active" #rla="routerLinkActive">
+    <i class="fas fa-circle align-self-center mr-2" style="font-size: .5rem;" *ngIf="rla.isActive"></i>
+    <span class="elipsis" style="font-size: 1.3rem;">{{ frame.name }}</span>
+    <i class="fas fa-key ml-3 align-self-center" style="text-decoration: none; font-size: .75rem;" *ngIf="frame.role === 'owner'"></i>
+  </div>
+</div> 
