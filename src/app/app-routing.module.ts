@@ -20,7 +20,8 @@ const appRoutes: Routes = [
     { path: 'create', component: CreateFrameComponent },
     { path: ':id', component: FrameViewerComponent, resolve: { UserInfo: UserInfoResolveService } }
   ] },
-  { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard], children: [
+  { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard],
+    resolve: { UserInfo: UserInfoResolveService }, children: [
     { path: 'account', component: AccountComponent },
   ] }
 ];

@@ -8,11 +8,9 @@
     <i class="fas fa-times ml-auto clickable" (click)="onClose()"></i>
   </header>
 
-  <div class="d-flex flex-column nav-content"
-    [ngClass]="{'bg-white': bgColor === 'white', 'bg-purple': bgColor === 'purple'}">
+  <div class="d-flex flex-column nav-content">
+    <!-- [ngClass]="{'bg-white': bgColor === 'white', 'bg-purple': bgColor === 'purple'}"> -->
     <!-- Body Content -->
-    <div class="p-2">
-      <ng-content></ng-content>
-    </div>
+    <ng-content></ng-content>
   </div>
 </div>

@@ -40,11 +40,23 @@
 </div>
 
 <app-floating-sidenav [(showSidenav)]="showNotifications" title="Alerts" side="right" bgColor="white">
-  <ng-container *ngFor="let notification of notifications">
-    <app-notification [notification]="notification"></app-notification>
-  </ng-container>
+  <div class="p-2">
+    <ng-container *ngFor="let notification of notifications">
+      <app-notification [notification]="notification"></app-notification>
+    </ng-container>
+  </div>
 </app-floating-sidenav>
 
 <app-floating-sidenav [(showSidenav)]="showHamburger" title="Navigation" side="left" bgColor="purple">
-  <app-frame-navigator class="h-100"></app-frame-navigator>
+  <div class="d-flex flex-column font-color" style="font-size: 1.5rem; background-color: rgba(120, 45, 104, .8);">
+    <div class="d-flex align-items-center clickable sidenav-item p-2" routerLink="/home" routerLinkActive="active-sidenav">
+      <i class="fas fa-space-shuttle ml-3 mr-3"></i>
+      <a class="mr-3">Home</a>
+    </div>
+    <div class="d-flex align-items-center clickable sidenav-item p-2">
+      <i class="fas fa-images ml-3 mr-3"></i>
+      <a class="mr-3">My Frames</a>
+    </div>
+  </div>
+  <app-frame-navigator class="flex-grow-1 font-color"></app-frame-navigator>
 </app-floating-sidenav>
