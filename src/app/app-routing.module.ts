@@ -10,6 +10,7 @@ import { CreateFrameComponent } from './frames/create-frame/create-frame.compone
 import { FrameViewerComponent } from './frames/frame-viewer/frame-viewer.component';
 import { AccountComponent } from './account/account/account.component';
 import { UserInfoResolveService } from './services/resolvers/user-info-resolve.service';
+import { LandingPageComponent } from './open-access/landing-page/landing-page.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: AuthenticationComponent, canActivate: [AuthGuard] },
@@ -23,7 +24,8 @@ const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [UnauthGuardGuard], canActivateChild: [UnauthGuardGuard],
     resolve: { UserInfo: UserInfoResolveService }, children: [
     { path: 'account', component: AccountComponent },
-  ] }
+  ] },
+  { path: 'open-access/:id', component: LandingPageComponent }
 ];
 
 @NgModule({

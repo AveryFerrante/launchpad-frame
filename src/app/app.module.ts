@@ -23,6 +23,7 @@ import { FramesModule } from './frames/frames.module';
 import { AccountModule } from './account/account.module';
 import { SidenavModule } from './sidenav/sidenav.module';
 import { NotificationModule } from './notification/notification.module';
+import { OpenAccessModule } from './open-access/open-access.module';
 
 
 import { HomeComponent } from './home/home.component';
@@ -51,6 +52,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     AccountModule,
     SidenavModule,
     NotificationModule,
+    OpenAccessModule,
     ReactiveFormsModule
   ],
   providers: [
