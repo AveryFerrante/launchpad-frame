@@ -52,7 +52,6 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
         this.frameId = params.get('id');
         this.userInfo$ = (this.router.snapshot.data['UserInfo'] as Observable<UserInfo>);
       }),
-      tap(() => console.log('Frame Viewer Component Switching')),
       switchMap(() => this.framesService.getFrameData(this.frameId).pipe(
         tap((cf: ClientFrame) => {
           this.frameImageUrls = [];
@@ -67,8 +66,6 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
           if (error.message === Errors.InvalidFrameId) {
             this.frameNotFound = true;
             this.frame = null;
-          } else {
-            console.error(error.message);
           }
           this.loading = false;
           return of(null);

@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { Notification } from 'src/app/models/Notification';
+import { UserInfoService } from 'src/UserInfo/user-info.service';
 import { AuthenticationService } from '../services/authentication/authentication.service';
+import { FramesService } from '../services/frames/frames.service';
 import { NotificationsService } from '../services/notifications/notifications.service';
-import { GlobalEventsService } from '../services/global/global-events.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,25 +15,33 @@ import { GlobalEventsService } from '../services/global/global-events.service';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
 
-  constructor(private authService: AuthenticationService, private router: Router, private notificationService: NotificationsService) { }
+  private _userInfoService: UserInfoService;
+  private _framesService: FramesService;
 
-  notifications$: Subscription;
+  constructor(private authService: AuthenticationService, private router: Router,
+    private notificationService: NotificationsService, userInfoService: UserInfoService, framesService: FramesService) {
+      this._userInfoService = userInfoService;
+      this._framesService = framesService;
+    }
+
+  notificationsSubscription: Subscription;
   notifications: Notification[] = [];
   showHamburger = false;
   ngOnInit() {
-    this.notifications$ = this.notificationService.getNotificationListener().pipe(
-      tap((notifications: Notification[]) =>  {
-        if (notifications != null) {
-          this.notifications = notifications;
-        }
-      })
+    this.notificationsSubscription = this.notificationService.getNotificationListener().pipe(
+      filter((n: Notification[]) => n != null),
+      tap((notifications: Notification[]) =>  this.notifications = notifications)
     ).subscribe();
   }
 
   onLogout() {
     this.notificationService.stopNotificationListener();
     this.authService.signOut().subscribe(
-      () => this.router.navigate(['login'])
+      () => {
+        this._userInfoService.clearUserInfo();
+        this._framesService.clearFrames();
+        this.router.navigate(['login']);
+      }
     );
   }
 
@@ -41,7 +50,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.notifications$.unsubscribe();
+    this.notificationsSubscription.unsubscribe();
   }
 
 }

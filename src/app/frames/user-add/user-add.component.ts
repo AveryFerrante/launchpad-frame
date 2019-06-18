@@ -82,7 +82,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
 
   private addUsername() {
     return tap((val: Username) => {
-      console.log(this.usernameList);
       this.usernameList.push(val);
       this.usernames.emit(this.usernameList);
       this.errorMessage = '';

@@ -111,6 +111,10 @@ export class FramesService {
     return task;
   }
 
+  clearFrames() {
+    this.frameStore.clearFrames();
+  }
+
   /*
    * Fetches frame and image data from the DB. This data
    * is then automatically inserted into the store.
@@ -131,11 +135,8 @@ export class FramesService {
           }
 
           const frameUserInfo = (val[2].docs[0].data());
-          console.log(frameUserInfo);
           for (const key in frameUserInfo.users) {
-            console.log(frameUserInfo.users[key].joined);
             frameUserInfo.users[key].joined = new Date(frameUserInfo.users[key].joined.seconds * 1000);
-            console.log(frameUserInfo.users[key].joined);
           }
           return new ClientFrame(frame, frameImages, frameUserInfo as FrameUserInfo);
         }),

@@ -32,7 +32,6 @@ export class FrameInfoComponent implements OnInit {
   }
 
   setUsernames() {
-    console.log('In setUsernames in frame-info.component.ts');
     this.pendingUsers = [];
     for (const pendingId in this.frame.users.pendingUsers) {
       this.pendingUsers.push(new Username(this.frame.users.pendingUsers[pendingId].username, pendingId));

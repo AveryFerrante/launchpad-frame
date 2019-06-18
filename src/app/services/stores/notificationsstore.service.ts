@@ -44,7 +44,6 @@ export class NotificationsStore {
       this.db.collection<Notification>(this.dbName, (ref) => ref.where('foruser', '==', this.authService.currentUser.uid))
         .stateChanges(['added']).pipe(
           map((newNotifications: DocumentChangeAction<Notification>[]) => {
-            console.log('Recieved a new notification');
             const notifications: Notification[] = [];
             for (const n of newNotifications) {
               const data = n.payload.doc.data();

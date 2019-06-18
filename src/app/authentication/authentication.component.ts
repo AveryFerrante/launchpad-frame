@@ -23,7 +23,7 @@ export class AuthenticationComponent implements OnInit {
     private userInfoService: UserInfoService, private router: Router, private globalEventService: GlobalEventsService) { }
 
   ngOnInit() {
-    this.activatedRoute.url.pipe(tap((u) => console.log(u[0]))).subscribe((u) => {
+    this.activatedRoute.url.subscribe((u) => {
       if (u[0] && u[0].path === 'login') {
         this.showLoginForm = true;
         this.showCreateAccountForm = false;
@@ -69,7 +69,6 @@ export class AuthenticationComponent implements OnInit {
             this.router.navigate(['/home']);
           },
           (error) => {
-            console.log(error);
             if (error.code === 'auth/weak-password') {
               this.errorMessage = 'Password is not strong enough';
             } else {

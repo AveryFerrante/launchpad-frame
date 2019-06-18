@@ -18,7 +18,8 @@ export class FrameNavigatorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userInfoSubscription = this.userInfoService.storeWatcher.pipe(
-      tap(() => console.log('Recieved userInfo inside of frame-navigator')),
+      tap(() => console.log('frame-navigator: recieved userinfo object: ')),
+      tap(console.log),
       tap((userInfo: UserInfo) => this.constructNavigationObject(userInfo))
     ).subscribe();
   }

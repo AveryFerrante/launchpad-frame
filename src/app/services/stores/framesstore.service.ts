@@ -33,7 +33,6 @@ export class FramesStore {
   }
 
   updatePendingUsers(frameId: string, invitedById: string, invitedByUsername: string, usersToAdd: Username[]) {
-    console.log('Updating Pending Users');
     const frame = this.get(frameId);
     if (frame) {
       const newFrame = cloneDeep(frame);
@@ -47,8 +46,6 @@ export class FramesStore {
         newFrame.users.pendingUsers[user.userid] = pendingUser;
       });
       this.frames = this.replaceFrame(frame, newFrame);
-      console.log('Value of frames store after update');
-      console.log(this.frames);
     } else {
       throw new Error('Can\'t find frame to update image');
     }
@@ -107,6 +104,10 @@ export class FramesStore {
       frame.users.users[userId].pictureCount += incrementValue;
       this.frames = this.replaceFrame(oldFrame, frame);
     }
+  }
+
+  clearFrames() {
+    this.frames = null;
   }
 
   private replaceFrame(oldFrame: ClientFrame, newFrame: ClientFrame): ClientFrame[] {

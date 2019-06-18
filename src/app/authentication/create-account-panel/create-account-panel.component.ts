@@ -37,7 +37,6 @@ export class CreateAccountPanelComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.signUpForm);
     this.submitted = true;
     if (this.passwordCtrl.value !== this.passwordConfirmCtrl.value) {
       this.passwordsMatch = false;

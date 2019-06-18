@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
 import { Notification } from 'src/app/models/Notification';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notification',
@@ -15,7 +16,7 @@ export class NotificationComponent implements OnInit {
   ngOnInit() { }
 
   onAccept(notification: Notification) {
-    this.notificationsService.acceptNotification(notification).subscribe(_ => console.log('accepted the notification..wow'));
+    this.notificationsService.acceptNotification(notification).pipe(take(1)).subscribe();
   }
 
 }
