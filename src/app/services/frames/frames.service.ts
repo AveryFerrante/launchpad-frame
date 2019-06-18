@@ -49,7 +49,8 @@ export class FramesService {
     this.userInfoService.addFrameBatch(batch, userFrame);
     this.addFrameBatch(batch, frame);
     this.addFrameUserBatch(batch, frame.id, frameUserInfo);
-    this.notificationService.addNewFrameNotificationsBatch(batch, frameId, frame.title, usersToAdd.map((username: Username) => username.userid));
+    this.notificationService.addNewFrameNotificationsBatch(batch, frameId, frame.title,
+      usersToAdd.map((username: Username) => username.userid));
     return from(batch.commit()).pipe(
         tap(() => this.userInfoService.addFrame(userFrame)),
         tap(() => this.frameStore.add(new ClientFrame(frame, [], frameUserInfo, true))),
@@ -61,12 +62,15 @@ export class FramesService {
     const batch = this.db.firestore.batch();
     const pendingUsers = {};
     usersToAdd.forEach(user => {
-      pendingUsers[user.userid] = constructFrameUserInfoPending(user.username, this.authService.currentUser.uid, this.userInfoService.currentState.username);
+      pendingUsers[user.userid] = constructFrameUserInfoPending(user.username, this.authService.currentUser.uid,
+        this.userInfoService.currentState.username);
     });
-    this.notificationService.addNewFrameNotificationsBatch(batch, frameId, frameTitle, usersToAdd.map((username: Username) => username.userid));
+    this.notificationService.addNewFrameNotificationsBatch(batch, frameId, frameTitle,
+      usersToAdd.map((username: Username) => username.userid));
     this.addPendingUsersBatch(batch, frameId, pendingUsers);
     return from(batch.commit()).pipe(
-      tap(() => this.frameStore.updatePendingUsers(frameId, this.authService.currentUser.uid, this.userInfoService.currentState.username, usersToAdd))
+      tap(() => this.frameStore.updatePendingUsers(frameId, this.authService.currentUser.uid,
+        this.userInfoService.currentState.username, usersToAdd))
     );
   }
 
@@ -85,7 +89,7 @@ export class FramesService {
     const updates = {
       pendingUsers
     };
-    b.set(docRef, updates, { merge: true })
+    b.set(docRef, updates, { merge: true });
   }
 
   getFrameData(frameId: string): Observable<ClientFrame> {
