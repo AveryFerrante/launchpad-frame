@@ -1,3 +1,8 @@
-<div *ngIf="urlValidator$ | async as urlId">
-  {{ urlId }}
+<div *ngIf="password != null">
+  Password:
+  <input type="password" />
+  <button class="btn btn-primary btn-sm ml-2">Submit</button>
+</div>
+<div *ngIf="errorMessage != null">
+  ERROR: {{ errorMessage }}
 </div>

@@ -15,6 +15,8 @@ export const environment = {
   imageDatabase: 'images',
   imageFrameSub: 'frameInfo',
   notificationsDatabase: 'notifications',
+  openAccessDatabase: 'openaccess',
+  openAccessTokenSub: 'activetokens',
   pictureCache: '60' // In seconds
 };
 
