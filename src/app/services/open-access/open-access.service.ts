@@ -33,7 +33,6 @@ export class OpenAccessService {
               id: result.docs[0].id,
               enddate: data['enddate'],
               frameId: data['frameid'],
-              password: data['password'],
             };
             return retVal;
           } else {

@@ -31,9 +31,7 @@ export class LandingPageComponent implements OnInit {
       console.log(openAccess);
       if (openAccess != null) {
         this.errorMessage = null;
-        this.password = openAccess.password;
       } else {
-        this.password = null;
         this.errorMessage = 'This URL is invalid or has expired';
       }
     });
