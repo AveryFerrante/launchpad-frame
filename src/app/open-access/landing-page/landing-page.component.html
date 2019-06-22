@@ -1,7 +1,7 @@
 <div *ngIf="errorMessage == null">
   Password:
-  <input type="password" />
-  <button class="btn btn-primary btn-sm ml-2">Submit</button>
+  <input #passInput type="password" />
+  <button class="btn btn-primary btn-sm ml-2" (click)="createAccessToken(passInput.value)">Submit</button>
 </div>
 <div *ngIf="errorMessage != null">
   ERROR: {{ errorMessage }}

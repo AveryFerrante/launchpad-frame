@@ -49,14 +49,15 @@ export const createOpenAccessToken = functions.https.onCall((data, context) => {
     }
 
     const openAccessPath = `openaccess/${openAccessId}/password/${password}`
-    const newToken = 'lpf-' + new Date().getMilliseconds().toString();
-    admin.firestore().doc(`${openAccessPath}`).get()
+    const newToken = 'lpf-' + new Date().getTime().toString();
+    return admin.firestore().doc(`${openAccessPath}`).get()
     .then(doc => {
+        console.log('Document exists: ', doc.exists);
         if (doc.exists) {
             console.log('password matched, documented existed');
-            return admin.firestore().doc(`${openAccessPath}`).set({
-                tokens: [newToken]
-            }, { merge: true })
+            return admin.firestore().doc(`${openAccessPath}`).update({
+                tokens: admin.firestore.FieldValue.arrayUnion(newToken)
+            });
         } else {
             throw new functions.https.HttpsError('invalid-argument', 'Password does not match');
         }
@@ -65,7 +66,7 @@ export const createOpenAccessToken = functions.https.onCall((data, context) => {
         console.log('Updated password record with new token');
         return { token: newToken }
     })
-    .catch(err => {
-        return err;
+    .catch((err: functions.https.HttpsError) => {
+        throw new functions.https.HttpsError(err.code, err.message);
     });
 });

@@ -24,7 +24,7 @@ export class OpenAccessService {
       );
   }
 
-  getPasswordByUrl(url: string): Observable<OpenAccess> {
+  getOpenAccessByUrl(url: string): Observable<OpenAccess> {
     return this.getByUrl(url).pipe(
         map((result) => {
           if (!result.empty) {
@@ -33,6 +33,7 @@ export class OpenAccessService {
               id: result.docs[0].id,
               enddate: data['enddate'],
               frameId: data['frameid'],
+              frameName: data['frameName']
             };
             return retVal;
           } else {
@@ -40,13 +41,6 @@ export class OpenAccessService {
           }
         })
       );
-  }
-
-  addNewAnonymousUser(openAccessId: string): Observable<string> {
-    const wtf = { test: 'thing' };
-    return from(this.db.collection(`${this.openAccessDb}/${openAccessId}/${this.activeTokenSub}`).add(wtf)).pipe(
-      map(doc => doc.id)
-    );
   }
 
   private getByUrl(url: string): Observable<firebase.firestore.QuerySnapshot> {
