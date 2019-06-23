@@ -1,8 +1,30 @@
-<div *ngIf="errorMessage == null">
-  Password:
-  <input #passInput type="password" />
-  <button class="btn btn-primary btn-sm ml-2" (click)="createAccessToken(passInput.value)">Submit</button>
-</div>
-<div *ngIf="errorMessage != null">
-  ERROR: {{ errorMessage }}
+<div class="bg-img font-white vh-100">
+
+  <div style="height: 40px; width: 40px;" *ngIf="loading === true">
+    <app-loader></app-loader>
+  </div>
+
+  <ng-container *ngIf="loading === false">
+    <div *ngIf="errorMessage === null && token === null">
+      Password:
+      <input #passInput type="password" />
+      <button class="btn btn-primary btn-sm ml-2" (click)="createAccessToken(passInput.value)">Submit</button>
+    </div>
+
+    <div *ngIf="errorMessage !== null">
+      ERROR: {{ errorMessage }}
+    </div>
+
+    <ng-container *ngIf="token !== null">
+      <div class="d-flex justify-content-center mt-2">
+        <h2>{{ openAccess.frameName }}</h2>
+      </div>
+    
+      <div class="d-flex flex-column align-items-center align-self-center h-100">
+        <h4>Upload Images:</h4>
+        <input type="file" accept="image/*" capture="environment" />
+      </div>
+    </ng-container>
+  </ng-container>
+
 </div>

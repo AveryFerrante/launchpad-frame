@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 
+import { LoaderModule } from '../loader/loader.module';
+
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    LoaderModule
   ],
   declarations: [LandingPageComponent],
   exports: [LandingPageComponent]

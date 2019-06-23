@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as firebase from 'firebase';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, take, tap, catchError, filter, mergeMap } from 'rxjs/operators';
 import { OpenAccess } from 'src/app/models/client-side/OpenAccess';
 import { OpenAccessService } from 'src/app/services/open-access/open-access.service';
+import { from, of } from 'rxjs';
 
 @Component({
   selector: 'app-landing-page',
@@ -13,29 +14,34 @@ import { OpenAccessService } from 'src/app/services/open-access/open-access.serv
 export class LandingPageComponent implements OnInit {
 
   password: string;
-  errorMessage: string;
-  private openAccess: OpenAccess = null;
+  errorMessage: string = null;
+  loading = false;
+  token: string = null;
+  openAccess: OpenAccess = null;
   constructor(private activatedRoute: ActivatedRoute, private openAccessService: OpenAccessService) { }
 
   ngOnInit() {
+    this.loading = true;
     this.activatedRoute.paramMap.pipe(
-      switchMap(params => {
-        return this.openAccessService.getOpenAccessByUrl(params.get('id')).pipe(this.checkValidUrl());
+      mergeMap(params => {
+        return this.openAccessService.getOpenAccessByUrl(params.get('id')).pipe(
+          tap(() => this.loading = false),
+          this.checkValidUrl()
+        );
       })
     ).pipe(take(1)).subscribe();
   }
 
   createAccessToken(password: string) {
+    this.loading = true;
     const func = firebase.functions().httpsCallable('createOpenAccessToken');
-    func({ password: password, openAccessId: this.openAccess.id })
-      .then(result => {
-        console.log('result: ', result.data.token);
-      })
-      .catch((err: firebase.functions.HttpsError) => {
-        if (err.message.toLowerCase() === 'password does not match') {
-          console.error('The passwords didn\'t match, try again');
-        }
-      });
+    // This completes automatically since it is from a promise.
+    from(func({ password: password, openAccessId: this.openAccess.id })).pipe(
+      this.checkError(),
+      tap(() => this.loading = false),
+      filter(val => val !== null),
+      this.saveTokenToLocalStorage()
+    ).subscribe();
   }
 
   private checkValidUrl() {
@@ -43,10 +49,34 @@ export class LandingPageComponent implements OnInit {
       if (openAccess != null) {
         this.openAccess = openAccess;
         this.errorMessage = null;
+        this.fetchTokenFromLocalStorage();
       } else {
         this.errorMessage = 'This URL is invalid or has expired';
       }
     });
+  }
+
+  private checkError() {
+    return catchError((error: firebase.functions.HttpsError) => {
+      if (error.message.toLowerCase() === 'password does not match') {
+        console.error('Passwords didn\'t match');
+      }
+      return of(null);
+    });
+  }
+
+  private saveTokenToLocalStorage() {
+    return tap((result: firebase.functions.HttpsCallableResult) => {
+      localStorage.setItem(this.openAccess.id, JSON.stringify({ token: result.data.token, expires: this.openAccess.enddate }));
+      this.token = result.data.token;
+    });
+  }
+
+  private fetchTokenFromLocalStorage() {
+    const token = JSON.parse(localStorage.getItem(this.openAccess.id));
+    if (token != null && token.token != null) {
+      this.token = token.token;
+    }
   }
 
 }
