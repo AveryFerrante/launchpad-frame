@@ -22,7 +22,7 @@
     
       <div class="d-flex flex-column align-items-center align-self-center h-100">
         <h4>Upload Images:</h4>
-        <input type="file" accept="image/*" capture="environment" />
+        <input type="file" (change)="onFileChange($event)" accept="image/*" capture="environment" />
       </div>
     </ng-container>
   </ng-container>

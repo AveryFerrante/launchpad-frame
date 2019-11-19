@@ -5,6 +5,7 @@ import { switchMap, take, tap, catchError, filter, mergeMap } from 'rxjs/operato
 import { OpenAccess } from 'src/app/models/client-side/OpenAccess';
 import { OpenAccessService } from 'src/app/services/open-access/open-access.service';
 import { from, of } from 'rxjs';
+import { FramesService } from 'src/app/services/frames/frames.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -18,7 +19,7 @@ export class LandingPageComponent implements OnInit {
   loading = false;
   token: string = null;
   openAccess: OpenAccess = null;
-  constructor(private activatedRoute: ActivatedRoute, private openAccessService: OpenAccessService) { }
+  constructor(private activatedRoute: ActivatedRoute, private openAccessService: OpenAccessService, private frameService: FramesService) { }
 
   ngOnInit() {
     this.loading = true;
@@ -42,6 +43,11 @@ export class LandingPageComponent implements OnInit {
       filter(val => val !== null),
       this.saveTokenToLocalStorage()
     ).subscribe();
+  }
+
+  onFileChange($event) {
+    this.frameService.uplaodAnonymousImageToFrame($event.target.files[0], this.openAccess.frameId).percentageChanges()
+      .subscribe(console.log);
   }
 
   private checkValidUrl() {

@@ -100,19 +100,38 @@ export class FramesService {
     }
   }
 
+  uplaodAnonymousImageToFrame(file: File, frameId: string) {
+    const task = this.uploadImageToStorage(file);
+    task.snapshotChanges().pipe(
+      last(),
+      mergeMap((snapShot: firebase.storage.UploadTaskSnapshot) => from(snapShot.ref.getDownloadURL())),
+      mergeMap((dl: string) => {
+        const frameImage = new FrameImage('', dl, 'N/A',
+            'N/A', new Date(), 'anonymous uploader');
+        return from(this.db.firestore.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`)
+          .add(frameImage.getData()));
+      })
+    ).subscribe();
+    return task;
+  }
+
   uploadImageToFrame(file: File, frameId: string): AngularFireUploadTask {
-    const fileName = `${new Date().toJSON()}_${file.name}`;
-    const metaData = {
-      cacheControl: `public,max-age=${environment.pictureCache}`
-    };
-    const ref = this.storage.ref(`images/${this.authService.currentUser.uid}/${fileName}`);
-    const task = ref.put(file, metaData);
+    const task = this.uploadImageToStorage(file);
     task.snapshotChanges().pipe(
       last(),
       mergeMap((snapShot: firebase.storage.UploadTaskSnapshot) => from(snapShot.ref.getDownloadURL())),
       mergeMap((dl: string) => this.newImageWorkflow(frameId, dl))
-    ).subscribe();
+    ).subscribe(); // This will self complete
     return task;
+  }
+
+  private uploadImageToStorage(file: File): AngularFireUploadTask {
+    const fileName = `${new Date().toJSON()}_${file.name}`;
+    const metaData = {
+      cacheControl: `public,max-age=${environment.pictureCache}`
+    };
+    const ref = this.storage.ref(`images/anonymous/${fileName}`);
+    return ref.put(file, metaData);
   }
 
   clearFrames() {
