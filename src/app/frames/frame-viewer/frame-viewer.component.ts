@@ -54,6 +54,7 @@ export class FrameViewerComponent implements OnInit, OnDestroy {
       }),
       switchMap(() => this.framesService.getFrameData(this.frameId).pipe(
         tap((cf: ClientFrame) => {
+          console.log('in here plz work');
           this.frameImageUrls = [];
           this.frameUsers = [];
           for (const img of cf.images) {

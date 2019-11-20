@@ -12,6 +12,8 @@ export const environment = {
   frameDatabase: 'frames',
   frameUserSub: 'userInfo',
   frameImageSub: 'images',
+  frameAnonymousTokenSub: 'anonymousTokens',
+  frameAnonymousImageSub: 'anonymousImages',
   imageDatabase: 'images',
   imageFrameSub: 'frameInfo',
   notificationsDatabase: 'notifications',

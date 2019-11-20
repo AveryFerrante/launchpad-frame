@@ -17,23 +17,21 @@ import { Image } from '../../models/Image';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { FramesStore } from '../stores/framesstore.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { AnonymousImage } from 'src/app/models/AnonymousImage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FramesService {
 
-  private frameDb: string;
-  private frameUserSub: string;
-  private frameImageSub: string;
+  private frameDb = environment.frameDatabase;
+  private frameUserSub = environment.frameUserSub;
+  private frameImageSub = environment.frameImageSub;
+  private frameAnonymousImageSub = environment.frameAnonymousImageSub;
   private imageDb = environment.imageDatabase;
   private imageFrameSub = environment.imageFrameSub;
   constructor(private db: AngularFirestore, private authService: AuthenticationService, private frameStore: FramesStore,
-    private userInfoService: UserInfoService, private storage: AngularFireStorage, private notificationService: NotificationsService) {
-    this.frameDb = environment.frameDatabase;
-    this.frameUserSub = environment.frameUserSub;
-    this.frameImageSub = environment.frameImageSub;
-   }
+    private userInfoService: UserInfoService, private storage: AngularFireStorage, private notificationService: NotificationsService) { }
 
    get currentState(): Observable<Frame[]> { return this.frameStore.frames$; }
 
@@ -53,7 +51,7 @@ export class FramesService {
       usersToAdd.map((username: Username) => username.userid));
     return from(batch.commit()).pipe(
         tap(() => this.userInfoService.addFrame(userFrame)),
-        tap(() => this.frameStore.add(new ClientFrame(frame, [], frameUserInfo, true))),
+        tap(() => this.frameStore.add(new ClientFrame(frame, [], frameUserInfo, [], true))),
         mapTo(frame.id)
       );
   }
@@ -143,12 +141,18 @@ export class FramesService {
    * is then automatically inserted into the store.
    */
   private fetchFrameData(frameId: string): Observable<ClientFrame> {
-    return forkJoin(this.db.collection(this.frameDb).doc(frameId).get(),
+    return forkJoin(
+      this.db.collection(this.frameDb).doc(frameId).get(),
       this.db.collection(`${this.frameDb}/${frameId}/${this.frameImageSub}`).get(),
-      this.db.collection(`${this.frameDb}/${frameId}/${this.frameUserSub}`).get()).pipe(
-        map((val: [firebase.firestore.DocumentSnapshot, firebase.firestore.QuerySnapshot, firebase.firestore.QuerySnapshot]) => {
+      this.db.collection(`${this.frameDb}/${frameId}/${this.frameUserSub}`).get(),
+      this.db.collection(`${this.frameDb}/${frameId}/${this.frameAnonymousImageSub}`).get()
+    ).pipe(
+        map((val: [firebase.firestore.DocumentSnapshot, firebase.firestore.QuerySnapshot, firebase.firestore.QuerySnapshot,
+          firebase.firestore.QuerySnapshot]) => {
           const data = val[0].data();
           const frame = new Frame(val[0].id, data.title, data.description, data.createdDate, data.createdBy);
+
+          // Create Frame Images
           const frameImages: FrameImage[] = [];
           for (const doc of val[1].docs) {
             const subData = doc.data();
@@ -157,11 +161,19 @@ export class FramesService {
               dateAdded, subData.addedBy));
           }
 
+          // Create Frame Anonymous Images
+          const anonImages: AnonymousImage[] = [];
+          for (const doc of val[3].docs) {
+            const subData = doc.data();
+            const dateAdded = new Date(subData.dateAdded.seconds * 1000);
+            anonImages.push(new AnonymousImage(dateAdded, subData.downloadPath, subData.token));
+          }
+
           const frameUserInfo = (val[2].docs[0].data());
           for (const key in frameUserInfo.users) {
             frameUserInfo.users[key].joined = new Date(frameUserInfo.users[key].joined.seconds * 1000);
           }
-          return new ClientFrame(frame, frameImages, frameUserInfo as FrameUserInfo);
+          return new ClientFrame(frame, frameImages, frameUserInfo as FrameUserInfo, anonImages);
         }),
         tap((val: ClientFrame) => this.frameStore.add(val)),
         mergeMap(() => this.frameStore.getFrameWatcher(frameId))

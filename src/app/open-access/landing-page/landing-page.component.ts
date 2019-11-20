@@ -37,7 +37,7 @@ export class LandingPageComponent implements OnInit {
     this.loading = true;
     const func = firebase.functions().httpsCallable('createOpenAccessToken');
     // This completes automatically since it is from a promise.
-    from(func({ password: password, openAccessId: this.openAccess.id })).pipe(
+    from(func({ password: password, openAccessId: this.openAccess.id, frameId: this.openAccess.frameId })).pipe(
       this.checkError(),
       tap(() => this.loading = false),
       filter(val => val !== null),
@@ -66,6 +66,8 @@ export class LandingPageComponent implements OnInit {
     return catchError((error: firebase.functions.HttpsError) => {
       if (error.message.toLowerCase() === 'password does not match') {
         console.error('Passwords didn\'t match');
+      } else {
+        console.log(error.message);
       }
       return of(null);
     });

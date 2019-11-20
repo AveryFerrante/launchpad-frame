@@ -4,7 +4,7 @@ import { NotifierService } from 'angular-notifier';
 import { combineLatest, Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import { ClientFrame } from 'src/app/models/client-side/ClientFrame';
-import { GroupedFrameImages } from 'src/app/models/GroupedFrameImages';
+import { GroupedFrameImages } from 'src/app/models/client-side/GroupedFrameImages';
 import { UserInfo } from 'src/app/models/UserInfo';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FramesService } from 'src/app/services/frames/frames.service';

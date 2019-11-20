@@ -1,4 +1,4 @@
-import { FrameImage } from './FrameImage';
+import { FrameImage } from '../FrameImage';
 
 export interface GroupedFrameImages {
     key: string;
